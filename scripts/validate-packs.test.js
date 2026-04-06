@@ -31,6 +31,7 @@ function minimalSealedPack(overrides = {}) {
     version: "1.0.0",
     visibility: "sealed",
     tier: "certified",
+    author: { name: "Sidereal", url: "https://sidereal.cc" },
     pricing: { model: "subscription", amount: 9.99, interval: "month" },
     encryption: { method: "aes-256-gcm", key_delivery: "registry-escrow" },
     readme: "# Sealed Pack\nThis is a detailed readme for the sealed pack.",
@@ -153,6 +154,60 @@ describe("validatePack — sealed packs", () => {
     const errors = validatePack(minimalOpenPack({
       tier: "community",
     }));
+    assert.deepEqual(errors, []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// DD-120 Phase 0 — third-party sealed distribution gate
+// ---------------------------------------------------------------------------
+
+describe("validatePack — DD-120 sealed distribution gate", () => {
+  it("allows sealed + public from first-party author", () => {
+    const errors = validatePack(minimalSealedPack());
+    assert.deepEqual(errors, []);
+  });
+
+  it("rejects sealed + public with no author", () => {
+    const pack = minimalSealedPack();
+    delete pack.author;
+    const errors = validatePack(pack);
+    assert.ok(errors.some(e => e.includes("DD-120")));
+  });
+
+  it("rejects sealed + public from third-party author", () => {
+    const errors = validatePack(minimalSealedPack({
+      author: { name: "Third Party", url: "https://example.com" },
+    }));
+    assert.ok(errors.some(e => e.includes("DD-120")));
+  });
+
+  it("rejects sealed + explicit public from non-first-party", () => {
+    const errors = validatePack(minimalSealedPack({
+      access: "public",
+      author: { name: "Third Party", url: "https://example.com" },
+    }));
+    assert.ok(errors.some(e => e.includes("DD-120")));
+  });
+
+  it("allows sealed + private from any author", () => {
+    const errors = validatePack(minimalSealedPack({
+      access: "private",
+      organization: "third-party-org",
+      author: { name: "Third Party", url: "https://example.com" },
+      pricing: undefined,  // private sealed packs don't require pricing
+    }));
+    assert.deepEqual(errors, []);
+  });
+
+  it("allows sealed + private with no author", () => {
+    const pack = minimalSealedPack({
+      access: "private",
+      organization: "some-org",
+      pricing: undefined,
+    });
+    delete pack.author;
+    const errors = validatePack(pack);
     assert.deepEqual(errors, []);
   });
 });

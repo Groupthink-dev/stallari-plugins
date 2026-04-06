@@ -23,6 +23,7 @@ const VALID_TIERS = ["certified", "verified", "community"];
 const VALID_PRICING_MODELS = ["free", "tip", "one-time", "subscription"];
 const VALID_KEY_DELIVERY = ["paddle", "registry-escrow", "direct"];
 const SEALED_ALLOWED_TIERS = ["certified", "verified"];
+const FIRST_PARTY_AUTHOR_URLS = ["https://sidereal.cc"];
 const VALID_SKILL_CATEGORIES = ["ingest", "triage", "digest", "transform", "notify", "review", "sync", "report"];
 
 function validatePack(parsed) {
@@ -257,6 +258,19 @@ function validatePack(parsed) {
 
   // ── Sealed pack rules ────────────────────────────────────────────
   if (String(parsed.visibility) === "sealed") {
+    // DD-120 Phase 0: third-party sealed distribution gate
+    // Sealed packs may only be public if published by a first-party author.
+    // Third-party sealed packs must use access: "private" until the
+    // certification pipeline (DD-120 Phases 1-5) is operational.
+    if (String(parsed.access || "public") !== "private") {
+      const authorUrl = parsed.author?.url;
+      if (!authorUrl || !FIRST_PARTY_AUTHOR_URLS.includes(authorUrl)) {
+        errors.push(
+          'Sealed packs require access: "private" unless published by a first-party author (DD-120)'
+        );
+      }
+    }
+
     // readme required
     if (!parsed.readme) {
       errors.push('Sealed packs require a "readme" field');

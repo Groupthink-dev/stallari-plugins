@@ -420,6 +420,16 @@ async function main() {
     await mkdir(packDir, { recursive: true });
 
     if (manifest.visibility === "sealed") {
+      // DD-120 Phase 0: reject sealed+public from non-first-party authors
+      const access = String(manifest.access || "public");
+      if (access !== "private") {
+        const authorUrl = manifest.author?.url;
+        const FIRST_PARTY = ["https://sidereal.cc"];
+        if (!authorUrl || !FIRST_PARTY.includes(authorUrl)) {
+          console.error(`  ERROR  ${manifest.name}: sealed packs require access: "private" unless published by a first-party author (DD-120)`);
+          process.exit(1);
+        }
+      }
       // Sealed packs: strip prompts, encrypt payload, write key separately
       const { publicManifest, payload } = sealPack(manifest);
       const { encrypted, key } = encryptPayload(payload);
