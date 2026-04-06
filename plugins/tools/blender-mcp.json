@@ -1,0 +1,64 @@
+{
+  "name": "blender-mcp",
+  "description": "Blender 3D modelling via TCP socket addon — object CRUD, materials, scene inspection, code execution, screenshot capture",
+  "version": "1.5.5",
+  "author": "ahujasid",
+  "licence": "MIT",
+  "icon": "/icons/blender-mcp.svg",
+  "tier": "community",
+  "contract": null,
+  "repository": "https://github.com/ahujasid/blender-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "blender-mcp"
+  },
+  "env": [
+    {
+      "name": "BLENDER_PORT",
+      "description": "TCP port for Blender addon socket server",
+      "default": "9876"
+    }
+  ],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "involved",
+    "icon": "cube.fill",
+    "product": "Blender Addon",
+    "help_text": "Install the Blender MCP addon: download from the repository, then in Blender → Edit → Preferences → Add-ons → Install. Enable the addon and start the socket server. The MCP connects via TCP on the configured port.",
+    "help_url": "https://github.com/ahujasid/blender-mcp",
+    "fields": [
+      {
+        "key": "BLENDER_PORT",
+        "label": "Port",
+        "secret": false,
+        "placeholder": "9876",
+        "required": false
+      }
+    ],
+    "prerequisites": [
+      "Blender 3.0+ installed",
+      "Blender MCP addon installed and enabled",
+      "Addon socket server running in Blender"
+    ]
+  },
+  "certification": {
+    "status": "validated",
+    "stability": "stable",
+    "security_notes": "Executes arbitrary Python code inside Blender via execute_blender_code tool — expected for addon pattern. No network exfil beyond optional Poly Haven / Sketchfab integrations.",
+    "validated_version": "1.5.5",
+    "validated_date": "2026-03-31",
+    "validator": "validate-plugin.js",
+    "platform_tested": [
+      "darwin-arm64"
+    ],
+    "checklist": {
+      "installs_cleanly": true,
+      "tools_enumerate": true,
+      "tools_callable": false,
+      "no_data_exfil": false,
+      "auth_reviewed": false,
+      "licence_compatible": true
+    }
+  },
+  "notes": "Dominant Blender MCP (18k+ stars). Requires Blender addon installed separately. Two-component: addon runs TCP socket server inside Blender, MCP server bridges to it. Supports Poly Haven, Hyper3D Rodin, Sketchfab integrations."
+}

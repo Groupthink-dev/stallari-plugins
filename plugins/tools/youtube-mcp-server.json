@@ -1,0 +1,47 @@
+{
+  "name": "youtube-mcp-server",
+  "description": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3",
+  "version": "1.0.0",
+  "author": "ZubeidHendricks",
+  "licence": "MIT",
+  "icon": "/icons/youtube-mcp-server.svg",
+  "tier": "community",
+  "contract": null,
+  "repository": "https://github.com/ZubeidHendricks/youtube-mcp-server",
+  "install": {
+    "runtime": "npx",
+    "package": "zubeid-youtube-mcp-server"
+  },
+  "env": [
+    {
+      "name": "YOUTUBE_API_KEY",
+      "description": "YouTube Data API v3 key from Google Cloud Console",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "play.rectangle.fill",
+    "product": "API Key",
+    "help_text": "Create a project at Google Cloud Console, enable the YouTube Data API v3, then create an API key under Credentials. Restrict the key to YouTube Data API v3 only.",
+    "help_url": "https://console.cloud.google.com/apis/library/youtube.googleapis.com",
+    "fields": [
+      {
+        "key": "YOUTUBE_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "AIza..."
+      }
+    ],
+    "prerequisites": [
+      "Google Cloud project with YouTube Data API v3 enabled"
+    ]
+  },
+  "certification": {
+    "status": "pending",
+    "stability": "stable",
+    "security_notes": "Read-only YouTube Data API access. API key scoped to YouTube Data API v3. No write operations, no OAuth user context."
+  },
+  "notes": "10-tool YouTube MCP (473 stars). Covers video search with advanced filters, channel info with subscriber band filtering, creator discovery, playlist browsing, and transcript extraction. Requires YouTube Data API v3 key."
+}

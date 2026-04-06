@@ -1,0 +1,15 @@
+*.tmp
+.DS_Store
+.claude/
+
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+
+# Seal keys (sensitive — never commit)
+seal-key.hex
+
+# Generated build-time files
+scripts/generated/

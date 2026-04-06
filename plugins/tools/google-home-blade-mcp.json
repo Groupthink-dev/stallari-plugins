@@ -1,0 +1,116 @@
+{
+  "name": "google-home-blade-mcp",
+  "description": "Google Home / Nest device control via SDM API — thermostats, cameras, doorbells, event streams",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/google-home-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "smarthome-v1",
+  "repository": "https://github.com/groupthink-dev/google-home-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "google-home-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "GOOGLE_HOME_CLIENT_ID",
+      "description": "OAuth2 client ID from Google Cloud Console"
+    },
+    {
+      "name": "GOOGLE_HOME_CLIENT_SECRET",
+      "description": "OAuth2 client secret",
+      "secret": true
+    },
+    {
+      "name": "GOOGLE_HOME_REFRESH_TOKEN",
+      "description": "OAuth2 refresh token (from make auth)",
+      "secret": true
+    },
+    {
+      "name": "GOOGLE_HOME_PROJECT_ID",
+      "description": "Project ID from Device Access Console"
+    },
+    {
+      "name": "GOOGLE_HOME_WRITE_ENABLED",
+      "description": "Enable device commands (thermostat, camera, fan)",
+      "default": "false"
+    },
+    {
+      "name": "GOOGLE_HOME_PUBSUB_SUBSCRIPTION",
+      "description": "Pub/Sub subscription for device events (optional)"
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "home",
+    "product": "Google Home / Nest",
+    "help_text": "Requires a Google Cloud project with SDM API enabled, Device Access Console registration ($5 USD one-time), and OAuth2 credentials. Run 'make auth' to complete the OAuth flow and obtain the refresh token.",
+    "fields": [
+      {
+        "key": "GOOGLE_HOME_CLIENT_ID",
+        "label": "OAuth2 Client ID",
+        "secret": false,
+        "placeholder": "123456789-xxx.apps.googleusercontent.com"
+      },
+      {
+        "key": "GOOGLE_HOME_CLIENT_SECRET",
+        "label": "OAuth2 Client Secret",
+        "secret": true
+      },
+      {
+        "key": "GOOGLE_HOME_REFRESH_TOKEN",
+        "label": "Refresh Token",
+        "secret": true,
+        "help": "Run 'make auth' in the repo to complete the OAuth flow and obtain this token"
+      },
+      {
+        "key": "GOOGLE_HOME_PROJECT_ID",
+        "label": "Device Access Project ID",
+        "secret": false,
+        "placeholder": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      },
+      {
+        "key": "GOOGLE_HOME_PUBSUB_SUBSCRIPTION",
+        "label": "Pub/Sub Subscription (optional)",
+        "secret": false,
+        "placeholder": "projects/my-project/subscriptions/nest-events"
+      }
+    ],
+    "test": {
+      "endpoint": "https://smartdevicemanagement.googleapis.com/v1/enterprises/{GOOGLE_HOME_PROJECT_ID}/devices",
+      "auth_style": "bearer"
+    },
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["https://www.googleapis.com/auth/sdm.service"],
+      "setup_url": "https://console.nest.google.com/device-access"
+    },
+    "prerequisites": [
+      "Google Cloud project with Smart Device Management API enabled",
+      "Device Access Console registration ($5 USD one-time fee)",
+      "OAuth 2.0 credentials (Web application type) with redirect URI configured"
+    ],
+    "help_links": [
+      {
+        "label": "Device Access Console",
+        "url": "https://console.nest.google.com/device-access"
+      },
+      {
+        "label": "SDM API Documentation",
+        "url": "https://developers.google.com/nest/device-access/api"
+      },
+      {
+        "label": "GCP Console",
+        "url": "https://console.cloud.google.com/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "4/4",
+    "recommended": "5/5",
+    "optional": "5/5",
+    "last_tested": "2026-04-03"
+  }
+}

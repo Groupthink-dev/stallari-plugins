@@ -1,0 +1,30 @@
+{
+  "name": "sidereal-blade-mcp",
+  "description": "Obsidian vault operations via Swift MCP — read, write, search, properties, graph analysis, lens semantic tools",
+  "version": "0.5.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/sidereal-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "vault-v1",
+  "repository": "https://github.com/groupthink-dev/sidereal-vault",
+  "install": {
+    "runtime": "native",
+    "binary": "sidereal-blade"
+  },
+  "env": [],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "trivial",
+    "icon": "doc.text.magnifyingglass",
+    "product": "Obsidian Vault",
+    "help_text": "No credentials required. Sidereal Blade connects directly to your local Obsidian vault via the filesystem. Ensure the vault path is configured in Sidereal settings."
+  },
+  "conformance": {
+    "required": "8/8",
+    "recommended": "10/10",
+    "optional": "7/7",
+    "last_tested": "2026-03-25"
+  },
+  "notes": "Vault tools from sidereal-blade (29 tools) + lens tools from sidereal-lens (11 tools). Both map to the vault service via the vault-v1 contract."
+}

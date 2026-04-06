@@ -1,0 +1,66 @@
+{
+  "name": "todoist-blade-mcp",
+  "description": "Todoist task management — projects, sections, tasks, labels, comments, incremental sync, batch commands, filter queries",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/todoist-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "tasks-v1",
+  "repository": "https://github.com/groupthink-dev/todoist-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "todoist-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "TODOIST_API_TOKEN",
+      "description": "Todoist API token",
+      "secret": true
+    },
+    {
+      "name": "TODOIST_WRITE_ENABLED",
+      "description": "Enable write operations (create, update, complete, delete, batch)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "checklist",
+    "product": "API Token",
+    "help_text": "Generate an API token at Todoist → Settings → Integrations → Developer.",
+    "help_url": "https://app.todoist.com/app/settings/integrations/developer",
+    "blurb": "Connect to Todoist for task management with dual REST v2 + Sync v9 APIs, batch commands, and incremental sync.",
+    "fields": [
+      {
+        "key": "TODOIST_API_TOKEN",
+        "label": "API Token",
+        "secret": true,
+        "placeholder": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "help": "Settings → Integrations → Developer → API token"
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.todoist.com/rest/v2/projects",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Todoist Developer Settings",
+        "url": "https://app.todoist.com/app/settings/integrations/developer"
+      },
+      {
+        "label": "Todoist REST API v2",
+        "url": "https://developer.todoist.com/rest/v2/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "4/4",
+    "optional": "1/1",
+    "gated": "3/3",
+    "last_tested": "2026-03-31"
+  }
+}

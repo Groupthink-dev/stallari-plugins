@@ -1,0 +1,479 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/sidereal-pack.schema.json",
+  "title": "Sidereal Pack Manifest",
+  "description": "Schema for pack manifests (sidereal-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5 (DD92, DD99, DD104, DD113, DD119).",
+  "type": "object",
+  "required": ["pack", "name", "description", "data", "skills"],
+  "additionalProperties": true,
+  "properties": {
+    "pack": {
+      "type": "string",
+      "enum": ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5"],
+      "description": "Pack spec version."
+    },
+    "name": {
+      "type": "string",
+      "description": "Pack name (title-case, human-readable)."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Pack semantic version (major.minor.patch)."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 300,
+      "description": "One-line summary of what this pack does."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/sidereal-core.svg')."
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Author name."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Author profile or website URL."
+        }
+      }
+    },
+    "licence": {
+      "type": "string",
+      "description": "SPDX licence identifier (e.g. MIT, Apache-2.0)."
+    },
+    "min_sidereal": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Minimum Sidereal version (e.g. \"0.29\"). Major.minor only."
+    },
+    "requires": {
+      "$ref": "#/$defs/requirements",
+      "description": "Hard requirements — missing services prevent pack execution."
+    },
+    "recommends": {
+      "$ref": "#/$defs/requirements",
+      "description": "Soft requirements — missing services degrade gracefully."
+    },
+    "data": {
+      "type": "object",
+      "required": ["reads", "writes", "stores", "phones_home"],
+      "additionalProperties": false,
+      "description": "Mandatory data access policy. Enforced by sandbox at runtime.",
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Services this pack reads from."
+        },
+        "writes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Services this pack writes to."
+        },
+        "stores": {
+          "type": "string",
+          "enum": ["nothing", "local", "remote"],
+          "description": "Persistence model."
+        },
+        "phones_home": {
+          "type": "boolean",
+          "description": "Whether pack calls external APIs beyond declared services."
+        }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/agent"
+      },
+      "description": "Named agent definitions (dict of name → agent config)."
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/skill" },
+      "description": "Ordered skill list. At least one required."
+    },
+    "workflows": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/workflow" },
+      "description": "Multi-skill execution sequences (DAGs)."
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "user_inputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/userInput" },
+          "description": "User-configurable parameters."
+        }
+      }
+    },
+    "visibility": {
+      "type": "string",
+      "enum": ["open", "sealed"],
+      "default": "open",
+      "description": "Visibility mode. Open = public and forkable. Sealed = prompts encrypted at rest."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["certified", "verified", "community"],
+      "default": "community",
+      "description": "Trust tier. Certified = first-party or audited. Verified = reviewed. Community = unreviewed."
+    },
+    "pricing": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["free", "tip", "one-time", "subscription"],
+              "description": "Revenue model."
+            },
+            "amount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Price amount (USD)."
+            },
+            "interval": {
+              "type": "string",
+              "enum": ["month", "year"],
+              "description": "Billing interval (subscription only)."
+            },
+            "tip": {
+              "type": "boolean",
+              "description": "Whether tips are accepted."
+            },
+            "paddle_product_id": {
+              "type": "string",
+              "description": "Paddle product ID for checkout."
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "default": null,
+      "description": "Pricing configuration (v1.1). Null = free."
+    },
+    "readme": {
+      "type": "string",
+      "description": "Inline README content (v1.2). Mandatory when visibility is sealed (enforced by validator, not schema)."
+    },
+    "forked_from": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the original pack."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of the original pack that was forked."
+        }
+      },
+      "description": "Fork provenance — which pack and version this was forked from (v1.2)."
+    },
+    "encryption": {
+      "type": "object",
+      "required": ["method", "key_delivery"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Encryption method for sealed pack prompts (e.g. aes-256-gcm)."
+        },
+        "key_delivery": {
+          "type": "string",
+          "description": "Key delivery mechanism (e.g. paddle, registry-escrow, direct)."
+        }
+      },
+      "description": "Encryption configuration for sealed packs (v1.2)."
+    },
+    "access": {
+      "type": "string",
+      "enum": ["public", "private"],
+      "default": "public",
+      "description": "Access control. Public = visible to everyone. Private = org-scoped, visible only to authenticated org members (v1.3, DD104)."
+    },
+    "organization": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Owning organisation slug. Required when access is private (v1.3, DD104)."
+    }
+  },
+  "$defs": {
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/serviceRequirement" }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Reserved for future capability requirements."
+        }
+      }
+    },
+    "serviceRequirement": {
+      "type": "object",
+      "required": ["service"],
+      "additionalProperties": false,
+      "properties": {
+        "service": {
+          "type": "string",
+          "description": "Abstract service name (e.g. email, tasks, calendar, vault)."
+        },
+        "operations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Specific operations required from this service."
+        }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "required": ["role"],
+      "additionalProperties": true,
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Agent role (e.g. operator, specialist, reviewer)."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "System prompt for the agent."
+        },
+        "model_preference": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Preferred model/provider keys in priority order."
+        }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "required": ["name", "prompt"],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Skill identifier (kebab-case)."
+        },
+        "description": {
+          "type": "string",
+          "description": "One-line human-readable description."
+        },
+        "agent": {
+          "type": "string",
+          "description": "Agent name that executes this skill (key in agents dict)."
+        },
+        "trigger": {
+          "$ref": "#/$defs/trigger"
+        },
+        "depends_on": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills that must complete before this one."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "Detailed LLM prompt. Can reference {{service.operation}} syntax."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["ingest", "triage", "digest", "transform", "notify", "review", "sync", "report"],
+          "description": "Skill category — what role this skill plays in the workflow (v1.2)."
+        },
+        "services_used": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["service"],
+            "additionalProperties": false,
+            "properties": {
+              "service": { "type": "string" },
+              "operations": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "description": "Services and operations this skill actually calls (v1.2)."
+        },
+        "inputs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/userInput" },
+          "description": "Skill-level user inputs, same shape as config.user_inputs (v1.2)."
+        },
+        "graph": {
+          "type": "string",
+          "enum": ["react-extract", "react"],
+          "default": "react-extract",
+          "description": "Execution graph topology (v1.5, DD119). react-extract = ReAct loop + structured JSON extraction (default). react = ReAct loop only, no structured output — lower latency for monitors and audits."
+        },
+        "webhook_name": {
+          "type": "string",
+          "description": "Name of the webhook that triggers this skill (v1.4, DD113). Links to a webhooks[] entry name or a HooksConfig webhook name."
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Output type (e.g. vault_note, task, notification, report)."
+              },
+              "description": {
+                "type": "string",
+                "description": "What this output contains."
+              }
+            }
+          },
+          "description": "What this skill produces (v1.2)."
+        }
+      }
+    },
+    "trigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schedule": {
+          "type": "string",
+          "description": "Cron expression (5-field, e.g. \"0 7 * * *\")."
+        },
+        "watch": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Paths to watch for changes."
+        },
+        "on_demand": {
+          "type": "boolean",
+          "description": "Manual trigger only."
+        },
+        "webhook": {
+          "$ref": "#/$defs/webhookTrigger",
+          "description": "Webhook-triggered execution (v1.4, DD113)."
+        }
+      }
+    },
+    "webhookTrigger": {
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^/hooks/",
+          "description": "URL path suffix for the webhook endpoint (e.g. /hooks/tech-support)."
+        },
+        "auth": {
+          "type": "string",
+          "enum": ["hmac", "bearer", "none"],
+          "default": "hmac",
+          "description": "Verification method for inbound webhook requests."
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["name", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Workflow identifier."
+        },
+        "description": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string",
+          "description": "Optional cron expression for the entire workflow."
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/workflowStep" }
+        }
+      }
+    },
+    "workflowStep": {
+      "type": "object",
+      "required": ["skill"],
+      "additionalProperties": false,
+      "properties": {
+        "skill": {
+          "type": "string",
+          "description": "Skill name to execute (must exist in skills array)."
+        },
+        "after": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills that must complete before this step."
+        },
+        "condition": {
+          "type": "string",
+          "description": "Execution condition (e.g. \"always\")."
+        }
+      }
+    },
+    "userInput": {
+      "type": "object",
+      "required": ["key", "type", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Configuration key (snake_case)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Input type (e.g. string, number, boolean, choice, time)."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable label."
+        },
+        "description": {
+          "type": "string",
+          "description": "Longer explanation."
+        },
+        "default": {
+          "description": "Default value (any JSON type)."
+        },
+        "choices": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Valid options (for type=choice)."
+        },
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether input is mandatory."
+        }
+      }
+    }
+  }
+}

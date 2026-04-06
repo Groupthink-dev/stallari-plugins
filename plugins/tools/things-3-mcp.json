@@ -1,0 +1,24 @@
+{
+  "name": "things-3-mcp",
+  "description": "Things 3 task management via AppleScript and URL scheme — macOS only",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/things-3-mcp.svg",
+  "tier": "certified",
+  "contract": "tasks-v1",
+  "repository": "https://github.com/groupthink-dev/things-3-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "things-3-mcp"
+  },
+  "setup": {
+    "auth_model": "none"
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "4/4",
+    "optional": "1/1",
+    "last_tested": "2026-03-25"
+  }
+}

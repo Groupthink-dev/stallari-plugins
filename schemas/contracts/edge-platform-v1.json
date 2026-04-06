@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/edge-platform-v1.json",
+  "title": "edge-platform-v1",
+  "description": "Edge platform service contract v1 — 31 operations across DNS management, Workers KV storage, D1 databases, and Cloudflare Tunnels.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "edge-platform-v1" },
+    "service": { "const": "edge-platform" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "dns_list_zones",
+      "description": "List DNS zones with filtering by name, status, and account",
+      "classification": "required"
+    },
+    {
+      "name": "dns_get_zone",
+      "description": "Get details for a single zone by ID or domain name",
+      "classification": "required"
+    },
+    {
+      "name": "dns_list_records",
+      "description": "List DNS records with type, name, content, and proxied filters",
+      "classification": "required"
+    },
+    {
+      "name": "dns_get_record",
+      "description": "Retrieve a single DNS record by ID",
+      "classification": "required"
+    },
+    {
+      "name": "dns_export_records",
+      "description": "Export all DNS records in BIND zonefile format",
+      "classification": "recommended"
+    },
+    {
+      "name": "dns_create_record",
+      "description": "Create a new DNS record (A, AAAA, CNAME, MX, TXT, SRV, CAA, NS, etc.)",
+      "classification": "gated"
+    },
+    {
+      "name": "dns_update_record",
+      "description": "Partial update (PATCH) of an existing DNS record",
+      "classification": "gated"
+    },
+    {
+      "name": "dns_delete_record",
+      "description": "Permanently delete a DNS record (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "dns_bulk_create",
+      "description": "Create up to 100 DNS records in a single operation",
+      "classification": "gated"
+    },
+    {
+      "name": "dns_bulk_update",
+      "description": "Update up to 100 DNS records in a single operation",
+      "classification": "gated"
+    },
+    {
+      "name": "kv_list_namespaces",
+      "description": "List Workers KV namespaces in the account",
+      "classification": "required"
+    },
+    {
+      "name": "kv_list_keys",
+      "description": "List keys in a KV namespace with optional prefix filter",
+      "classification": "required"
+    },
+    {
+      "name": "kv_get",
+      "description": "Retrieve the value of a single key from a KV namespace",
+      "classification": "required"
+    },
+    {
+      "name": "kv_put",
+      "description": "Write a key-value pair to KV with optional TTL and metadata",
+      "classification": "gated"
+    },
+    {
+      "name": "kv_delete",
+      "description": "Permanently delete a key from KV (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "kv_bulk_put",
+      "description": "Write up to 10,000 key-value pairs in a single operation",
+      "classification": "gated"
+    },
+    {
+      "name": "kv_bulk_delete",
+      "description": "Permanently delete up to 10,000 keys in a single operation (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "d1_list_databases",
+      "description": "List D1 databases in the account with size and table counts",
+      "classification": "required"
+    },
+    {
+      "name": "d1_get_database",
+      "description": "Get details for a single D1 database",
+      "classification": "required"
+    },
+    {
+      "name": "d1_query",
+      "description": "Execute read-only SQL queries (SELECT) with bind parameters",
+      "classification": "required"
+    },
+    {
+      "name": "d1_execute",
+      "description": "Execute write SQL statements (INSERT, UPDATE, DELETE, DDL) with confirmation gate",
+      "classification": "gated"
+    },
+    {
+      "name": "d1_export",
+      "description": "Export all table schemas and row counts from a database",
+      "classification": "recommended"
+    },
+    {
+      "name": "d1_list_tables",
+      "description": "List all tables in a database with row counts",
+      "classification": "recommended"
+    },
+    {
+      "name": "d1_describe_table",
+      "description": "Describe a table schema using PRAGMA table_info",
+      "classification": "recommended"
+    },
+    {
+      "name": "tunnel_list",
+      "description": "List Cloudflare Tunnels with optional name filter",
+      "classification": "required"
+    },
+    {
+      "name": "tunnel_get",
+      "description": "Get details for a single tunnel by ID",
+      "classification": "required"
+    },
+    {
+      "name": "tunnel_create",
+      "description": "Create a new Cloudflare Tunnel",
+      "classification": "gated"
+    },
+    {
+      "name": "tunnel_delete",
+      "description": "Permanently delete a tunnel (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "tunnel_list_configs",
+      "description": "Get ingress configuration (routing rules) for a tunnel",
+      "classification": "required"
+    },
+    {
+      "name": "tunnel_update_config",
+      "description": "Replace tunnel ingress configuration (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "tunnel_list_connections",
+      "description": "List active connections (connectors) for a tunnel",
+      "classification": "recommended"
+    }
+  ]
+}

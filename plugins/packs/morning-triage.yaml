@@ -1,0 +1,109 @@
+pack: "1.1"
+name: morning-triage
+version: "1.1.0"
+description: Triages unread email and generates a morning briefing with today's calendar.
+icon: /icons/morning-triage.svg
+author:
+  name: Jane Dev
+  url: https://example.com/@janedev
+licence: MIT
+visibility: open
+tier: community
+pricing: null
+
+min_sidereal: "0.29"
+
+requires:
+  services:
+    - service: email
+      operations: [search, read, mailboxes]
+    - service: calendar
+      operations: [events, today]
+  capabilities: []
+
+recommends:
+  services:
+    - service: tasks
+      operations: [create]
+
+data:
+  reads: [email, calendar]
+  writes: [vault, tasks]
+  stores: nothing
+  phones_home: false
+
+agents:
+  triage-bot:
+    role: operator
+    prompt: |
+      You are a personal email triage assistant. Your job is to scan the inbox,
+      classify messages by urgency, and produce a concise morning briefing.
+
+      Classification rules:
+      - Urgent: requires response today, time-sensitive, from known contacts
+      - Review: informational, needs reading but not immediate action
+      - Low: newsletters, notifications, marketing
+
+      Always preserve the original message — never delete or archive.
+
+skills:
+  - name: triage-inbox
+    agent: triage-bot
+    description: Scan and classify unread email by urgency
+    tier: reasoning
+    category: triage
+    services_used:
+      - service: email
+        operations: [search, read, flag, move]
+    trigger:
+      schedule: "0 {{config.wake_hour}} * * *"
+    prompt: |
+      Search for unread messages received in the last 24 hours.
+      Classify each message as urgent, review, or low.
+      For urgent messages, flag them.
+      Move low-priority messages to the "Filtered" folder.
+
+      Output a structured summary:
+      - Count by category
+      - Top 3 urgent items with sender and subject
+      - Any calendar-related messages (invites, changes)
+
+  - name: daily-briefing
+    agent: triage-bot
+    description: Generate morning briefing combining email triage and calendar
+    tier: reasoning
+    category: digest
+    services_used:
+      - service: calendar
+        operations: [events, today]
+      - service: vault
+        operations: [create]
+      - service: tasks
+        operations: [create]
+    depends_on: [triage-inbox]
+    prompt: |
+      Using the triage results and today's calendar:
+
+      1. List today's events in chronological order
+      2. Highlight scheduling conflicts
+      3. Match urgent emails to calendar context (e.g., meeting prep needed)
+      4. Create a vault note at the daily log path with the briefing
+
+      If tasks service is available, create tasks for any action items found.
+
+workflows:
+  - name: morning-run
+    description: Full morning triage and briefing sequence
+    schedule: "0 {{config.wake_hour}} * * *"
+    steps:
+      - skill: triage-inbox
+      - skill: daily-briefing
+        after: [triage-inbox]
+
+config:
+  user_inputs:
+    - key: wake_hour
+      type: number
+      default: 7
+      label: What hour should the morning triage run?
+      description: 24-hour format (e.g., 7 for 7am, 6 for 6am)

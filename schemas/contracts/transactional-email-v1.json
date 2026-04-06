@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/transactional-email-v1.json",
+  "title": "transactional-email-v1",
+  "description": "Transactional email service contract v1 — 19 operations across sending, contacts, broadcasts, templates, domains, and webhooks.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "transactional-email-v1" },
+    "service": { "const": "transactional-email" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "send",
+      "description": "Send an email (HTML/text, attachments, scheduled, idempotent)",
+      "classification": "required"
+    },
+    {
+      "name": "get_email",
+      "description": "Retrieve a sent email by ID with delivery status",
+      "classification": "required"
+    },
+    {
+      "name": "list_emails",
+      "description": "List sent emails with status filters",
+      "classification": "required"
+    },
+    {
+      "name": "list_contacts",
+      "description": "List contacts in an audience",
+      "classification": "required"
+    },
+    {
+      "name": "list_domains",
+      "description": "List sending domains with verification status",
+      "classification": "required"
+    },
+    {
+      "name": "get_domain",
+      "description": "Get domain detail with DNS record requirements",
+      "classification": "required"
+    },
+    {
+      "name": "list_broadcasts",
+      "description": "List broadcasts with delivery status",
+      "classification": "recommended"
+    },
+    {
+      "name": "list_templates",
+      "description": "List email templates",
+      "classification": "recommended"
+    },
+    {
+      "name": "get_template",
+      "description": "Get template with HTML content and variables",
+      "classification": "recommended"
+    },
+    {
+      "name": "list_segments",
+      "description": "List audience segments",
+      "classification": "recommended"
+    },
+    {
+      "name": "list_logs",
+      "description": "List recent API request logs",
+      "classification": "recommended"
+    },
+    {
+      "name": "send_batch",
+      "description": "Batch send up to 100 emails in a single request",
+      "classification": "optional"
+    },
+    {
+      "name": "list_webhooks",
+      "description": "List webhook endpoints for delivery events",
+      "classification": "optional"
+    },
+    {
+      "name": "cancel_scheduled",
+      "description": "Cancel a scheduled email before delivery",
+      "classification": "optional"
+    },
+    {
+      "name": "create_contact",
+      "description": "Create a contact with properties in an audience",
+      "classification": "gated"
+    },
+    {
+      "name": "create_broadcast",
+      "description": "Create a broadcast draft for an audience segment",
+      "classification": "gated"
+    },
+    {
+      "name": "send_broadcast",
+      "description": "Send or schedule a draft broadcast",
+      "classification": "gated"
+    },
+    {
+      "name": "create_template",
+      "description": "Create an email template with variables",
+      "classification": "gated"
+    },
+    {
+      "name": "add_domain",
+      "description": "Register a sending domain (returns DNS records for verification)",
+      "classification": "gated"
+    }
+  ]
+}

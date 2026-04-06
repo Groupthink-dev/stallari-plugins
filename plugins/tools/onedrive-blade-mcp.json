@@ -1,0 +1,102 @@
+{
+  "name": "onedrive-blade-mcp",
+  "description": "OneDrive and SharePoint file operations via Microsoft Graph API — browse, read, search, upload, share, delta sync",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/onedrive-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "drive-v1",
+  "repository": "https://github.com/groupthink-dev/onedrive-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "onedrive-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "ONEDRIVE_TENANT_ID",
+      "description": "Azure AD tenant ID"
+    },
+    {
+      "name": "ONEDRIVE_CLIENT_ID",
+      "description": "Azure AD app client ID"
+    },
+    {
+      "name": "ONEDRIVE_CLIENT_SECRET",
+      "description": "Azure AD app client secret (optional — for client_credentials flow)",
+      "secret": true
+    },
+    {
+      "name": "ONEDRIVE_AUTH_MODE",
+      "description": "Auth mode: device_code (interactive) or client_credentials (headless)",
+      "default": "device_code"
+    },
+    {
+      "name": "ONEDRIVE_WRITE_ENABLED",
+      "description": "Enable write operations (upload, move, delete, share)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "icloud.and.arrow.up.fill",
+    "product": "OneDrive / SharePoint",
+    "help_text": "1. Register an app at Azure Portal → App registrations. 2. Set platform to 'Mobile and desktop applications'. 3. Add Files.ReadWrite.All and Sites.ReadWrite.All permissions. 4. Copy Tenant ID and Client ID. 5. On first run, complete the device code flow.",
+    "help_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+    "blurb": "Browse, read, search, and manage files across OneDrive and SharePoint with delta sync for incremental change tracking.",
+    "fields": [
+      {
+        "key": "ONEDRIVE_TENANT_ID",
+        "label": "Tenant ID",
+        "secret": false,
+        "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      {
+        "key": "ONEDRIVE_CLIENT_ID",
+        "label": "Client ID",
+        "secret": false,
+        "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      {
+        "key": "ONEDRIVE_CLIENT_SECRET",
+        "label": "Client Secret (optional)",
+        "secret": true,
+        "placeholder": "Only needed for client_credentials flow",
+        "required": false
+      },
+      {
+        "key": "ONEDRIVE_AUTH_MODE",
+        "label": "Auth Mode",
+        "secret": false,
+        "placeholder": "device_code",
+        "help": "Use 'device_code' for interactive setup, 'client_credentials' for headless/CI"
+      }
+    ],
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["Files.ReadWrite.All", "Sites.ReadWrite.All"],
+      "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+    },
+    "prerequisites": [
+      "Azure AD app registration with Microsoft Graph API permissions",
+      "API permissions: Files.ReadWrite.All, Sites.ReadWrite.All"
+    ],
+    "help_links": [
+      {
+        "label": "Azure App Registrations",
+        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+      },
+      {
+        "label": "OneDrive API Reference",
+        "url": "https://learn.microsoft.com/en-us/onedrive/developer/rest-api/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "1/1",
+    "optional": "0/0",
+    "last_tested": "2026-03-31"
+  }
+}

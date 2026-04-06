@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/billing-v1.json",
+  "title": "billing-v1",
+  "description": "Billing service contract v1 — 28 operations across products, subscriptions, transactions, and payments.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "billing-v1" },
+    "service": { "const": "billing" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "products",
+      "description": "List products with status and category filters",
+      "classification": "required"
+    },
+    {
+      "name": "product",
+      "description": "Get product detail with optional price inclusion",
+      "classification": "required"
+    },
+    {
+      "name": "prices",
+      "description": "List prices with product and status filters",
+      "classification": "required"
+    },
+    {
+      "name": "customers",
+      "description": "List or search customers",
+      "classification": "required"
+    },
+    {
+      "name": "subscriptions",
+      "description": "List subscriptions with status and customer filters",
+      "classification": "required"
+    },
+    {
+      "name": "transactions",
+      "description": "List transactions with date range and status filters",
+      "classification": "required"
+    },
+    {
+      "name": "customer",
+      "description": "Get customer detail",
+      "classification": "recommended"
+    },
+    {
+      "name": "subscription",
+      "description": "Get subscription detail with billing period and items",
+      "classification": "recommended"
+    },
+    {
+      "name": "transaction",
+      "description": "Get transaction detail with totals and line items",
+      "classification": "recommended"
+    },
+    {
+      "name": "invoice",
+      "description": "Get invoice PDF download URL",
+      "classification": "recommended"
+    },
+    {
+      "name": "adjustments",
+      "description": "List adjustments (refunds, credits, chargebacks)",
+      "classification": "recommended"
+    },
+    {
+      "name": "discounts",
+      "description": "List and get discounts",
+      "classification": "recommended"
+    },
+    {
+      "name": "events",
+      "description": "List billing events",
+      "classification": "recommended"
+    },
+    {
+      "name": "credit_balance",
+      "description": "Get customer credit balance",
+      "classification": "recommended"
+    },
+    {
+      "name": "notifications",
+      "description": "List and inspect webhook notifications",
+      "classification": "optional"
+    },
+    {
+      "name": "reports",
+      "description": "List and create billing reports",
+      "classification": "optional"
+    },
+    {
+      "name": "payment_methods",
+      "description": "List customer payment methods",
+      "classification": "optional"
+    },
+    {
+      "name": "preview_transaction",
+      "description": "Preview transaction pricing without persistence",
+      "classification": "optional"
+    },
+    {
+      "name": "verify_webhook",
+      "description": "HMAC-SHA256 webhook signature verification",
+      "classification": "optional"
+    },
+    {
+      "name": "ip_addresses",
+      "description": "Paddle IP addresses for webhook firewall allowlisting",
+      "classification": "optional"
+    },
+    {
+      "name": "create_customer",
+      "description": "Create a new customer",
+      "classification": "gated"
+    },
+    {
+      "name": "update_subscription",
+      "description": "Update subscription items and proration",
+      "classification": "gated"
+    },
+    {
+      "name": "cancel_subscription",
+      "description": "Cancel a subscription (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "create_transaction",
+      "description": "Create a new transaction",
+      "classification": "gated"
+    },
+    {
+      "name": "create_adjustment",
+      "description": "Create a refund, credit, or chargeback",
+      "classification": "gated"
+    },
+    {
+      "name": "create_discount",
+      "description": "Create a discount code or percentage",
+      "classification": "gated"
+    },
+    {
+      "name": "replay_notification",
+      "description": "Replay a failed webhook notification",
+      "classification": "gated"
+    },
+    {
+      "name": "simulate",
+      "description": "Create and run billing simulations",
+      "classification": "gated"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "fastmail-blade-mcp",
+  "description": "Fastmail email operations via JMAP — search, read, send, manage, masked email, push notifications",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/fastmail-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "email-v1",
+  "repository": "https://github.com/groupthink-dev/fastmail-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "fastmail-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "FASTMAIL_API_TOKEN",
+      "description": "Fastmail JMAP API token",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "envelope.fill",
+    "product": "API Token",
+    "help_text": "Create an API token at fastmail.com → Settings → Privacy & Security → API tokens. Enable the Mail scope.",
+    "help_url": "https://app.fastmail.com/settings/security/tokens",
+    "fields": [
+      {
+        "key": "FASTMAIL_API_TOKEN",
+        "label": "API Token",
+        "secret": true,
+        "placeholder": "fmu1-..."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.fastmail.com/.well-known/jmap",
+      "auth_style": "bearer"
+    }
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "2/2",
+    "optional": "3/3",
+    "last_tested": "2026-03-25"
+  }
+}

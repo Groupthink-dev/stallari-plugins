@@ -1,0 +1,56 @@
+# Forge ecosystem vocabulary — agent/operator roster
+# Source: sidereal-ops/.agents/config.yaml
+# Updated by: sync-forge-vocabulary skill (sidereal-sysadmin pack)
+# Last synced: 2026-04-04
+#
+# Keep this compact — it's rendered into LLM system prompts where tokens matter.
+# One entry per agent. Only include fields the Forge needs for pack design.
+
+agents:
+  digital-assistant:
+    role: orchestrator
+    domain: User-facing coordinator, routes work to operators
+    services: [email, vault, tasks, calendar]
+    core_skills: [morning-sweep]
+
+  pkm-operator:
+    role: operator
+    domain: Vault operations — inbox processing, digests, structure maintenance, effort tracking
+    services: [vault, tasks, calendar, email]
+    core_skills: [daily-digest, weekly-digest, process-inbox, vault-hygiene, effort-digest, video-sidecar, decompose-inbox]
+
+  comms-operator:
+    role: operator
+    domain: Email triage, contact management, correspondence tracking
+    services: [email, vault, tasks]
+    core_skills: [email-triage, flag-triage, enrich-person-email]
+
+  scheduling-operator:
+    role: operator
+    domain: Calendar management, conflict detection, event creation from handoffs
+    services: [calendar, vault, tasks]
+    core_skills: [calendar-sync, schedule-event, process-calendar-handoffs]
+
+  secops-operator:
+    role: operator
+    domain: macOS security posture — TCC grants, launchd drift, credential freshness, network exposure
+    services: [vault]
+    core_skills: [darwin-state-audit, launchd-audit, credential-expiry-watch, tcc-drift-monitor, network-exposure-scan, fleet-trust-audit]
+
+  fleet-operator:
+    role: operator
+    domain: Platform health monitoring, MCP connectivity, version drift, dispatch analytics, fleet coordination
+    services: [vault]
+    core_skills: [platform-health, version-drift-check, dispatch-analytics, upgrade-coordinator, capacity-forecast, mcp-lifecycle, backup-verification]
+
+  home-operator:
+    role: operator
+    domain: Home Assistant integration — energy, climate, presence, scenes, maintenance, incidents
+    services: [home, vault, calendar, tasks, email]
+    core_skills: [site-status, device-inventory, scene-manager, energy-portfolio, climate-optimizer, presence-intelligence, environmental-monitor, maintenance-forecast, incident-responder, utility-reconciler, departure-protocol]
+
+  bizops-operator:
+    role: operator
+    domain: Billing lifecycle, revenue analytics, accounting integration, financial reporting
+    services: [billing, accounting, transactional-email, vault]
+    core_skills: [subscription-dashboard, churn-alert, refund-processor, invoice-reconciliation, monthly-financials, trial-expiry-nudge]

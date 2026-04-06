@@ -1,0 +1,183 @@
+pack: "1.2"
+name: sidereal-core
+version: "3.1.0"
+description: >-
+  Core platform operators and infrastructure health — security auditing,
+  fleet monitoring, notification delivery, and the six operator agents that
+  power every Sidereal installation. Bundled with every install.
+icon: /icons/sidereal-core.svg
+author:
+  name: Sidereal
+  url: https://sidereal.cc
+licence: Proprietary
+visibility: open
+tier: certified
+pricing: null
+bundled: true
+
+min_sidereal: "0.38"
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, create, append]
+
+recommends:
+  services: []
+
+data:
+  reads: [vault]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+agents:
+  pkm-operator:
+    role: operator
+    prompt: |
+      You are a PKM operator for an Obsidian vault. You execute vault operations:
+      filing notes, generating digests, processing inbox items. Follow every step
+      precisely. Use the available MCP tools. Log every action.
+
+  comms-operator:
+    role: operator
+    prompt: |
+      You are a communications operator. You triage email across configured
+      providers and create handoff notes for relevant items. Read-only by default.
+
+  scheduling-operator:
+    role: operator
+    prompt: |
+      You are a scheduling operator. You manage calendar events, detect conflicts,
+      create events from structured handoffs, and provide scheduling intelligence.
+
+  secops-operator:
+    role: operator
+    prompt: |
+      You are a security operations operator. You audit macOS security posture,
+      monitor TCC grants, track launchd agent drift, and verify system integrity.
+      Read-only probes — never modify system state without explicit human approval.
+
+  fleet-operator:
+    role: operator
+    prompt: |
+      You are a fleet operations operator. You monitor Sidereal daemon health,
+      MCP server connectivity, version drift across fleet peers, and platform
+      infrastructure status. Report findings — never auto-remediate.
+
+  notifications-operator:
+    role: operator
+    prompt: |
+      You are a notifications operator. You receive notification requests from
+      other operators via structured result JSON fields and route them to
+      appropriate delivery channels. You do not generate notifications from
+      raw data — only route what other operators produce.
+
+skills:
+  - name: platform-health
+    agent: fleet-operator
+    description: Probe daemon, MCP servers, Lens, and identity provider health
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Probe Sidereal platform health on the current host. Check daemon status,
+      MCP server connectivity, Lens index health, and tsidp reachability.
+      Write findings to a structured registry note at
+      atlas/registers/system/platform-health-{hostname}.md.
+
+  - name: version-drift-check
+    agent: fleet-operator
+    description: Compare component versions across fleet peers
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Compare Sidereal daemon and MCP plugin versions between the current host
+      and configured fleet peers. Flag version drift. Write a drift report to
+      atlas/registers/system/version-drift-{date}.md.
+
+  - name: darwin-state-audit
+    agent: secops-operator
+    description: Audit macOS imperative state residue and security posture
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create, append]
+    trigger:
+      on_demand: true
+    prompt: |
+      Audit the current macOS host for imperative state residue and security
+      posture. Check SIP, Gatekeeper, FileVault, TCC grants, sharing services,
+      network exposure, firewall rules, and filesystem residue. Write a structured
+      registry note at atlas/registers/system/darwin-state-audit-{hostname}.md.
+
+  - name: launchd-audit
+    agent: secops-operator
+    description: Audit macOS launchctl user-domain agents
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Audit launchctl user-domain agents on the current host. Classify agents
+      by group, detect exit-code anomalies, track drift from previous snapshot,
+      check expected-set compliance. Write a structured registry note at
+      atlas/registers/system/launchd-user-agents-{hostname}.md.
+
+  - name: notification-channel-status
+    agent: notifications-operator
+    description: Probe notification delivery channel health
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Probe all configured notification delivery channels (ntfy, APNS,
+      assistant-bot, email handoff). Write channel health report to
+      atlas/registers/notifications/channel-health.md.
+
+  - name: notification-delivery-audit
+    agent: notifications-operator
+    description: Aggregate delivery stats and flag unreliable channels
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Read delivery reports from the last 7 days. Aggregate per-channel
+      and per-category statistics. Flag unreliable channels. Write audit
+      summary to atlas/registers/notifications/delivery-audit.md.
+
+  - name: delivery-report
+    agent: notifications-operator
+    description: Daily aggregate of all notification deliveries
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      schedule: "0 23 * * *"
+    prompt: |
+      Generate daily notification delivery report. Aggregate by channel
+      and category. Archive to calendar/notes/{date} — notification
+      delivery report.md.

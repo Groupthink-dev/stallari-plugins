@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/social-v1.json",
+  "title": "social-v1",
+  "description": "Social platform contract v1 — 20 operations across timelines, statuses, accounts, and interactions.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "social-v1" },
+    "service": { "const": "social" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "timeline",
+      "description": "Read timeline (home, public, local, hashtag, list)",
+      "classification": "required"
+    },
+    {
+      "name": "status",
+      "description": "Get a specific status/post by ID",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search statuses, accounts, and hashtags",
+      "classification": "required"
+    },
+    {
+      "name": "notifications",
+      "description": "List notifications (mentions, favourites, boosts, follows)",
+      "classification": "required"
+    },
+    {
+      "name": "context",
+      "description": "Get thread context (ancestors and descendants) for a status",
+      "classification": "recommended"
+    },
+    {
+      "name": "account",
+      "description": "Get account profile and statuses",
+      "classification": "recommended"
+    },
+    {
+      "name": "trending",
+      "description": "Get trending hashtags, statuses, and links",
+      "classification": "recommended"
+    },
+    {
+      "name": "bookmarks",
+      "description": "List bookmarked statuses",
+      "classification": "recommended"
+    },
+    {
+      "name": "favourites",
+      "description": "List favourited statuses",
+      "classification": "recommended"
+    },
+    {
+      "name": "relationships",
+      "description": "Check follow/block/mute relationships with accounts",
+      "classification": "recommended"
+    },
+    {
+      "name": "lists",
+      "description": "Manage curated lists of accounts",
+      "classification": "optional"
+    },
+    {
+      "name": "filters",
+      "description": "Manage content filters and keyword blocks",
+      "classification": "optional"
+    },
+    {
+      "name": "conversations",
+      "description": "List direct message conversations",
+      "classification": "optional"
+    },
+    {
+      "name": "instance",
+      "description": "Get instance information, rules, and configuration",
+      "classification": "optional"
+    },
+    {
+      "name": "post",
+      "description": "Create a new status (text, media, poll, scheduled)",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a status",
+      "classification": "gated"
+    },
+    {
+      "name": "favourite",
+      "description": "Favourite or unfavourite a status",
+      "classification": "gated"
+    },
+    {
+      "name": "boost",
+      "description": "Boost (reblog) or unboost a status",
+      "classification": "gated"
+    },
+    {
+      "name": "follow",
+      "description": "Follow or unfollow an account",
+      "classification": "gated"
+    },
+    {
+      "name": "block",
+      "description": "Block, unblock, mute, or unmute an account",
+      "classification": "gated"
+    }
+  ]
+}

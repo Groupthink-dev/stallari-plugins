@@ -1,0 +1,59 @@
+{
+  "name": "gmail-blade-mcp",
+  "description": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation.",
+  "version": "0.2.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/gmail-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "email-v1",
+  "repository": "https://github.com/groupthink-dev/gmail-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "gmail-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "GOOGLE_API_KEY",
+      "description": "Google API key for Gemini AI features (optional — classification and summarisation)",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "envelope.fill",
+    "product": "Google OAuth",
+    "help_text": "1. Create a project at Google Cloud Console. 2. Enable the Gmail API. 3. Create OAuth 2.0 credentials (Desktop app type). 4. Download the JSON and save as ~/.gmail-blade/credentials.json. 5. On first run, complete the OAuth consent flow in your browser.",
+    "help_url": "https://console.cloud.google.com/apis/credentials",
+    "fields": [
+      {
+        "key": "GOOGLE_API_KEY",
+        "label": "Gemini API Key",
+        "secret": true,
+        "placeholder": "AIza...",
+        "required": false
+      }
+    ],
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["https://www.googleapis.com/auth/gmail.modify", "https://www.googleapis.com/auth/gmail.send"],
+      "setup_url": "https://console.cloud.google.com/apis/credentials"
+    },
+    "prerequisites": [
+      "Google Cloud project with Gmail API enabled",
+      "OAuth 2.0 credentials (Desktop app) downloaded to ~/.gmail-blade/credentials.json"
+    ]
+  },
+  "inference": {
+    "provider": "google-gemini",
+    "model": "gemini-2.0-flash-lite",
+    "purpose": "classification, summarisation"
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "2/2",
+    "optional": "3/3",
+    "last_tested": "2026-03-27"
+  }
+}

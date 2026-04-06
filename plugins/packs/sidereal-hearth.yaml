@@ -1,0 +1,160 @@
+pack: "1.2"
+name: sidereal-hearth
+version: "1.1.0"
+description: >-
+  Smart home intelligence for Sidereal — site status monitoring, device
+  inventory tracking, and scene management across your connected home.
+  Supports Home Assistant with Google Home in testing preview.
+  The foundation for home automation intelligence.
+icon: /icons/sidereal-hearth.svg
+author:
+  name: Sidereal
+  url: https://sidereal.cc
+licence: MIT
+visibility: open
+tier: certified
+pricing: null
+
+min_sidereal: "0.40"
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, create, append]
+    - service: home
+      operations: [entity_list, entity_state, area_list]
+
+recommends:
+  services:
+    - service: home
+      operations: [scene_activate, entity_history]
+
+data:
+  reads: [vault, home]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+agents:
+  home-operator:
+    role: operator
+    prompt: |
+      You are a home operations operator managing Home Assistant integrations
+      for Sidereal. You monitor site health, track device inventories, and
+      manage scenes across multiple HA instances. Follow the property domain
+      brief for site disambiguation — each site has a slug, HA instance name,
+      and vault path. Write structured registry notes to atlas/registers/home/.
+
+skills:
+  - name: site-status
+    agent: home-operator
+    description: Query sensor state across all HA sites and compile a health summary
+    tier: reasoning
+    category: review
+    services_used:
+      - service: home
+        operations: [entity_state, area_list]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      For each configured site in config.sites:
+        1. Query entity_state for critical sensor domains: binary_sensor,
+           sensor (temperature, humidity, power, battery), alarm_control_panel,
+           lock, and climate.
+        2. Query area_list to organise findings by physical area.
+        3. Flag any entity in an alarm or unavailable state.
+
+      Compile a per-site health summary with sections: connectivity, climate,
+      security (alarm + locks), power, and flagged entities.
+
+      Write the summary to atlas/registers/home/site-status-{date}.md with
+      llm_generated: true frontmatter.
+
+      If any entity is in an alarm state, push an ntfy alert to the alert
+      topic with priority 4 and an Obsidian deep-link to the status note.
+
+      Log the run to the decision ledger (ops stream).
+
+  - name: device-inventory
+    agent: home-operator
+    description: Enumerate and categorise all HA entities across sites
+    tier: reasoning
+    category: review
+    services_used:
+      - service: home
+        operations: [entity_list, area_list]
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      For each configured site in config.sites:
+        1. Call entity_list to enumerate all entities.
+        2. Call area_list to map entities to physical areas.
+        3. Categorise entities by HA domain (light, switch, sensor,
+           binary_sensor, climate, lock, cover, media_player, camera, etc.).
+        4. Count entities per domain and per area.
+
+      Read the previous inventory note from
+      atlas/registers/home/device-inventory-{site_slug}-latest.md if it exists.
+      Diff against the current enumeration — flag added, removed, and
+      newly-unavailable entities.
+
+      Write the inventory to
+      atlas/registers/home/device-inventory-{site_slug}-{date}.md with
+      llm_generated: true frontmatter. Include a summary table at the top
+      with domain counts and a diff section if changes were detected.
+
+      Log the run to the decision ledger (ops stream).
+
+  - name: scene-manager
+    agent: home-operator
+    description: List available scenes and activate on request with vault logging
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: home
+        operations: [entity_list, scene_activate]
+      - service: vault
+        operations: [append]
+    trigger:
+      on_demand: true
+    prompt: |
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      For each configured site in config.sites:
+        1. Call entity_list filtered to the scene domain to enumerate
+           available scenes.
+        2. Present the scene list to the human grouped by site.
+
+      If the human requests activation of a specific scene:
+        3. Confirm the site and scene name before proceeding.
+        4. Call scene_activate for the requested scene.
+        5. Append an entry to atlas/registers/home/scene-log.md with
+           timestamp, site, scene name, and outcome.
+
+      Log the run to the decision ledger (ops stream).
+
+workflows:
+  - name: site-check
+    description: Full site health check — inventory devices then check status
+    steps:
+      - skill: device-inventory
+      - skill: site-status
+
+config:
+  user_inputs:
+    - key: sites
+      type: object
+      label: HA Sites
+      required: true
+      description: >-
+        Map of site slugs to HA instance names and vault paths. Example:
+        { "sandy-bay": { "ha_instance": "homeassistant-sandybay",
+          "vault_path": "spaces/Family Living/Areas/Property - Sandy Bay" } }

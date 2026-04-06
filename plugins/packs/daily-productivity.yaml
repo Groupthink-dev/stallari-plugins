@@ -1,0 +1,249 @@
+pack: "1.2"
+name: daily-productivity
+version: "2.1.0"
+description: >-
+  Daily and weekly productivity automation — morning digest, email triage,
+  inbox processing, flagged email actions, effort tracking, and weekly review.
+  The complete daily/weekly cycle from first coffee to end-of-week wrap-up.
+icon: /icons/daily-productivity.svg
+author:
+  name: groupthink-dev
+  url: https://github.com/groupthink-dev
+licence: MIT
+visibility: open
+tier: certified
+pricing: null
+
+min_sidereal: "0.38"
+
+requires:
+  services:
+    - service: email
+      operations: [search, read, snippets, state, changes]
+    - service: vault
+      operations: [read, search, files, query_properties, lens_fts, lens_recall, lens_connections]
+    - service: calendar
+      operations: [events, today]
+    - service: tasks
+      operations: [today]
+
+recommends:
+  services:
+    - service: vault
+      operations: [create, append, move]
+    - service: tasks
+      operations: [create]
+
+data:
+  reads: [email, calendar, tasks, vault]
+  writes: [vault, tasks]
+  stores: nothing
+  phones_home: false
+
+agents:
+  pkm-operator:
+    role: operator
+    prompt: |
+      You are a PKM operator managing an Obsidian vault. You generate daily
+      and weekly digests, classify inbox items, and track effort status. You
+      write concise, scannable Markdown. All created notes include
+      llm_generated: true in frontmatter. You never delete notes — only move
+      or archive. Confidence thresholds: >=0.85 auto-file, 0.60-0.84 flag,
+      <0.60 leave in triage.
+
+  comms-operator:
+    role: operator
+    prompt: |
+      You are a communications operator that triages email and processes
+      flagged messages. You assess sender relevance against known domains of
+      influence, classify urgency, and create structured handoff notes for
+      downstream processing. You never send, delete, or archive email —
+      read-only access unless explicitly instructed.
+
+  digital-assistant:
+    role: orchestrator
+    prompt: |
+      You are the orchestrator running the morning sweep. You aggregate
+      pending work from all sources, classify each item as DISPATCH (route
+      to operator), PREP (needs human preparation), YOURS (human must do it),
+      or SKIP. Present the classified list for human approval before
+      dispatching any work.
+
+skills:
+  - name: daily-digest
+    agent: pkm-operator
+    description: Generate a morning digest combining calendar, tasks, efforts, and inbox status
+    tier: reasoning
+    category: digest
+    services_used:
+      - service: calendar
+        operations: [events]
+      - service: tasks
+        operations: [today]
+      - service: vault
+        operations: [query_properties, lens_fts, files, create]
+    trigger:
+      schedule: "0 {{config.digest_hour}} * * *"
+    prompt: |
+      Generate today's daily digest. Gather data in parallel where possible:
+      calendar events, today's tasks, active efforts, inbox item count.
+      Write a digest note to calendar/logs/digests/YYYY-MM-DD-digest.md.
+      Keep it under 35 lines, scannable in 2 minutes.
+
+  - name: email-triage
+    agent: comms-operator
+    description: Scan recent inbox for messages relevant to active domains of influence
+    tier: reasoning
+    category: triage
+    services_used:
+      - service: email
+        operations: [changes, state, search, snippets, read]
+      - service: vault
+        operations: [lens_fts]
+      - service: tasks
+        operations: [create]
+    trigger:
+      schedule: "0 {{config.triage_hour}} * * *"
+    prompt: |
+      Triage recent email from the inbox. Find new messages since the last
+      known state watermark. Classify urgency (urgent/attention/routine).
+      Create handoff notes for urgent/attention items. Skip routine.
+      Persist the JMAP state watermark. Never send, delete, or move email.
+
+  - name: process-inbox
+    agent: pkm-operator
+    description: Classify and file items from the vault inbox
+    tier: reasoning
+    category: ingest
+    services_used:
+      - service: vault
+        operations: [read, lens_recall, lens_connections, move]
+    trigger:
+      on_demand: true
+    depends_on: [email-triage]
+    prompt: |
+      Process unclassified items in +/ingest/ and +/handoff/. For each item:
+      read, find related vault content, classify, and file based on confidence
+      (>=0.85 auto-file, 0.60-0.84 flag, <0.60 triage). Handle corrections
+      and person-interaction handoffs specially.
+
+  - name: morning-sweep
+    agent: digital-assistant
+    description: Interactive morning triage across all sources
+    tier: reasoning
+    category: triage
+    services_used:
+      - service: vault
+        operations: [read, search, files, query_properties]
+      - service: calendar
+        operations: [events, today]
+      - service: tasks
+        operations: [today]
+    trigger:
+      on_demand: true
+    prompt: |
+      Run a structured morning sweep: aggregate pending work from calendar,
+      Things, handoffs, inbox, and active efforts. Classify each item as
+      DISPATCH/PREP/YOURS/SKIP. Present the classified list for human
+      approval, then dispatch approved items to the appropriate operators.
+
+  - name: flag-triage
+    agent: comms-operator
+    description: Process colour-coded flagged emails from Apple Mail
+    tier: reasoning
+    category: triage
+    services_used:
+      - service: email
+        operations: [search, read]
+      - service: vault
+        operations: [read, create, append]
+      - service: tasks
+        operations: [create]
+    trigger:
+      schedule: "*/5 * * * *"
+    prompt: |
+      Process emails flagged by the human in Apple Mail. Each flag colour
+      signals a specific action: red (urgent — immediate handoff), orange
+      (file — create vault note), yellow (review — summarise and flag),
+      blue (reply — draft response for review), green (reference — file to
+      atlas), purple (calendar — create scheduling handoff), grey (skip).
+      Clear the flag after processing.
+
+  - name: weekly-digest
+    agent: pkm-operator
+    description: Generate weekly digest with effort status and dispatch metrics
+    tier: reasoning
+    category: digest
+    services_used:
+      - service: vault
+        operations: [read, search, query_properties, lens_fts, files, create]
+      - service: calendar
+        operations: [events]
+      - service: tasks
+        operations: [today]
+    trigger:
+      schedule: "0 {{config.weekly_review_hour}} * * 0"
+    prompt: |
+      Generate a weekly digest at calendar/logs/digests/YYYY-WNN-digest.md.
+      Week-at-a-glance: family events, active efforts with status changes,
+      completed tasks, dispatch metrics by operator and model. Scannable
+      in under 3 minutes.
+
+  - name: effort-digest
+    agent: pkm-operator
+    description: Generate per-effort status snapshots
+    tier: reasoning
+    category: digest
+    services_used:
+      - service: vault
+        operations: [read, search, query_properties, lens_fts, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Generate a status snapshot for each active effort (or a specific effort
+      if named). For each: list objectives, job progress (count by status),
+      recent activity, blockers, and recommended next steps. Write to
+      calendar/logs/digests/effort-{slug}-{date}.md.
+
+workflows:
+  - name: daily-run
+    description: Full daily pipeline — triage email, process inbox, generate digest
+    schedule: "0 {{config.digest_hour}} * * *"
+    steps:
+      - skill: email-triage
+      - skill: process-inbox
+        after: [email-triage]
+      - skill: daily-digest
+        after: [email-triage, process-inbox]
+
+  - name: weekly-review
+    description: End-of-week wrap-up — weekly digest then effort snapshots
+    schedule: "0 {{config.weekly_review_hour}} * * 0"
+    steps:
+      - skill: weekly-digest
+      - skill: effort-digest
+        after: [weekly-digest]
+
+config:
+  user_inputs:
+    - key: digest_hour
+      type: number
+      default: 7
+      label: What hour should the daily automation run?
+      description: 24-hour format (e.g., 7 for 7am). Email triage runs at the same time.
+    - key: triage_hour
+      type: number
+      default: 7
+      label: What hour should email triage run?
+      description: Set earlier than digest_hour if you want triage results in the digest.
+    - key: weekly_review_hour
+      type: number
+      default: 17
+      label: What hour should the Sunday weekly review run?
+      description: 24-hour format (e.g., 17 for 5pm Sunday).
+    - key: effort_scope
+      type: choice
+      choices: [active, all]
+      default: active
+      label: Which efforts to include in effort-digest?
+      description: "active = on+ongoing efforts only. all = all statuses."

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/messages-v1.json",
+  "title": "messages-v1",
+  "description": "Messaging platform contract v1 — 10 operations across conversations, messages, contacts, and delivery.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "messages-v1" },
+    "service": { "const": "messages" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "chats",
+      "description": "List conversations (1:1 and group)",
+      "classification": "required"
+    },
+    {
+      "name": "messages",
+      "description": "Get messages from a conversation with pagination",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Full-text search across all messages",
+      "classification": "required"
+    },
+    {
+      "name": "chat",
+      "description": "Get a specific conversation by ID or contact identifier",
+      "classification": "recommended"
+    },
+    {
+      "name": "contacts",
+      "description": "List known contacts and handles",
+      "classification": "recommended"
+    },
+    {
+      "name": "attachments",
+      "description": "List and inspect message attachments",
+      "classification": "recommended"
+    },
+    {
+      "name": "stats",
+      "description": "Aggregate statistics (message counts, date ranges, top contacts)",
+      "classification": "optional"
+    },
+    {
+      "name": "unread",
+      "description": "Unread message counts per conversation",
+      "classification": "optional"
+    },
+    {
+      "name": "send",
+      "description": "Send a text message to a contact or conversation",
+      "classification": "gated"
+    },
+    {
+      "name": "send_file",
+      "description": "Send a file attachment to a contact or conversation",
+      "classification": "gated"
+    }
+  ]
+}

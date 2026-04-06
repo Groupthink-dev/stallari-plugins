@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/notifications-v1.json",
+  "title": "notifications-v1",
+  "description": "Notifications service contract v1 — 13 operations across list, channel, delivery, and preferences.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "notifications-v1" },
+    "service": { "const": "notifications" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "list",
+      "description": "List recent notifications",
+      "classification": "required"
+    },
+    {
+      "name": "channels",
+      "description": "List available notification channels",
+      "classification": "required"
+    },
+    {
+      "name": "get",
+      "description": "Get a specific notification by ID",
+      "classification": "recommended"
+    },
+    {
+      "name": "history",
+      "description": "Query notification delivery history with filters",
+      "classification": "recommended"
+    },
+    {
+      "name": "channel_status",
+      "description": "Get health and delivery stats for a specific channel",
+      "classification": "recommended"
+    },
+    {
+      "name": "preferences",
+      "description": "Get user notification preferences (channels, quiet hours, categories)",
+      "classification": "recommended"
+    },
+    {
+      "name": "templates",
+      "description": "List available notification templates",
+      "classification": "optional"
+    },
+    {
+      "name": "schedule",
+      "description": "Schedule a notification for future delivery",
+      "classification": "optional"
+    },
+    {
+      "name": "delivery_report",
+      "description": "Get delivery statistics for a time period",
+      "classification": "optional"
+    },
+    {
+      "name": "send",
+      "description": "Send a notification to a channel",
+      "classification": "gated"
+    },
+    {
+      "name": "dismiss",
+      "description": "Dismiss or acknowledge a notification",
+      "classification": "gated"
+    },
+    {
+      "name": "bulk_send",
+      "description": "Send notifications to multiple channels simultaneously",
+      "classification": "gated"
+    },
+    {
+      "name": "update_preferences",
+      "description": "Update user notification preferences",
+      "classification": "gated"
+    }
+  ]
+}

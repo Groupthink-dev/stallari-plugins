@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/tasks-v1.json",
+  "title": "tasks-v1",
+  "description": "Tasks service contract v1 — 11 operations across list, search, manage, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "tasks-v1" },
+    "service": { "const": "tasks" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "list",
+      "description": "List tasks with filters",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search tasks by text/tags",
+      "classification": "required"
+    },
+    {
+      "name": "projects",
+      "description": "List/manage projects",
+      "classification": "required"
+    },
+    {
+      "name": "today",
+      "description": "Today view",
+      "classification": "recommended"
+    },
+    {
+      "name": "inbox",
+      "description": "Inbox/unsorted tasks",
+      "classification": "recommended"
+    },
+    {
+      "name": "tags",
+      "description": "List available tags/labels",
+      "classification": "recommended"
+    },
+    {
+      "name": "summary",
+      "description": "Compact overview",
+      "classification": "recommended"
+    },
+    {
+      "name": "logbook",
+      "description": "Completed tasks history",
+      "classification": "optional"
+    },
+    {
+      "name": "create",
+      "description": "Create a new task",
+      "classification": "gated"
+    },
+    {
+      "name": "update",
+      "description": "Update task fields",
+      "classification": "gated"
+    },
+    {
+      "name": "complete",
+      "description": "Mark task as complete",
+      "classification": "gated"
+    }
+  ]
+}

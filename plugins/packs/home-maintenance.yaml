@@ -1,0 +1,225 @@
+pack: "1.1"
+name: home-maintenance
+version: "1.1.0"
+description: >-
+  Property maintenance logger — drop a photo, voice memo, or text note into
+  an ingest folder to classify issues, assess urgency, draft job descriptions,
+  and match contractors from your vault. Monthly audit flags overdue items.
+  Tracks costs in a per-property CSV (Excel-compatible; native spreadsheet
+  integration planned for a future version).
+icon: /icons/home-maintenance.svg
+author:
+  name: groupthink-dev
+  url: https://github.com/groupthink-dev
+licence: MIT
+visibility: open
+tier: certified
+pricing: null
+
+min_sidereal: "0.35"
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, files, create, append, query_properties]
+
+recommends:
+  services:
+    - service: vault
+      operations: [lens_fts, lens_connections, move]
+    - service: tasks
+      operations: [create]
+
+data:
+  reads: [vault]
+  writes: [vault, tasks]
+  stores: nothing
+  phones_home: false
+
+agents:
+  classifier:
+    role: specialist
+    prompt: |
+      You are a property maintenance classifier. Given a dropped file (photo,
+      voice transcript, or text note), you extract structured fields: issue
+      type, affected property, urgency, and a short description. You are
+      concise and factual — do not speculate beyond what the input shows.
+
+      Issue type taxonomy (pick exactly one):
+        plumbing | electrical | structural | cosmetic | appliance |
+        landscaping | pest | other
+
+      Urgency levels:
+        critical — safety risk or active damage (water ingress, exposed wiring)
+        high     — functional loss, needs attention this week
+        medium   — degraded but usable, schedule within a month
+        low      — cosmetic or preventive, no deadline
+
+  maintainer:
+    role: operator
+    prompt: |
+      You are a property maintenance operator. You write structured vault
+      notes, match contractors from person/org cards, maintain cost CSV
+      registers, and run monthly audits. All notes you create include
+      llm_generated: true in frontmatter. You never delete notes.
+
+skills:
+  - name: classify-and-file
+    agent: classifier
+    description: Classify a dropped maintenance item and create a structured vault note
+    tier: reasoning
+    category: ingest
+    services_used:
+      - service: vault
+        operations: [read, search, lens_fts, create]
+      - service: tasks
+        operations: [create]
+    trigger:
+      watch: ["{{config.ingest_path}}"]
+    prompt: |
+      A new file has appeared in the maintenance ingest folder. Process it:
+
+      1. Read the file via {{vault.read}}. If it is an image, describe the
+         visible issue. If it is a voice memo transcript or text, extract
+         the key details.
+
+      2. Classify the issue:
+         - issue_type: one of plumbing, electrical, structural, cosmetic,
+           appliance, landscaping, pest, other
+         - urgency: critical, high, medium, or low
+         - property: match against configured properties (see config).
+           If ambiguous, check the file's parent folder or content for clues.
+           If still unclear, use "unknown" and flag for human review.
+
+      3. Draft a one-paragraph job description suitable for sending to a
+         tradesperson. Be specific about location within the property and
+         what needs to be done.
+
+      4. Search for relevant contractors in the vault via {{vault.search}}
+         or {{vault.lens_fts}} — look for person or organisation cards with
+         context or domains matching the issue type (e.g., "plumber",
+         "electrician"). Return up to 3 matches with names and context.
+
+      5. Create a maintenance note at the property's maintenance path:
+         `{{config.properties[matched].vault_path}}/maintenance/YYYY-MM-DD — short description.md`
+
+         Frontmatter:
+         ```yaml
+         kind: maintenance
+         status: open
+         property: "<property slug>"
+         issue_type: "<type>"
+         urgency: "<level>"
+         contractor_matches: ["[[Name]]"]
+         reported: <today's date>
+         cost: null
+         llm_generated: true
+         ```
+
+         Body: job description paragraph, then a "Contractor matches" section
+         listing matched cards with context.
+
+      6. If tasks service is available, create a task via {{tasks.create}}
+         with the issue summary. Set deadline based on urgency:
+         critical = today, high = 7 days, medium = 30 days, low = none.
+
+  - name: monthly-audit
+    agent: maintainer
+    description: Audit open maintenance items across all properties and flag overdue jobs
+    tier: reasoning
+    category: report
+    services_used:
+      - service: vault
+        operations: [query_properties, search, create, append]
+      - service: tasks
+        operations: [create]
+    trigger:
+      schedule: "0 7 1 * *"
+    prompt: |
+      Run a monthly maintenance audit across all configured properties.
+
+      1. For each property in the config, search for maintenance notes with
+         status: open or status: in-progress via {{vault.query_properties}}
+         or {{vault.search}}.
+
+      2. Flag overdue items — any note with status open/in-progress where
+         the reported date is more than 30 days ago (or more than 7 days
+         for critical/high urgency).
+
+      3. Generate an audit summary note at each property's maintenance path:
+         `{{config.properties[slug].vault_path}}/maintenance/open-items.md`
+
+         Format as a table: Date | Issue | Type | Urgency | Status | Days Open
+         Sort by urgency (critical first), then age.
+         Overdue items marked with a flag.
+
+      4. If tasks service is available, create tasks for any overdue
+         critical/high items that don't already have one.
+
+      5. Append a one-line summary to the cost CSV:
+         "AUDIT,<date>,<open_count> open / <overdue_count> overdue"
+
+  - name: log-resolution
+    agent: maintainer
+    description: Mark a maintenance item as resolved and record the cost
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: vault
+        operations: [search, read, append]
+    trigger:
+      on_demand: true
+    prompt: |
+      The user wants to close a maintenance item. They will provide the note
+      path (or enough detail to find it) and the resolution details.
+
+      1. Find the maintenance note via {{vault.search}} or {{vault.read}}.
+
+      2. Update its frontmatter:
+         - status: done
+         - resolved: <today's date>
+         - cost: <amount if provided, null otherwise>
+         - contractor: "[[Name]]" if provided
+
+      3. If a cost was provided, append a row to the property's cost CSV at:
+         `{{config.properties[slug].vault_path}}/maintenance/costs.csv`
+
+         CSV columns: Date Reported, Date Resolved, Issue Type, Urgency,
+         Contractor, Cost, Note Path
+
+         Create the CSV with a header row if it doesn't exist yet.
+
+      4. Update the property's open-items.md if it exists — remove the
+         resolved item from the table.
+
+workflows:
+  - name: ingest-pipeline
+    description: Classify and file a new maintenance item when dropped into the ingest folder
+    steps:
+      - skill: classify-and-file
+
+  - name: monthly-review
+    description: Monthly audit of all open maintenance items
+    schedule: "0 7 1 * *"
+    steps:
+      - skill: monthly-audit
+
+config:
+  user_inputs:
+    - key: ingest_path
+      type: string
+      default: "+/ingest/maintenance"
+      label: Maintenance ingest folder
+      description: >-
+        Vault-relative path to the folder where you drop photos, voice memos,
+        or text notes about maintenance issues. The pack watches this folder.
+
+    - key: properties
+      type: object
+      label: Properties
+      required: true
+      description: >-
+        Map of property slugs to vault area paths. Each property gets its own
+        maintenance subfolder and cost CSV. Example:
+        { "sandy-bay": { "vault_path": "spaces/Family Living/Areas/Property - Sandy Bay" },
+          "cascade-st": { "vault_path": "spaces/Family Living/Areas/Property - Cascade St" } }

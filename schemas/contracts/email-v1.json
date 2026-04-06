@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/email-v1.json",
+  "title": "email-v1",
+  "description": "Email service contract v1 — 13 operations across search, read, manage, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "email-v1" },
+    "service": { "const": "email" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "search",
+      "description": "Search messages by query, folder, date range",
+      "classification": "required"
+    },
+    {
+      "name": "read",
+      "description": "Read full message content",
+      "classification": "required"
+    },
+    {
+      "name": "mailboxes",
+      "description": "List available mailboxes/folders",
+      "classification": "required"
+    },
+    {
+      "name": "snippets",
+      "description": "Token-efficient message previews",
+      "classification": "recommended"
+    },
+    {
+      "name": "threads",
+      "description": "Thread-grouped message view",
+      "classification": "recommended"
+    },
+    {
+      "name": "state",
+      "description": "Protocol state for incremental sync",
+      "classification": "optional"
+    },
+    {
+      "name": "changes",
+      "description": "Incremental change tracking",
+      "classification": "optional"
+    },
+    {
+      "name": "bulk",
+      "description": "Batch operations",
+      "classification": "optional"
+    },
+    {
+      "name": "send",
+      "description": "Compose and send a message",
+      "classification": "gated"
+    },
+    {
+      "name": "reply",
+      "description": "Reply to a message",
+      "classification": "gated"
+    },
+    {
+      "name": "flag",
+      "description": "Set/clear flags on messages",
+      "classification": "gated"
+    },
+    {
+      "name": "move",
+      "description": "Move messages between folders",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a message",
+      "classification": "gated"
+    }
+  ]
+}

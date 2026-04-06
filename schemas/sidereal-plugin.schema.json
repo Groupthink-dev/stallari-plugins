@@ -1,0 +1,585 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/sidereal-plugin.schema.json",
+  "title": "Sidereal Plugin Manifest",
+  "description": "Schema for sidereal-plugin.yaml — the manifest format for Sidereal platform plugins.",
+  "type": "object",
+  "required": ["name", "version", "description", "author", "licence", "tier", "install"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Plugin identifier. Lowercase alphanumeric with hyphens."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (major.minor.patch)."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Human-readable summary of the plugin's capabilities."
+    },
+    "author": {
+      "type": "string",
+      "description": "Plugin author identifier."
+    },
+    "licence": {
+      "type": "string",
+      "description": "SPDX licence identifier (e.g. MIT, Apache-2.0)."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["certified", "verified", "community"],
+      "description": "Quality tier. Certified = first-party, Verified = third-party validated, Community = interest signal."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/xero-blade-mcp.svg')."
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Plugin homepage or repository URL."
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri",
+      "description": "Source repository URL."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes about the plugin (curation status, caveats, context)."
+    },
+    "multi_instance": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this plugin supports multiple named instances (e.g. multi-site Home Assistant, multi-account email)."
+    },
+    "inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional declaration of embedded LLM inference. Informational — platform does not enforce or route.",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "description": "Inference provider identifier (e.g. google-gemini, openai)."
+        },
+        "model": {
+          "type": "string",
+          "description": "Model identifier (e.g. gemini-2.0-flash-lite)."
+        },
+        "purpose": {
+          "type": "string",
+          "description": "What the inference is used for (e.g. classification, summarisation)."
+        }
+      }
+    },
+    "contract": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z]+-v\\d+$",
+      "description": "Domain contract identifier (e.g. email-v1, tasks-v1, calendar-v1). Null for uncontracted third-party tools."
+    },
+    "services": {
+      "type": "object",
+      "description": "Service operation mappings. Keys are service names, values map contract operation names to concrete MCP tool names.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string",
+          "description": "Concrete MCP tool name that implements this operation."
+        }
+      }
+    },
+    "install": {
+      "type": "object",
+      "required": ["runtime"],
+      "additionalProperties": false,
+      "description": "Installation specification.",
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["uv", "npm", "npx", "node", "docker", "native", "remote"],
+          "description": "Runtime type for executing the plugin."
+        },
+        "package": {
+          "type": "string",
+          "description": "Package name for local runtimes (uv/npm)."
+        },
+        "command": {
+          "type": "string",
+          "description": "Command to invoke the plugin."
+        },
+        "args": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Additional arguments passed to the command."
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Remote MCP endpoint URL (for runtime = remote)."
+        },
+        "auth": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Authentication configuration for remote MCPs.",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["bearer", "header", "oauth2"],
+              "description": "Authentication method."
+            },
+            "header": {
+              "type": "string",
+              "description": "HTTP header name for token injection."
+            },
+            "prefix": {
+              "type": "string",
+              "description": "Token prefix (e.g. 'Bearer')."
+            }
+          },
+          "required": ["type"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "runtime": { "const": "remote" } }
+          },
+          "then": {
+            "required": ["runtime", "url"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "runtime": { "enum": ["uv", "npm", "npx"] } }
+          },
+          "then": {
+            "required": ["runtime", "package"]
+          }
+        }
+      ]
+    },
+    "env": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$",
+                "description": "Environment variable name."
+              },
+              "description": {
+                "type": "string",
+                "description": "Human-readable description of the variable's purpose."
+              },
+              "secret": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether this value should be stored in the system keychain."
+              },
+              "default": {
+                "type": "string",
+                "description": "Default value if not set by the user."
+              }
+            }
+          }
+        },
+        {
+          "type": "array",
+          "maxItems": 0
+        }
+      ],
+      "description": "Required environment variables."
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Dependency requirements.",
+      "properties": {
+        "sidereal": {
+          "type": "string",
+          "pattern": "^[><=!~^]+\\d+\\.\\d+\\.\\d+",
+          "description": "Minimum Sidereal version (e.g. >=0.3.0)."
+        }
+      }
+    },
+    "conformance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Contract conformance test results.",
+      "properties": {
+        "required": {
+          "type": "string",
+          "pattern": "^(\\d+/\\d+|untested)$",
+          "description": "Required operations met (e.g. 3/3) or 'untested'."
+        },
+        "recommended": {
+          "type": "string",
+          "pattern": "^(\\d+/\\d+|untested)$",
+          "description": "Recommended operations met (e.g. 2/2) or 'untested'."
+        },
+        "optional": {
+          "type": "string",
+          "pattern": "^(\\d+/\\d+|untested)$",
+          "description": "Optional operations met (e.g. 1/1) or 'untested'."
+        },
+        "gated": {
+          "type": "string",
+          "pattern": "^(\\d+/\\d+|untested)$",
+          "description": "Gated (write) operations met."
+        },
+        "last_tested": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "ISO date of last conformance run, or null if untested."
+        }
+      }
+    },
+    "webhooks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/webhookSetup" },
+      "description": "Webhook endpoint requirements (v1.4, DD113). Declares endpoints the plugin needs wired at install time."
+    },
+    "setup": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Setup metadata for credential UI generation, marketplace display, and preflight readiness checks.",
+      "properties": {
+        "auth_model": {
+          "type": "string",
+          "enum": ["api_key", "oauth2", "basic", "file", "none"],
+          "description": "Primary authentication model. Drives harness setup flow selection."
+        },
+        "complexity": {
+          "type": "string",
+          "enum": ["trivial", "moderate", "involved"],
+          "description": "Setup effort signal for marketplace. trivial = paste one key, moderate = create app + configure, involved = multi-step OAuth or external setup."
+        },
+        "icon": {
+          "type": "string",
+          "description": "SF Symbol name for credential card (e.g. 'cart.fill', 'envelope.fill')."
+        },
+        "product": {
+          "type": "string",
+          "description": "Service label for credential card subtitle (e.g. 'Admin API Token', 'OAuth2 Client')."
+        },
+        "help_text": {
+          "type": "string",
+          "description": "Human-readable setup instructions shown in credential wizard."
+        },
+        "help_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to external setup docs or developer console."
+        },
+        "blurb": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Short marketing copy for the setup wizard (e.g. 'Connect to your Home Assistant instance for device monitoring'). Distinct from help_text which is step-by-step instructions."
+        },
+        "help": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Human-readable link label."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "External URL."
+              }
+            }
+          },
+          "description": "Labelled documentation links shown in the setup wizard and settings card (guides, developer consoles, API docs)."
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["key", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$",
+                "description": "Environment variable name. Should match an entry in the env array."
+              },
+              "label": {
+                "type": "string",
+                "description": "Human-readable field label for UI (e.g. 'API Token', 'Store URL')."
+              },
+              "type": {
+                "type": "string",
+                "enum": ["string", "boolean"],
+                "default": "string",
+                "description": "Field type. 'string' renders as text/secure input. 'boolean' renders as checkbox (e.g. write-enable gates)."
+              },
+              "secret": {
+                "type": "boolean",
+                "default": false,
+                "description": "true = SecureField in UI, stored encrypted. false = plain TextField. Ignored when type is 'boolean'."
+              },
+              "placeholder": {
+                "type": "string",
+                "description": "Placeholder text for the input field (e.g. 'ghp_...', 'https://store.myshopify.com'). Ignored when type is 'boolean'."
+              },
+              "required": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether this field is mandatory for the plugin to function."
+              },
+              "help": {
+                "type": "string",
+                "description": "Per-field guidance shown below the input (e.g. 'Run make auth to obtain', 'Create at Profile → Security')."
+              }
+            }
+          },
+          "description": "Credential fields. Each maps to an environment variable injected at plugin launch."
+        },
+        "test": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Connection test configuration. Enables 'Test Connection' button in credential UI.",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "description": "URL template for connection test. Use {FIELD_KEY} for variable substitution (e.g. '{SHOPIFY_STORE_URL}/admin/api/2024-01/shop.json')."
+            },
+            "auth_style": {
+              "type": "string",
+              "enum": ["bearer", "basic", "header", "none"],
+              "description": "How to attach credentials to the test request."
+            },
+            "auth_header": {
+              "type": "string",
+              "description": "Custom header name when auth_style is 'header' (e.g. 'X-Shopify-Access-Token')."
+            },
+            "expected_status": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "default": [200],
+              "description": "HTTP status codes that indicate success."
+            }
+          }
+        },
+        "oauth2": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "OAuth2 flow metadata. Present when auth_model is 'oauth2'.",
+          "properties": {
+            "grant_type": {
+              "type": "string",
+              "enum": ["authorization_code", "client_credentials"],
+              "description": "OAuth2 grant type."
+            },
+            "scopes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Required OAuth2 scopes."
+            },
+            "setup_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL where user creates the OAuth2 app/client."
+            }
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Human-readable external prerequisites (e.g. 'Xero developer account', 'Google Cloud project with Gmail API enabled')."
+        }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Third-party validation and certification state. Tracks the process of promoting community plugins to verified tier.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "validated", "certified", "revoked"],
+          "description": "Certification workflow status. pending = queued for review, validated = passed checklist, certified = first-party full conformance, revoked = previously validated but withdrawn."
+        },
+        "validated_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+",
+          "description": "Upstream version that was validated."
+        },
+        "validated_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "description": "Git commit SHA of the validated version."
+        },
+        "validated_date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO date when validation was performed."
+        },
+        "validator": {
+          "type": "string",
+          "description": "Who performed the validation (e.g. system-architect, CI)."
+        },
+        "security_review": {
+          "type": "string",
+          "enum": ["pass", "warn", "fail"],
+          "description": "Security review outcome. warn = acceptable with noted caveats."
+        },
+        "security_notes": {
+          "type": "string",
+          "description": "Free-form notes on security findings or caveats."
+        },
+        "stability": {
+          "type": "string",
+          "enum": ["stable", "beta", "experimental"],
+          "description": "Upstream project maturity assessment."
+        },
+        "platform_tested": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Platforms where validation was performed (e.g. macos-arm64, linux-x64)."
+        },
+        "checklist": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Validation checklist results.",
+          "properties": {
+            "installs_cleanly": {
+              "type": "boolean",
+              "description": "Plugin installs without errors via declared runtime."
+            },
+            "tools_enumerate": {
+              "type": "boolean",
+              "description": "MCP tools/list returns valid tool schemas."
+            },
+            "tools_callable": {
+              "type": "boolean",
+              "description": "At least one tool can be called with valid inputs."
+            },
+            "no_data_exfil": {
+              "type": "boolean",
+              "description": "No unexpected network calls or data exfiltration observed."
+            },
+            "auth_reviewed": {
+              "type": "boolean",
+              "description": "Authentication model reviewed and documented."
+            },
+            "licence_compatible": {
+              "type": "boolean",
+              "description": "Licence is compatible (MIT, Apache-2.0, ISC, BSD)."
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "webhookSetup": {
+      "type": "object",
+      "required": ["name", "path", "processor"],
+      "additionalProperties": false,
+      "description": "Webhook endpoint requirement (DD113). Declares an endpoint the plugin needs auto-wired at install time.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Webhook endpoint name (e.g. xero-invoice). Becomes WebhookConfig.name."
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/hooks/",
+          "description": "URL path suffix (e.g. /hooks/xero/invoice). Becomes WebhookConfig.path."
+        },
+        "processor": {
+          "type": "string",
+          "enum": ["dispatch", "xero", "oura", "home-assistant", "security-event", "energy", "podcast", "generic"],
+          "description": "Built-in processor type that handles inbound events."
+        },
+        "auth_model": {
+          "type": "string",
+          "enum": ["hmac", "bearer", "none"],
+          "default": "hmac",
+          "description": "Verification method for inbound webhook requests."
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "key": {
+                "type": "string",
+                "description": "Credential key (e.g. WEBHOOK_SECRET)."
+              },
+              "label": {
+                "type": "string",
+                "description": "Human-readable field label for UI."
+              },
+              "secret": {
+                "type": "boolean",
+                "default": false,
+                "description": "true = SecureField in UI, stored encrypted."
+              },
+              "placeholder": {
+                "type": "string",
+                "description": "Placeholder text for the input field."
+              },
+              "required": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether this field is mandatory."
+              },
+              "help": {
+                "type": "string",
+                "description": "Per-field guidance shown below the input."
+              }
+            }
+          },
+          "description": "Credential fields for webhook auth (mirrors setup.fields shape)."
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Processor-specific options (e.g. skill, operator for dispatch processor)."
+        },
+        "external_setup": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Human-readable instructions for configuring the external service to send webhooks.",
+          "properties": {
+            "help_text": {
+              "type": "string",
+              "description": "Step-by-step instructions shown in wizard/settings."
+            },
+            "help_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL to external service's webhook configuration page."
+            },
+            "prerequisites": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Prerequisites before webhook setup."
+            }
+          }
+        }
+      }
+    }
+  }
+}

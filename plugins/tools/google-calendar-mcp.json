@@ -1,0 +1,39 @@
+{
+  "name": "google-calendar-mcp",
+  "description": "Google Calendar via REST API — events, calendars, freebusy, create/update/delete",
+  "version": "0.1.0",
+  "author": "community",
+  "licence": "MIT",
+  "icon": "/icons/google-calendar-mcp.svg",
+  "tier": "community",
+  "contract": "calendar-v1",
+  "repository": "https://github.com/anthropics/google-calendar-mcp",
+  "install": {
+    "runtime": "node",
+    "package": "@anthropic/google-calendar-mcp"
+  },
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "calendar",
+    "product": "Google OAuth",
+    "help_text": "Create a Google Cloud project, enable the Calendar API, create OAuth 2.0 credentials, and complete the consent flow on first run.",
+    "help_url": "https://console.cloud.google.com/apis/library/calendar-json.googleapis.com",
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["https://www.googleapis.com/auth/calendar"],
+      "setup_url": "https://console.cloud.google.com/apis/credentials"
+    },
+    "prerequisites": [
+      "Google Cloud project with Calendar API enabled",
+      "OAuth 2.0 credentials (Desktop app type)"
+    ]
+  },
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "untested",
+    "last_tested": null
+  },
+  "notes": "Curated third-party plugin. Not yet conformance-tested against calendar-v1. Would trigger calendar v2 adapter work if activated alongside CalDAV."
+}

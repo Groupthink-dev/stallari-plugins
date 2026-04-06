@@ -1,0 +1,72 @@
+{
+  "name": "paddle-billing-blade-mcp",
+  "description": "Paddle Billing API operations — products, prices, subscriptions, transactions, webhooks. Token-efficient, write-gated, confirm-gated for destructive ops.",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/paddle-billing-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "billing-v1",
+  "repository": "https://github.com/groupthink-dev/paddle-billing-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "paddle-billing-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "PADDLE_API_KEY",
+      "description": "Paddle API key from Developer Tools",
+      "secret": true
+    },
+    {
+      "name": "PADDLE_ENVIRONMENT",
+      "description": "API environment: sandbox or production",
+      "default": "sandbox"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "creditcard.fill",
+    "product": "API Key",
+    "help_text": "Create an API key at Paddle → Developer Tools → Authentication. Choose sandbox for testing or production for live billing.",
+    "help_url": "https://developer.paddle.com/concepts/about/authentication",
+    "fields": [
+      {
+        "key": "PADDLE_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "pdl_..."
+      },
+      {
+        "key": "PADDLE_ENVIRONMENT",
+        "label": "Environment",
+        "secret": false,
+        "placeholder": "sandbox"
+      }
+    ],
+    "test": {
+      "endpoint": "https://sandbox-api.paddle.com/products",
+      "auth_style": "bearer"
+    },
+    "prerequisites": [
+      "Paddle account (sandbox or production)"
+    ],
+    "help_links": [
+      {
+        "label": "Paddle Developer Tools",
+        "url": "https://sandbox-vendors.paddle.com/authentication"
+      },
+      {
+        "label": "API Authentication Guide",
+        "url": "https://developer.paddle.com/concepts/about/authentication"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "6/6",
+    "recommended": "8/8",
+    "optional": "6/6",
+    "last_tested": "2026-04-01"
+  }
+}

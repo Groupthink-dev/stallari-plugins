@@ -1,0 +1,77 @@
+{
+  "name": "xero-blade-mcp",
+  "description": "Xero Accounting + Payroll AU API operations — contacts, invoices, bills, payments, reports, payroll. Token-efficient, write-gated, confirm-gated for destructive ops.",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/xero-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "accounting-v1",
+  "repository": "https://github.com/groupthink-dev/xero-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "xero-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "XERO_CLIENT_ID",
+      "description": "OAuth2 client ID from Xero Developer Portal"
+    },
+    {
+      "name": "XERO_CLIENT_SECRET",
+      "description": "OAuth2 client secret",
+      "secret": true
+    },
+    {
+      "name": "XERO_TENANT_ID",
+      "description": "Xero organisation tenant ID"
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "dollarsign.circle.fill",
+    "product": "OAuth2 Client",
+    "help_text": "Create an app at developer.xero.com → My Apps → New App. Select 'Web app' type with client_credentials grant. Copy the client ID and secret, then find your tenant ID via the Xero API connections endpoint.",
+    "help_url": "https://developer.xero.com/app/manage",
+    "fields": [
+      {
+        "key": "XERO_CLIENT_ID",
+        "label": "Client ID",
+        "secret": false,
+        "placeholder": "A1B2C3D4..."
+      },
+      {
+        "key": "XERO_CLIENT_SECRET",
+        "label": "Client Secret",
+        "secret": true,
+        "placeholder": "OAuth2 client secret"
+      },
+      {
+        "key": "XERO_TENANT_ID",
+        "label": "Tenant ID",
+        "secret": false,
+        "placeholder": "Organisation tenant UUID"
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.xero.com/connections",
+      "auth_style": "bearer"
+    },
+    "oauth2": {
+      "grant_type": "client_credentials",
+      "scopes": ["accounting.transactions", "accounting.contacts", "accounting.settings", "accounting.reports.read"],
+      "setup_url": "https://developer.xero.com/app/manage"
+    },
+    "prerequisites": [
+      "Xero developer account",
+      "Xero app with client_credentials grant type"
+    ]
+  },
+  "conformance": {
+    "required": "12/12",
+    "recommended": "16/16",
+    "optional": "11/11",
+    "last_tested": "2026-04-01"
+  }
+}

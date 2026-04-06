@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/drive-v1.json",
+  "title": "drive-v1",
+  "description": "Cloud drive service contract v1 — 8 operations across read, search, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "drive-v1" },
+    "service": { "const": "drive" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "list",
+      "description": "List files and folders",
+      "classification": "required"
+    },
+    {
+      "name": "read",
+      "description": "Read file content or metadata",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search files by name or content",
+      "classification": "required"
+    },
+    {
+      "name": "download",
+      "description": "Download a file to local storage",
+      "classification": "recommended"
+    },
+    {
+      "name": "upload",
+      "description": "Upload a file to the drive",
+      "classification": "gated"
+    },
+    {
+      "name": "move",
+      "description": "Move or rename a file",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a file",
+      "classification": "gated"
+    },
+    {
+      "name": "share",
+      "description": "Share a file or folder with others",
+      "classification": "gated"
+    }
+  ]
+}

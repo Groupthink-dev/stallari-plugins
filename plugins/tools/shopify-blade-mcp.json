@@ -1,0 +1,64 @@
+{
+  "name": "shopify-blade-mcp",
+  "description": "Shopify Admin API operations via GraphQL — products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, analytics",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/shopify-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "ecommerce-v1",
+  "repository": "https://github.com/groupthink-dev/shopify-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "shopify-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "SHOPIFY_STORE_URL",
+      "description": "Shopify store URL (e.g. https://your-store.myshopify.com)"
+    },
+    {
+      "name": "SHOPIFY_ACCESS_TOKEN",
+      "description": "Shopify Admin API access token",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "cart.fill",
+    "product": "Admin API Token",
+    "help_text": "Create a custom app in Shopify Admin → Settings → Apps and sales channels → Develop apps → Create an app. Configure Admin API scopes, then install to get the access token.",
+    "help_url": "https://shopify.dev/docs/apps/auth/admin-app-access-tokens",
+    "fields": [
+      {
+        "key": "SHOPIFY_STORE_URL",
+        "label": "Store URL",
+        "secret": false,
+        "placeholder": "https://your-store.myshopify.com"
+      },
+      {
+        "key": "SHOPIFY_ACCESS_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "shpat_..."
+      }
+    ],
+    "test": {
+      "endpoint": "{SHOPIFY_STORE_URL}/admin/api/2024-10/shop.json",
+      "auth_style": "header",
+      "auth_header": "X-Shopify-Access-Token"
+    },
+    "prerequisites": [
+      "Shopify store (development or production)",
+      "Custom app with Admin API access scopes configured"
+    ]
+  },
+  "conformance": {
+    "required": "8/8",
+    "recommended": "11/11",
+    "optional": "7/7",
+    "gated": "14/14",
+    "last_tested": "2026-04-01"
+  }
+}

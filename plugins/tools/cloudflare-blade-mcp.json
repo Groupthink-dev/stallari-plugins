@@ -1,0 +1,92 @@
+{
+  "name": "cloudflare-blade-mcp",
+  "description": "Cloudflare platform operations — DNS zones and records, Workers KV storage, D1 databases, and Cloudflare Tunnels with token-efficient defaults and confirm gates",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/cloudflare-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "edge-platform-v1",
+  "homepage": "https://github.com/groupthink-dev/cloudflare-blade-mcp",
+  "repository": "https://github.com/groupthink-dev/cloudflare-blade-mcp",
+  "install": {
+    "runtime": "node",
+    "package": "cloudflare-blade-mcp",
+    "command": "cloudflare-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "CLOUDFLARE_API_TOKEN",
+      "description": "Cloudflare API token with Zone DNS Edit, Account Workers KV Edit, Account D1 Edit, and Account Tunnel Edit permissions",
+      "secret": true
+    },
+    {
+      "name": "CLOUDFLARE_ACCOUNT_ID",
+      "description": "Cloudflare Account ID — required for KV, D1, and Tunnel tools. Found in dashboard overview page",
+      "secret": false
+    },
+    {
+      "name": "MCP_API_TOKEN",
+      "description": "Bearer token for HTTP transport authentication (optional, only needed for HTTP mode)",
+      "secret": true,
+      "default": ""
+    },
+    {
+      "name": "TRANSPORT",
+      "description": "Transport mode: stdio (default) or http",
+      "secret": false,
+      "default": "stdio"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "cloud.fill",
+    "product": "Cloudflare Platform",
+    "blurb": "Manage DNS records, Workers KV, D1 databases, and Cloudflare Tunnels. Token-efficient concise output saves 60-80% on API response tokens.",
+    "help_text": "Create a custom API token at dash.cloudflare.com/profile/api-tokens. Grant Zone > DNS > Edit for DNS tools, and Account-level Workers KV Storage, D1, and Cloudflare Tunnel Edit permissions for the remaining tools. Tokens can be scoped to specific zones if you only need DNS.",
+    "help_url": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+    "fields": [
+      {
+        "key": "CLOUDFLARE_API_TOKEN",
+        "label": "API Token",
+        "secret": true,
+        "placeholder": "Create at dash.cloudflare.com/profile/api-tokens",
+        "required": true,
+        "help": "Custom token with Zone DNS Edit and Account-level KV/D1/Tunnel Edit permissions"
+      },
+      {
+        "key": "CLOUDFLARE_ACCOUNT_ID",
+        "label": "Account ID",
+        "secret": false,
+        "placeholder": "32-character hex from dashboard overview",
+        "required": true,
+        "help": "Found on any zone's overview page in the Cloudflare dashboard, or via the API"
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.cloudflare.com/client/v4/user/tokens/verify",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Create API Token",
+        "url": "https://dash.cloudflare.com/profile/api-tokens"
+      },
+      {
+        "label": "Find Account ID",
+        "url": "https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/"
+      },
+      {
+        "label": "API Token Permissions",
+        "url": "https://developers.cloudflare.com/fundamentals/api/reference/permissions/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "12/12",
+    "recommended": "5/5",
+    "gated": "14/14",
+    "last_tested": "2026-04-04"
+  }
+}

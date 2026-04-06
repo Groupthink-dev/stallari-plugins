@@ -1,0 +1,93 @@
+{
+  "name": "mastodon-blade-mcp",
+  "description": "Mastodon operations — timelines, statuses, notifications, search, interactions, multi-instance",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/mastodon-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "social-v1",
+  "repository": "https://github.com/groupthink-dev/mastodon-blade-mcp",
+  "multi_instance": true,
+  "install": {
+    "runtime": "uv",
+    "package": "mastodon-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "MASTODON_INSTANCE",
+      "description": "Mastodon instance URL (single-instance mode)"
+    },
+    {
+      "name": "MASTODON_TOKEN",
+      "description": "OAuth access token",
+      "secret": true
+    },
+    {
+      "name": "MASTODON_PROVIDERS",
+      "description": "Comma-separated provider names for multi-instance (e.g. personal,project)"
+    },
+    {
+      "name": "MASTODON_WRITE_ENABLED",
+      "description": "Enable write operations (posting, favouriting, following)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "bubble.left.and.text.bubble.right.fill",
+    "product": "Mastodon",
+    "blurb": "Connect to Mastodon for timeline browsing, search, notifications, and social interactions. Multi-instance.",
+    "help_text": "Generate an access token at Preferences > Development > New Application on your Mastodon instance. Grant read scopes for read-only use, or read+write for full interaction.",
+    "fields": [
+      {
+        "key": "MASTODON_INSTANCE",
+        "label": "Instance URL",
+        "secret": false,
+        "placeholder": "https://mastodon.social",
+        "help": "Your Mastodon instance base URL"
+      },
+      {
+        "key": "MASTODON_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "your-access-token",
+        "help": "Preferences > Development > New Application > Access Token"
+      },
+      {
+        "key": "MASTODON_WRITE_ENABLED",
+        "label": "Enable Write Operations",
+        "secret": false,
+        "placeholder": "false",
+        "required": false,
+        "help": "Set to 'true' to enable posting, favouriting, following, and other write operations"
+      }
+    ],
+    "test": {
+      "endpoint": "{MASTODON_INSTANCE}/api/v1/accounts/verify_credentials",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Creating Access Tokens",
+        "url": "https://docs.joinmastodon.org/client/token/"
+      },
+      {
+        "label": "Mastodon API Documentation",
+        "url": "https://docs.joinmastodon.org/api/"
+      },
+      {
+        "label": "OAuth Scopes Reference",
+        "url": "https://docs.joinmastodon.org/api/oauth-scopes/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "4/4",
+    "recommended": "6/6",
+    "optional": "4/4",
+    "gated": "6/6",
+    "last_tested": "2026-04-04"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "name": "office365-blade-mcp",
+  "description": "Microsoft 365 operations via Graph API — email, calendar, tasks (To Do + Planner). Token-efficient, write-gated, dual auth.",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/office365-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "email-v1",
+  "repository": "https://github.com/groupthink-dev/office365-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "office365-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "O365_TENANT_ID",
+      "description": "Azure AD tenant ID"
+    },
+    {
+      "name": "O365_CLIENT_ID",
+      "description": "Azure AD app client ID"
+    },
+    {
+      "name": "O365_CLIENT_SECRET",
+      "description": "Azure AD app client secret (optional — for client_credentials flow)",
+      "secret": true
+    },
+    {
+      "name": "O365_AUTH_MODE",
+      "description": "Auth mode: device_code (interactive) or client_credentials (headless)",
+      "default": "device_code"
+    },
+    {
+      "name": "O365_WRITE_ENABLED",
+      "description": "Enable write operations (send, reply, create, update, delete)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "envelope.badge.fill",
+    "product": "Microsoft 365",
+    "help_text": "1. Register an app at Azure Portal → App registrations → New registration. 2. Set platform to 'Mobile and desktop applications' for device code flow. 3. Copy the Tenant ID and Client ID. 4. On first run, complete the device code auth flow in your browser.",
+    "help_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+    "blurb": "Connect to Microsoft 365 for email, calendar, and task management through a single MCP server.",
+    "fields": [
+      {
+        "key": "O365_TENANT_ID",
+        "label": "Tenant ID",
+        "secret": false,
+        "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      {
+        "key": "O365_CLIENT_ID",
+        "label": "Client ID",
+        "secret": false,
+        "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      {
+        "key": "O365_CLIENT_SECRET",
+        "label": "Client Secret (optional)",
+        "secret": true,
+        "placeholder": "Only needed for client_credentials flow",
+        "required": false
+      },
+      {
+        "key": "O365_AUTH_MODE",
+        "label": "Auth Mode",
+        "secret": false,
+        "placeholder": "device_code",
+        "help": "Use 'device_code' for interactive setup, 'client_credentials' for headless/CI"
+      }
+    ],
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["Mail.ReadWrite", "Mail.Send", "Calendars.ReadWrite", "Tasks.ReadWrite"],
+      "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+    },
+    "prerequisites": [
+      "Azure AD app registration with Microsoft Graph API permissions",
+      "API permissions: Mail.ReadWrite, Mail.Send, Calendars.ReadWrite, Tasks.ReadWrite"
+    ],
+    "help_links": [
+      {
+        "label": "Azure App Registrations",
+        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+      },
+      {
+        "label": "Microsoft Graph API Permissions",
+        "url": "https://learn.microsoft.com/en-us/graph/permissions-reference"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "2/2",
+    "optional": "3/3",
+    "last_tested": "2026-03-31"
+  }
+}

@@ -1,0 +1,504 @@
+pack: "1.4"
+name: cloudflare-edge-platform
+version: "1.1.0"
+description: >-
+  Turnkey edge networking for Sidereal — expose services via Cloudflare Tunnels,
+  manage DNS records, provision KV and D1 storage, and monitor tunnel health.
+  The infrastructure pack that makes your Sidereal instance reachable from anywhere.
+icon: /icons/cloudflare-edge-platform.svg
+author:
+  name: Sidereal
+  url: https://sidereal.cc
+licence: Proprietary
+visibility: open
+tier: certified
+pricing: null
+bundled: true
+
+min_sidereal: "0.50"
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, create, append]
+    - service: edge-platform
+      operations: [dns_list_zones, dns_list_records, dns_get_record, tunnel_list, tunnel_get, tunnel_list_configs, tunnel_list_connections]
+
+recommends:
+  services:
+    - service: edge-platform
+      operations: [dns_create_record, dns_update_record, dns_delete_record, tunnel_create, tunnel_update_config, kv_list_namespaces, kv_list_keys, kv_get, d1_list_databases, d1_query]
+    - service: notifications
+      operations: [send]
+
+data:
+  reads: [vault, edge-platform]
+  writes: [vault, edge-platform]
+  stores: nothing
+  phones_home: false
+
+agents:
+  infra-operator:
+    role: operator
+    prompt: |
+      You are an infrastructure operator for the Sidereal edge platform pack. You
+      manage Cloudflare Tunnel ingress, DNS records, KV namespaces, and D1 databases
+      that support a Sidereal installation's external connectivity.
+
+      Your domain is the Cloudflare edge — tunnels that expose daemon APIs, webhook
+      endpoints, and MCP services to the internet without opening firewall ports.
+      You treat Cloudflare as managed infrastructure: read freely, write only with
+      human confirmation on destructive operations.
+
+      When creating or modifying tunnel ingress rules, always present the full
+      proposed config for review before applying. Never delete DNS records or
+      tunnels without explicit human approval. Write structured reports to
+      atlas/registers/infrastructure/.
+
+skills:
+  - name: tunnel-serve
+    agent: infra-operator
+    description: Expose a local service via Cloudflare Tunnel — the turnkey alternative to Tailscale Serve
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: edge-platform
+        operations: [tunnel_list, tunnel_get, tunnel_list_configs, tunnel_update_config, dns_list_zones, dns_list_records, dns_create_record]
+      - service: vault
+        operations: [read, create]
+    inputs:
+      - key: hostname
+        type: string
+        label: Public hostname
+        description: "The public hostname to expose (e.g. api.example.com)"
+        required: true
+      - key: origin
+        type: string
+        label: Local origin
+        description: "The local service URL to proxy to (e.g. http://localhost:9847)"
+        required: true
+      - key: tunnel_name
+        type: string
+        label: Tunnel name
+        description: "Name of the Cloudflare Tunnel to use (uses default if omitted)"
+        required: false
+    trigger:
+      on_demand: true
+    prompt: |
+      Expose a local service through a Cloudflare Tunnel — the equivalent of
+      `tailscale serve` but via Cloudflare's edge network with automatic HTTPS,
+      DDoS protection, and global anycast.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. List tunnels via {{edge-platform.tunnel_list}} and identify the target
+           tunnel (by config.tunnel_name input, or the first active tunnel).
+        2. Read current ingress config via {{edge-platform.tunnel_list_configs}}.
+        3. Verify the requested hostname (config.hostname) does not already have
+           an ingress rule. If it does, show the existing rule and ask whether to
+           replace it.
+        4. Look up the DNS zone for the hostname's domain via
+           {{edge-platform.dns_list_zones}}.
+        5. Check if a CNAME record already exists for the hostname pointing to
+           the tunnel's .cfargotunnel.com address. If not, create it via
+           {{edge-platform.dns_create_record}} (proxied CNAME).
+        6. Build the new ingress config: insert the new rule (hostname →
+           config.origin) before the catch-all rule. Present the full proposed
+           config to the human for review.
+        7. On approval, apply via {{edge-platform.tunnel_update_config}}.
+        8. Verify the tunnel shows active connections via
+           {{edge-platform.tunnel_list_connections}}.
+
+      Write a service record to
+      atlas/registers/infrastructure/tunnel-serve-{hostname-slug}.md with:
+        - Tunnel name and ID
+        - Hostname → origin mapping
+        - DNS record created (if any)
+        - Timestamp of provisioning
+
+      Present a summary: "hostname is now reachable at https://{hostname},
+      proxying to {origin} via tunnel {tunnel_name}."
+
+  - name: tunnel-funnel
+    agent: infra-operator
+    description: Create a public-facing Cloudflare Tunnel endpoint with DNS — the turnkey alternative to Tailscale Funnel
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: edge-platform
+        operations: [tunnel_list, tunnel_get, tunnel_create, tunnel_list_configs, tunnel_update_config, dns_list_zones, dns_list_records, dns_create_record]
+      - service: vault
+        operations: [read, create]
+    inputs:
+      - key: hostname
+        type: string
+        label: Public hostname
+        description: "The public hostname to expose (e.g. hooks.example.com)"
+        required: true
+      - key: origin
+        type: string
+        label: Local origin
+        description: "The local service URL to proxy to (e.g. http://localhost:9848)"
+        required: true
+      - key: tunnel_name
+        type: string
+        label: Tunnel name
+        description: "Create or use a named tunnel (auto-generated if omitted)"
+        required: false
+      - key: access_policy
+        type: choice
+        label: Access policy
+        description: "Who can reach this endpoint"
+        choices: [public, tailnet-only]
+        default: public
+        required: false
+    trigger:
+      on_demand: true
+    prompt: |
+      Create a publicly reachable endpoint via Cloudflare Tunnel — the equivalent
+      of `tailscale funnel` but with Cloudflare's global edge network, WAF, and
+      bot management. Unlike tunnel-serve (which uses an existing tunnel),
+      tunnel-funnel provisions a dedicated tunnel for internet-facing services
+      like webhook receivers and public APIs.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. Check if config.tunnel_name matches an existing tunnel via
+           {{edge-platform.tunnel_list}}.
+        2. If no matching tunnel exists, create one via
+           {{edge-platform.tunnel_create}} with a generated secret. Store the
+           tunnel secret reference (never log the secret itself).
+        3. Read current ingress config (if tunnel existed) via
+           {{edge-platform.tunnel_list_configs}}.
+        4. Look up the DNS zone for the hostname's domain via
+           {{edge-platform.dns_list_zones}}.
+        5. Create a proxied CNAME record (hostname → tunnel UUID.cfargotunnel.com)
+           via {{edge-platform.dns_create_record}} if one does not exist.
+        6. Build the ingress config: hostname → config.origin, plus catch-all
+           returning 404. Present the full config for human review.
+        7. On approval, apply via {{edge-platform.tunnel_update_config}}.
+        8. Verify connectivity via {{edge-platform.tunnel_list_connections}}.
+
+      If config.access_policy is "tailnet-only", note in the service record
+      that the operator should configure Cloudflare Access policies manually
+      (this pack does not manage Access — only Tunnel + DNS).
+
+      Write a service record to
+      atlas/registers/infrastructure/tunnel-funnel-{hostname-slug}.md with:
+        - Tunnel name, ID, and creation status (new/existing)
+        - Hostname → origin mapping
+        - DNS record details
+        - Access policy note
+        - Timestamp
+
+      Present a summary: "Public endpoint live at https://{hostname},
+      proxying to {origin}. Tunnel: {tunnel_name}."
+
+  - name: tunnel-health
+    agent: infra-operator
+    description: Monitor Cloudflare Tunnel connectivity and ingress configuration health
+    tier: reasoning
+    category: review
+    services_used:
+      - service: edge-platform
+        operations: [tunnel_list, tunnel_get, tunnel_list_configs, tunnel_list_connections, dns_list_records]
+      - service: vault
+        operations: [read, search, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Audit the health of all Cloudflare Tunnels and their ingress configurations.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. List all tunnels via {{edge-platform.tunnel_list}}.
+        2. For each tunnel:
+           a. Get tunnel details and status via {{edge-platform.tunnel_get}}.
+           b. List active connections via {{edge-platform.tunnel_list_connections}}.
+           c. Read ingress config via {{edge-platform.tunnel_list_configs}}.
+        3. For each ingress hostname, verify the corresponding DNS record exists
+           and points to the correct tunnel via {{edge-platform.dns_list_records}}.
+        4. Cross-reference with vault service records in
+           atlas/registers/infrastructure/tunnel-*.md — flag any stale records
+           (tunnel deleted but record remains, or vice versa).
+
+      Classify each tunnel as:
+        - healthy: active connections, DNS aligned, ingress rules valid
+        - degraded: tunnel exists but no active connections, or DNS mismatch
+        - orphaned: DNS record exists but tunnel is deleted
+        - undocumented: tunnel active but no vault service record
+
+      Write the health report to
+      atlas/registers/infrastructure/tunnel-health-{date}.md with a summary
+      table and per-tunnel detail sections. Push an ntfy alert (priority 4)
+      for any degraded or orphaned tunnels.
+
+  - name: dns-audit
+    agent: infra-operator
+    description: Audit DNS records across all zones — find orphans, misconfigurations, and missing records
+    tier: reasoning
+    category: review
+    services_used:
+      - service: edge-platform
+        operations: [dns_list_zones, dns_list_records, dns_get_record, dns_export_records]
+      - service: vault
+        operations: [read, search, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Audit DNS records across all Cloudflare zones for hygiene and correctness.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. List all zones via {{edge-platform.dns_list_zones}}.
+        2. For each zone, list all records via {{edge-platform.dns_list_records}}.
+        3. Classify each record:
+           - Tunnel CNAMEs: verify the referenced tunnel still exists.
+           - A/AAAA records: flag any pointing to private IP ranges
+             (10.x, 172.16-31.x, 192.168.x) — these are likely stale.
+           - MX records: verify consistency (no orphaned MX without matching
+             SPF/DKIM TXT records).
+           - TXT records: flag any that look like abandoned verification tokens.
+           - Proxied vs unproxied: flag unproxied A/AAAA records that could
+             benefit from Cloudflare's CDN.
+        4. Export each zone in BIND format via {{edge-platform.dns_export_records}}
+           for backup.
+        5. Search vault for infrastructure notes that reference DNS records —
+           flag records with no vault documentation.
+
+      Write the audit to atlas/registers/infrastructure/dns-audit-{date}.md with:
+        - Per-zone summary (record count by type, issues found)
+        - Issue table (record, type, issue, severity, recommendation)
+        - Backup confirmation (BIND export paths)
+
+  - name: kv-inventory
+    agent: infra-operator
+    description: Inventory Workers KV namespaces with key counts and usage patterns
+    tier: reasoning
+    category: report
+    services_used:
+      - service: edge-platform
+        operations: [kv_list_namespaces, kv_list_keys]
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Inventory all Workers KV namespaces and their contents.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. List all KV namespaces via {{edge-platform.kv_list_namespaces}}.
+        2. For each namespace, list keys via {{edge-platform.kv_list_keys}}
+           to get a count and sample key prefixes (first page only — do not
+           paginate exhaustively for large namespaces).
+        3. Classify namespaces by apparent purpose based on name and key
+           patterns (e.g. session store, cache, config, feature flags).
+        4. Flag namespaces with zero keys (candidates for cleanup) or
+           namespaces not referenced by any known Worker.
+
+      Write the inventory to
+      atlas/registers/infrastructure/kv-inventory-{date}.md with a summary
+      table (namespace, key count, classification, notes).
+
+  - name: d1-inventory
+    agent: infra-operator
+    description: Inventory D1 databases with schema snapshots and size tracking
+    tier: reasoning
+    category: report
+    services_used:
+      - service: edge-platform
+        operations: [d1_list_databases, d1_get_database, d1_list_tables, d1_describe_table]
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Inventory all D1 databases with schema snapshots.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. List all databases via {{edge-platform.d1_list_databases}}.
+        2. For each database:
+           a. Get details via {{edge-platform.d1_get_database}} (size, table count).
+           b. List tables via {{edge-platform.d1_list_tables}} with row counts.
+           c. For each table, describe schema via {{edge-platform.d1_describe_table}}.
+        3. Compare against previous inventory in
+           atlas/registers/infrastructure/d1-inventory-*.md if available.
+           Flag schema changes (new tables, dropped columns, type changes) and
+           significant size growth.
+
+      Write the inventory to
+      atlas/registers/infrastructure/d1-inventory-{date}.md with:
+        - Database summary table (name, tables, size, row total)
+        - Per-database schema snapshot (table, columns, types, PKs)
+        - Drift notes vs previous inventory
+
+  - name: edge-provision
+    agent: infra-operator
+    description: Provision a complete edge stack — tunnel + DNS + KV namespace + D1 database for a new service
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: edge-platform
+        operations: [tunnel_list, tunnel_create, tunnel_update_config, dns_list_zones, dns_create_record, kv_list_namespaces, kv_put, d1_list_databases, d1_execute]
+      - service: vault
+        operations: [read, create]
+    inputs:
+      - key: service_name
+        type: string
+        label: Service name
+        description: "Name for the new service (used as prefix for all resources)"
+        required: true
+      - key: hostname
+        type: string
+        label: Public hostname
+        description: "Public hostname for the service"
+        required: true
+      - key: origin
+        type: string
+        label: Local origin
+        description: "Local service URL"
+        required: true
+      - key: with_kv
+        type: boolean
+        label: Provision KV namespace
+        default: false
+      - key: with_d1
+        type: boolean
+        label: Provision D1 database
+        default: false
+    trigger:
+      on_demand: true
+    prompt: |
+      Provision a complete Cloudflare edge stack for a new service. This is the
+      one-command setup that creates everything a service needs to be publicly
+      reachable with optional storage backends.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Present a provisioning plan to the human before executing anything:
+
+        Service: {config.service_name}
+        Hostname: https://{config.hostname}
+        Origin: {config.origin}
+        Resources:
+          - Tunnel: {service_name}-tunnel (new or existing)
+          - DNS: CNAME {hostname} → tunnel
+          - KV: {service_name}-kv (if config.with_kv)
+          - D1: {service_name}-db (if config.with_d1)
+
+      On approval, execute in order:
+        1. Create tunnel (if needed) via {{edge-platform.tunnel_create}}.
+        2. Configure ingress via {{edge-platform.tunnel_update_config}}.
+        3. Create DNS CNAME via {{edge-platform.dns_create_record}}.
+        4. If config.with_kv: note that KV namespace creation is not yet
+           available in the contract — document the manual step.
+        5. If config.with_d1: note that D1 database creation is not yet
+           available in the contract — document the manual step.
+
+      Write a comprehensive service record to
+      atlas/registers/infrastructure/edge-service-{service_name}.md with all
+      resource IDs, configuration details, and any manual steps remaining.
+
+      Present a completion summary with the provisioned resources and any
+      manual follow-up actions.
+
+  - name: edge-teardown
+    agent: infra-operator
+    description: Decommission an edge service — remove tunnel ingress, DNS records, and archive documentation
+    tier: reasoning
+    category: transform
+    services_used:
+      - service: edge-platform
+        operations: [tunnel_list, tunnel_list_configs, tunnel_update_config, tunnel_delete, dns_list_zones, dns_list_records, dns_delete_record]
+      - service: vault
+        operations: [read, search, append]
+    inputs:
+      - key: hostname
+        type: string
+        label: Hostname to decommission
+        description: "The public hostname to tear down"
+        required: true
+      - key: delete_tunnel
+        type: boolean
+        label: Delete tunnel entirely
+        description: "Delete the tunnel if this is its only ingress rule"
+        default: false
+    trigger:
+      on_demand: true
+    prompt: |
+      Decommission an edge service by removing its tunnel ingress and DNS records.
+      This is a destructive operation — every step requires explicit human
+      confirmation.
+
+      Generate timestamps via agentic-timestamp --iso --date.
+
+      Steps:
+        1. Find the DNS record for config.hostname via
+           {{edge-platform.dns_list_records}}. Identify the tunnel it points to.
+        2. Read the tunnel's ingress config via
+           {{edge-platform.tunnel_list_configs}}.
+        3. Present the teardown plan:
+           - DNS record to delete: {type} {hostname} → {content}
+           - Ingress rule to remove: {hostname} → {origin}
+           - Tunnel deletion: yes/no (based on config.delete_tunnel and
+             whether other ingress rules remain)
+        4. On approval, remove the ingress rule via
+           {{edge-platform.tunnel_update_config}} (rebuild config without the
+           hostname's rule).
+        5. Delete the DNS record via {{edge-platform.dns_delete_record}}.
+        6. If config.delete_tunnel and no other ingress rules remain, delete
+           the tunnel via {{edge-platform.tunnel_delete}}.
+
+      Update the vault service record at
+      atlas/registers/infrastructure/tunnel-*-{hostname-slug}.md — append a
+      decommission note with timestamp (do not delete the note — archive it).
+
+      Present a summary of what was removed.
+
+workflows:
+  - name: edge-health-sweep
+    description: Full edge infrastructure audit — tunnel health, DNS hygiene, storage inventory
+    steps:
+      - skill: tunnel-health
+      - skill: dns-audit
+      - skill: kv-inventory
+        after: [dns-audit]
+      - skill: d1-inventory
+        after: [kv-inventory]
+
+  - name: service-standup
+    description: Provision a new service with tunnel, DNS, and optional storage
+    steps:
+      - skill: edge-provision
+
+  - name: service-decommission
+    description: Tear down an edge service with full cleanup
+    steps:
+      - skill: edge-teardown
+      - skill: tunnel-health
+        after: [edge-teardown]
+
+config:
+  user_inputs:
+    - key: default_tunnel
+      type: string
+      label: Default tunnel name
+      required: false
+      description: >-
+        Name of the default Cloudflare Tunnel to use for tunnel-serve. If
+        omitted, the first active tunnel is used.
+    - key: primary_zone
+      type: string
+      label: Primary DNS zone
+      required: false
+      description: >-
+        Primary domain for DNS operations (e.g. example.com). Used as default
+        when hostname doesn't specify a zone.

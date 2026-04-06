@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/home-v1.json",
+  "title": "home-v1",
+  "description": "Home automation service contract v1 — 14 operations across state, history, control, and environmental monitoring.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "home-v1" },
+    "service": { "const": "home" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    { "name": "entity_list", "description": "List known entities and their domains", "classification": "required" },
+    { "name": "entity_state", "description": "Get current state of an entity", "classification": "required" },
+    { "name": "entity_history", "description": "Query state history for an entity over a time range", "classification": "required" },
+    { "name": "area_list", "description": "List defined areas and zones", "classification": "required" },
+    { "name": "scene_activate", "description": "Activate a configured scene", "classification": "recommended" },
+    { "name": "climate_set", "description": "Set HVAC temperature, mode, or fan speed", "classification": "recommended" },
+    { "name": "light_control", "description": "Turn lights on/off, set brightness or colour", "classification": "recommended" },
+    { "name": "automation_list", "description": "List configured automations and their state", "classification": "recommended" },
+    { "name": "automation_trigger", "description": "Trigger an existing automation", "classification": "recommended" },
+    { "name": "lock_control", "description": "Lock or unlock a door lock", "classification": "gated" },
+    { "name": "alarm_control", "description": "Arm, disarm, or trigger an alarm panel", "classification": "gated" },
+    { "name": "camera_snapshot", "description": "Capture a still image from a camera entity", "classification": "optional" },
+    { "name": "energy_stats", "description": "Get energy consumption, production, and cost data", "classification": "optional" },
+    { "name": "automation_create", "description": "Create or delete an automation rule", "classification": "gated" }
+  ]
+}

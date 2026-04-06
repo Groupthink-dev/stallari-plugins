@@ -1,0 +1,77 @@
+{
+  "name": "hass-mcp",
+  "description": "Home Assistant operations via REST API — entity state, history, areas, services, automations, camera snapshots, energy monitoring",
+  "version": "0.3.0",
+  "author": "bendavid",
+  "licence": "MIT",
+  "icon": "/icons/hass-mcp.svg",
+  "repository": "https://github.com/bendavid/hass-mcp",
+  "tier": "verified",
+  "contract": "home-v1",
+  "install": {
+    "runtime": "uv",
+    "package": "hass-mcp"
+  },
+  "env": [
+    {
+      "name": "HA_URL",
+      "description": "Home Assistant base URL (e.g. https://haus.example.com)",
+      "secret": false
+    },
+    {
+      "name": "HA_TOKEN",
+      "description": "Long-lived access token from Home Assistant",
+      "secret": true
+    }
+  ],
+  "multi_instance": true,
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "house.fill",
+    "product": "Home Assistant",
+    "blurb": "Connect to your Home Assistant instance for device monitoring, automation control, and energy tracking.",
+    "help_text": "Create a Long-Lived Access Token at Profile → Security → Long-Lived Access Tokens in your Home Assistant instance.",
+    "fields": [
+      {
+        "key": "HA_URL",
+        "label": "Home Assistant URL",
+        "secret": false,
+        "placeholder": "https://haus.example.com",
+        "required": true,
+        "help": "The base URL of your Home Assistant instance."
+      },
+      {
+        "key": "HA_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "eyJ0eX...",
+        "required": true,
+        "help": "Profile → Security → Long-Lived Access Tokens"
+      }
+    ],
+    "test": {
+      "endpoint": "{HA_URL}/api/",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Home Assistant Authentication",
+        "url": "https://developers.home-assistant.io/docs/auth_api/"
+      },
+      {
+        "label": "REST API Documentation",
+        "url": "https://developers.home-assistant.io/docs/api/rest/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "4/4",
+    "recommended": "5/5",
+    "optional": "2/2",
+    "gated": "2/3",
+    "details": {
+      "automation_create": false
+    }
+  }
+}

@@ -1,0 +1,98 @@
+pack: "1.1"
+name: vault-gardener
+version: "1.1.0"
+description: Finds orphaned notes, broken links, and stale content in your vault.
+icon: /icons/vault-gardener.svg
+author:
+  name: Vault Community
+licence: MIT
+visibility: open
+tier: community
+pricing: null
+
+min_sidereal: "0.29"
+
+requires:
+  services:
+    - service: vault
+      operations: [search, read, files, links, backlinks]
+  capabilities: []
+
+data:
+  reads: [vault]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+agents:
+  gardener:
+    role: specialist
+    prompt: |
+      You are a vault maintenance specialist. You find structural issues
+      in an Obsidian vault — orphaned notes, broken wikilinks, stale content —
+      and produce actionable reports. You never delete or move notes without
+      explicit instruction. Your job is to surface problems, not fix them.
+
+skills:
+  - name: find-orphans
+    agent: gardener
+    description: Find notes with no inbound or outbound links
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [search, backlinks, append]
+    trigger:
+      schedule: "0 3 * * 0"
+    prompt: |
+      Search the vault for notes that have zero inbound links (orphans)
+      and notes that have inbound links but zero outbound links (dead ends).
+
+      Exclude:
+      - Daily log notes (calendar/logs/)
+      - Archive notes (zz Notes(archive)/)
+      - Template files
+
+      Produce a report grouped by folder, sorted by last modified date.
+      Append the report to the weekly vault health note.
+
+  - name: check-links
+    agent: gardener
+    description: Find broken wikilinks that point to non-existent notes
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [links, read, append]
+    trigger:
+      on_demand: true
+    prompt: |
+      Scan all notes for wikilinks that resolve to non-existent files.
+      Group broken links by the note that contains them.
+      For each broken link, suggest whether it should be:
+      - Created (the note is missing but should exist)
+      - Fixed (likely a typo or renamed note)
+      - Removed (stale reference)
+
+      Append findings to the vault health note.
+
+  - name: stale-content
+    agent: gardener
+    description: Find notes not modified in over 6 months
+    tier: reasoning
+    category: report
+    services_used:
+      - service: vault
+        operations: [search, backlinks, read]
+    trigger:
+      schedule: "0 3 1 * *"
+    prompt: |
+      Find notes that haven't been modified in over 180 days.
+      Exclude archived notes and reference material (atlas/source/).
+
+      For each stale note, check:
+      - Does it have recent inbound links? (still referenced = not truly stale)
+      - Is it an effort or project note? (check status field)
+      - Is it a person/org card? (may be valid even if old)
+
+      Produce a prioritised list of candidates for review or archival.

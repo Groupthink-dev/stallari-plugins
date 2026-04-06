@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "updated": "2026-04-05",
+  "providers": {
+    "xai": {
+      "frontier": ["grok-4.20-reasoning", "grok-4.20-non-reasoning", "grok-4.20-multi-agent-0309", "grok-4.20-0309-reasoning", "grok-4.20-0309-non-reasoning"],
+      "legacy_prefixes": ["grok-2", "grok-4-", "grok-4"],
+      "default": "grok-4.20-reasoning"
+    },
+    "openai": {
+      "frontier": ["gpt-5.4", "o3", "o4-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano"],
+      "legacy_prefixes": ["gpt-3.5", "gpt-4-", "gpt-4o", "babbage", "davinci", "whisper", "tts", "dall-e", "text-embedding", "text-moderation"],
+      "default": "gpt-5.4"
+    },
+    "claude": {
+      "frontier": ["claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-4-5-20251001"],
+      "legacy_prefixes": ["claude-2", "claude-instant", "claude-3-haiku-20240307"],
+      "default": "claude-sonnet-4-6"
+    },
+    "google": {
+      "frontier": ["gemini-3.1-pro", "gemini-3.1-pro-preview", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+      "legacy_prefixes": ["gemini-1.0", "gemini-pro", "gemini-2.0"],
+      "default": "gemini-2.5-pro"
+    }
+  }
+}

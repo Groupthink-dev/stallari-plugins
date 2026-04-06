@@ -1,0 +1,73 @@
+{
+  "name": "messages-blade-mcp",
+  "description": "Apple Messages (iMessage) operations — conversations, search, contacts, attachments, send",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/messages-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "messages-v1",
+  "repository": "https://github.com/groupthink-dev/messages-blade-mcp",
+  "multi_instance": false,
+  "notes": "macOS only. Requires Full Disk Access for reading message history. TCC Automation permission for sending.",
+  "install": {
+    "runtime": "uv",
+    "package": "messages-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "MESSAGES_WRITE_ENABLED",
+      "description": "Enable send operations (sending messages is irreversible)",
+      "default": "false"
+    },
+    {
+      "name": "MESSAGES_DB_PATH",
+      "description": "Override chat.db path (default: ~/Library/Messages/chat.db)"
+    }
+  ],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "moderate",
+    "icon": "message.fill",
+    "product": "Apple Messages",
+    "blurb": "Read iMessage and SMS conversations, search message history, and send messages via Apple Messages on macOS.",
+    "help_text": "Grant Full Disk Access to your terminal emulator (Terminal, iTerm2, Ghostty) in System Settings > Privacy & Security > Full Disk Access. Child processes inherit the grant, so the MCP binary itself does not need separate access.",
+    "fields": [
+      {
+        "key": "MESSAGES_WRITE_ENABLED",
+        "label": "Enable Send Operations",
+        "secret": false,
+        "placeholder": "false",
+        "required": false,
+        "help": "Set to 'true' to enable sending messages. All sends require additional confirmation."
+      }
+    ],
+    "test": {
+      "endpoint": "file:///Users/{USER}/Library/Messages/chat.db",
+      "auth_style": "none",
+      "expected_status": [200]
+    },
+    "prerequisites": [
+      "macOS 13 (Ventura) or later",
+      "Full Disk Access granted to terminal emulator",
+      "Messages app configured with iMessage or SMS Relay"
+    ],
+    "help_links": [
+      {
+        "label": "Granting Full Disk Access",
+        "url": "https://support.apple.com/guide/mac-help/allow-access-to-files-in-security-privacy-mchld5a35146/mac"
+      },
+      {
+        "label": "Setting Up iMessage",
+        "url": "https://support.apple.com/en-au/108768"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "3/3",
+    "optional": "2/2",
+    "gated": "2/2",
+    "last_tested": "2026-04-04"
+  }
+}

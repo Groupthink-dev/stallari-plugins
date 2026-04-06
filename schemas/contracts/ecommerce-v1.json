@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://registry.sidereal.cc/schemas/contracts/ecommerce-v1.json",
+  "title": "E-Commerce Service Contract v1",
+  "description": "Defines required, recommended, optional, and gated operations for e-commerce platform integrations (Shopify, WooCommerce, BigCommerce, etc.)",
+  "type": "object",
+  "properties": {
+    "contract": {
+      "const": "ecommerce-v1"
+    },
+    "operations": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "array",
+          "description": "Core operations — must be implemented for conformance",
+          "items": {
+            "type": "string",
+            "enum": [
+              "shop_info",
+              "products",
+              "product",
+              "orders",
+              "order",
+              "customers",
+              "customer",
+              "inventory"
+            ]
+          },
+          "minItems": 8,
+          "uniqueItems": true
+        },
+        "recommended": {
+          "type": "array",
+          "description": "Strongly recommended for full integration",
+          "items": {
+            "type": "string",
+            "enum": [
+              "search_products",
+              "search_orders",
+              "search_customers",
+              "locations",
+              "collections",
+              "collection",
+              "fulfillments",
+              "discounts",
+              "metafields",
+              "webhooks",
+              "analytics"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "optional": {
+          "type": "array",
+          "description": "Nice-to-have operations",
+          "items": {
+            "type": "string",
+            "enum": [
+              "create_collection",
+              "collection_products",
+              "create_fulfillment",
+              "update_tracking",
+              "create_discount",
+              "set_metafield",
+              "verify_webhook"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "gated": {
+          "type": "array",
+          "description": "Write/destructive operations requiring env var or confirmation gate",
+          "items": {
+            "type": "string",
+            "enum": [
+              "create_product",
+              "update_product",
+              "delete_product",
+              "update_order",
+              "cancel_order",
+              "close_order",
+              "create_customer",
+              "update_customer",
+              "adjust_inventory",
+              "set_inventory",
+              "delete_discount",
+              "delete_metafield",
+              "create_webhook",
+              "delete_webhook"
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": ["required"]
+    }
+  },
+  "required": ["contract", "operations"]
+}

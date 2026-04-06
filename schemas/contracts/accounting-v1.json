@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/accounting-v1.json",
+  "title": "accounting-v1",
+  "description": "Accounting service contract v1 — 55 operations across contacts, invoices, bills, payments, reports, and payroll.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "accounting-v1" },
+    "service": { "const": "accounting" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "organisation",
+      "description": "Get organisation details and settings",
+      "classification": "required"
+    },
+    {
+      "name": "connections",
+      "description": "List connected tenants/organisations",
+      "classification": "required"
+    },
+    {
+      "name": "contacts",
+      "description": "List contacts with name, status, and date filters",
+      "classification": "required"
+    },
+    {
+      "name": "contact",
+      "description": "Get contact detail including addresses and phone numbers",
+      "classification": "required"
+    },
+    {
+      "name": "invoices",
+      "description": "List sales invoices with status, date, and contact filters",
+      "classification": "required"
+    },
+    {
+      "name": "invoice",
+      "description": "Get invoice detail with line items and payment allocations",
+      "classification": "required"
+    },
+    {
+      "name": "bills",
+      "description": "List purchase invoices/bills with status and date filters",
+      "classification": "required"
+    },
+    {
+      "name": "bill",
+      "description": "Get bill detail with line items",
+      "classification": "required"
+    },
+    {
+      "name": "payments",
+      "description": "List payments with date range and status filters",
+      "classification": "required"
+    },
+    {
+      "name": "accounts",
+      "description": "List chart of accounts with type and class filters",
+      "classification": "required"
+    },
+    {
+      "name": "profit_loss",
+      "description": "Get profit and loss report for a date range",
+      "classification": "required"
+    },
+    {
+      "name": "balance_sheet",
+      "description": "Get balance sheet report as at a given date",
+      "classification": "required"
+    },
+    {
+      "name": "account",
+      "description": "Get account detail with balance and tax type",
+      "classification": "recommended"
+    },
+    {
+      "name": "payment",
+      "description": "Get payment detail with allocation information",
+      "classification": "recommended"
+    },
+    {
+      "name": "bank_transactions",
+      "description": "List bank transactions with date and account filters",
+      "classification": "recommended"
+    },
+    {
+      "name": "bank_transaction",
+      "description": "Get bank transaction detail with line items",
+      "classification": "recommended"
+    },
+    {
+      "name": "credit_notes",
+      "description": "List credit notes with status and contact filters",
+      "classification": "recommended"
+    },
+    {
+      "name": "credit_note",
+      "description": "Get credit note detail with allocations",
+      "classification": "recommended"
+    },
+    {
+      "name": "purchase_orders",
+      "description": "List purchase orders with status and date filters",
+      "classification": "recommended"
+    },
+    {
+      "name": "purchase_order",
+      "description": "Get purchase order detail with line items",
+      "classification": "recommended"
+    },
+    {
+      "name": "quotes",
+      "description": "List quotes with status, date, and contact filters",
+      "classification": "recommended"
+    },
+    {
+      "name": "quote",
+      "description": "Get quote detail with line items and terms",
+      "classification": "recommended"
+    },
+    {
+      "name": "trial_balance",
+      "description": "Get trial balance report as at a given date",
+      "classification": "recommended"
+    },
+    {
+      "name": "aged_receivables",
+      "description": "Get aged receivables report with period breakdown",
+      "classification": "recommended"
+    },
+    {
+      "name": "aged_payables",
+      "description": "Get aged payables report with period breakdown",
+      "classification": "recommended"
+    },
+    {
+      "name": "tax_rates",
+      "description": "List tax rates and their components",
+      "classification": "recommended"
+    },
+    {
+      "name": "currencies",
+      "description": "List active currencies",
+      "classification": "recommended"
+    },
+    {
+      "name": "tracking_categories",
+      "description": "List tracking categories and their options",
+      "classification": "recommended"
+    },
+    {
+      "name": "manual_journals",
+      "description": "List manual journal entries",
+      "classification": "optional"
+    },
+    {
+      "name": "manual_journal",
+      "description": "Get manual journal detail with lines",
+      "classification": "optional"
+    },
+    {
+      "name": "invoice_pdf",
+      "description": "Get invoice as PDF binary",
+      "classification": "optional"
+    },
+    {
+      "name": "branding_themes",
+      "description": "List branding themes for document customisation",
+      "classification": "optional"
+    },
+    {
+      "name": "employees",
+      "description": "List payroll employees",
+      "classification": "optional"
+    },
+    {
+      "name": "employee",
+      "description": "Get payroll employee detail with tax, super, leave",
+      "classification": "optional"
+    },
+    {
+      "name": "timesheets",
+      "description": "List payroll timesheets with date and status filters",
+      "classification": "optional"
+    },
+    {
+      "name": "timesheet",
+      "description": "Get timesheet detail with lines and hours",
+      "classification": "optional"
+    },
+    {
+      "name": "payslips",
+      "description": "List payslips for a pay run",
+      "classification": "optional"
+    },
+    {
+      "name": "payslip",
+      "description": "Get payslip detail with earnings, deductions, super, tax",
+      "classification": "optional"
+    },
+    {
+      "name": "verify_webhook",
+      "description": "HMAC-SHA256 webhook signature verification",
+      "classification": "optional"
+    },
+    {
+      "name": "create_contact",
+      "description": "Create a new contact (customer or supplier)",
+      "classification": "gated"
+    },
+    {
+      "name": "update_contact",
+      "description": "Update contact details",
+      "classification": "gated"
+    },
+    {
+      "name": "archive_contact",
+      "description": "Archive a contact (requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "create_invoice",
+      "description": "Create a sales invoice with line items",
+      "classification": "gated"
+    },
+    {
+      "name": "update_invoice",
+      "description": "Update a draft or submitted invoice",
+      "classification": "gated"
+    },
+    {
+      "name": "void_invoice",
+      "description": "Void an invoice (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "email_invoice",
+      "description": "Email an invoice to its contact",
+      "classification": "gated"
+    },
+    {
+      "name": "create_bill",
+      "description": "Create a purchase invoice/bill",
+      "classification": "gated"
+    },
+    {
+      "name": "update_bill",
+      "description": "Update a draft or submitted bill",
+      "classification": "gated"
+    },
+    {
+      "name": "create_payment",
+      "description": "Record a payment against an invoice or bill",
+      "classification": "gated"
+    },
+    {
+      "name": "delete_payment",
+      "description": "Delete a payment (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "create_credit_note",
+      "description": "Create a credit note",
+      "classification": "gated"
+    },
+    {
+      "name": "void_credit_note",
+      "description": "Void a credit note (destructive, requires confirmation)",
+      "classification": "gated"
+    },
+    {
+      "name": "create_bank_transaction",
+      "description": "Create a bank transaction (spend or receive money)",
+      "classification": "gated"
+    },
+    {
+      "name": "create_quote",
+      "description": "Create a quote",
+      "classification": "gated"
+    },
+    {
+      "name": "create_purchase_order",
+      "description": "Create a purchase order",
+      "classification": "gated"
+    }
+  ]
+}

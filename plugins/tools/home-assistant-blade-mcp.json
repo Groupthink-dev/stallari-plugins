@@ -1,0 +1,89 @@
+{
+  "name": "home-assistant-blade-mcp",
+  "description": "Home Assistant operations — entities, state, history, device control, automations, energy, multi-site management",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/home-assistant-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "home-v1",
+  "repository": "https://github.com/groupthink-dev/home-assistant-blade-mcp",
+  "multi_instance": true,
+  "install": {
+    "runtime": "uv",
+    "package": "home-assistant-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "HA_URL",
+      "description": "Home Assistant base URL (single-instance mode)"
+    },
+    {
+      "name": "HA_TOKEN",
+      "description": "Long-lived access token",
+      "secret": true
+    },
+    {
+      "name": "HA_PROVIDERS",
+      "description": "Comma-separated provider names for multi-instance mode (e.g. sandybay,paddington)"
+    },
+    {
+      "name": "HA_WRITE_ENABLED",
+      "description": "Enable write operations (device control, automations)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "house.fill",
+    "product": "Home Assistant",
+    "blurb": "Connect to Home Assistant for smart home control, monitoring, and automation management. Supports multi-site.",
+    "help_text": "Create a Long-Lived Access Token at Profile → Security → Long-Lived Access Tokens in your Home Assistant instance. For multi-site, set HA_PROVIDERS and per-provider URL/token env vars.",
+    "fields": [
+      {
+        "key": "HA_URL",
+        "label": "Home Assistant URL",
+        "secret": false,
+        "placeholder": "http://homeassistant.local:8123",
+        "help": "The base URL of your Home Assistant instance"
+      },
+      {
+        "key": "HA_TOKEN",
+        "label": "Long-Lived Access Token",
+        "secret": true,
+        "placeholder": "eyJhbGciOiJIUzI1NiIs...",
+        "help": "Profile → Security → Long-Lived Access Tokens"
+      },
+      {
+        "key": "HA_WRITE_ENABLED",
+        "label": "Enable Write Operations",
+        "secret": false,
+        "placeholder": "false",
+        "required": false,
+        "help": "Set to 'true' to enable device control, scene activation, and automation triggers"
+      }
+    ],
+    "test": {
+      "endpoint": "{HA_URL}/api/",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Creating Access Tokens",
+        "url": "https://www.home-assistant.io/docs/authentication/#your-account-profile"
+      },
+      {
+        "label": "HA REST API Documentation",
+        "url": "https://developers.home-assistant.io/docs/api/rest/"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "4/4",
+    "recommended": "5/5",
+    "optional": "2/2",
+    "gated": "3/3",
+    "last_tested": "2026-04-03"
+  }
+}

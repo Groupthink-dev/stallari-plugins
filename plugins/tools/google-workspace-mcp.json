@@ -1,0 +1,39 @@
+{
+  "name": "google-workspace-mcp",
+  "description": "Google Workspace email via Gmail API — search, read, send, labels, threads",
+  "version": "0.1.0",
+  "author": "community",
+  "licence": "MIT",
+  "icon": "/icons/google-workspace-mcp.svg",
+  "tier": "community",
+  "contract": "email-v1",
+  "repository": "https://github.com/anthropics/google-workspace-mcp",
+  "install": {
+    "runtime": "node",
+    "package": "@anthropic/google-workspace-mcp"
+  },
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "involved",
+    "icon": "envelope.fill",
+    "product": "Google OAuth",
+    "help_text": "Create a Google Cloud project, enable the Gmail API, create OAuth 2.0 credentials, and complete the consent flow on first run.",
+    "help_url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com",
+    "oauth2": {
+      "grant_type": "authorization_code",
+      "scopes": ["https://www.googleapis.com/auth/gmail.modify"],
+      "setup_url": "https://console.cloud.google.com/apis/credentials"
+    },
+    "prerequisites": [
+      "Google Cloud project with Gmail API enabled",
+      "OAuth 2.0 credentials (Desktop app type)"
+    ]
+  },
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "untested",
+    "last_tested": null
+  },
+  "notes": "Curated third-party plugin. Not yet conformance-tested against email-v1. Listed for future multi-provider email routing."
+}

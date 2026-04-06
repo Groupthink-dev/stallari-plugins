@@ -1,0 +1,65 @@
+{
+  "name": "resend-blade-mcp",
+  "description": "Resend transactional email — send, contacts, broadcasts, templates, domains, webhooks. Security-first with no filesystem access.",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/resend-blade-mcp.svg",
+  "contract": "transactional-email-v1",
+  "tier": "certified",
+  "repository": "https://github.com/groupthink-dev/resend-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "resend-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "RESEND_API_KEY",
+      "description": "Resend API key",
+      "secret": true
+    },
+    {
+      "name": "RESEND_WRITE_ENABLED",
+      "description": "Enable write operations (send, create, update, delete)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "paperplane.fill",
+    "product": "API Key",
+    "help_text": "Create an API key at resend.com → API Keys. Full access scope is recommended for all features.",
+    "help_url": "https://resend.com/api-keys",
+    "blurb": "Security-first transactional email — no filesystem access, no API key CRUD exposed, credential scrubbing on all error paths.",
+    "fields": [
+      {
+        "key": "RESEND_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "re_..."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.resend.com/domains",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Resend API Keys",
+        "url": "https://resend.com/api-keys"
+      },
+      {
+        "label": "Resend API Documentation",
+        "url": "https://resend.com/docs/api-reference/introduction"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "6/6",
+    "recommended": "5/5",
+    "optional": "3/3",
+    "gated": "5/5",
+    "last_tested": "2026-04-04"
+  }
+}

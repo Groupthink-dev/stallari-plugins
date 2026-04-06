@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/calendar-v1.json",
+  "title": "calendar-v1",
+  "description": "Calendar service contract v1 — 11 operations across query, convenience views, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "calendar-v1" },
+    "service": { "const": "calendar" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "events",
+      "description": "List events in a date range",
+      "classification": "required"
+    },
+    {
+      "name": "event",
+      "description": "Get single event detail",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search events by text",
+      "classification": "required"
+    },
+    {
+      "name": "calendars",
+      "description": "List available calendars",
+      "classification": "required"
+    },
+    {
+      "name": "freebusy",
+      "description": "Free/busy lookup",
+      "classification": "recommended"
+    },
+    {
+      "name": "today",
+      "description": "Today's events",
+      "classification": "recommended"
+    },
+    {
+      "name": "week",
+      "description": "This week's events",
+      "classification": "recommended"
+    },
+    {
+      "name": "batch",
+      "description": "Batch event retrieval",
+      "classification": "optional"
+    },
+    {
+      "name": "create",
+      "description": "Create an event",
+      "classification": "gated"
+    },
+    {
+      "name": "update",
+      "description": "Update an event",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete an event",
+      "classification": "gated"
+    }
+  ]
+}

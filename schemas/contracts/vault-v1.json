@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/vault-v1.json",
+  "title": "vault-v1",
+  "description": "Vault service contract v1 — 35 operations across read, search, graph, lens, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "vault-v1" },
+    "service": { "const": "vault" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "read",
+      "description": "Read note content and frontmatter",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search notes by query text",
+      "classification": "required"
+    },
+    {
+      "name": "file_info",
+      "description": "Get note metadata (size, dates, path)",
+      "classification": "required"
+    },
+    {
+      "name": "files",
+      "description": "List files in a folder",
+      "classification": "required"
+    },
+    {
+      "name": "folders",
+      "description": "List folders in a path",
+      "classification": "required"
+    },
+    {
+      "name": "property_read",
+      "description": "Read a single frontmatter property",
+      "classification": "required"
+    },
+    {
+      "name": "property_set",
+      "description": "Set a frontmatter property value",
+      "classification": "required"
+    },
+    {
+      "name": "query_properties",
+      "description": "Query notes by frontmatter property values",
+      "classification": "required"
+    },
+    {
+      "name": "lens_search",
+      "description": "Semantic vector search across vault",
+      "classification": "recommended"
+    },
+    {
+      "name": "lens_fts",
+      "description": "Full-text search via FTS5 index",
+      "classification": "recommended"
+    },
+    {
+      "name": "lens_related",
+      "description": "Find semantically related notes",
+      "classification": "recommended"
+    },
+    {
+      "name": "lens_connections",
+      "description": "Graph neighbourhood traversal",
+      "classification": "recommended"
+    },
+    {
+      "name": "lens_recall",
+      "description": "Memory-augmented semantic recall",
+      "classification": "recommended"
+    },
+    {
+      "name": "links",
+      "description": "List outbound wikilinks from a note",
+      "classification": "recommended"
+    },
+    {
+      "name": "backlinks",
+      "description": "List inbound wikilinks to a note",
+      "classification": "recommended"
+    },
+    {
+      "name": "outline",
+      "description": "Get heading outline of a note",
+      "classification": "recommended"
+    },
+    {
+      "name": "tags",
+      "description": "List tags used in vault or note",
+      "classification": "recommended"
+    },
+    {
+      "name": "recents",
+      "description": "List recently modified notes",
+      "classification": "recommended"
+    },
+    {
+      "name": "section_read",
+      "description": "Read a specific section by heading",
+      "classification": "optional"
+    },
+    {
+      "name": "section_replace",
+      "description": "Replace content of a section by heading",
+      "classification": "optional"
+    },
+    {
+      "name": "search_context",
+      "description": "Search with surrounding context",
+      "classification": "optional"
+    },
+    {
+      "name": "orphans",
+      "description": "Find notes with zero links",
+      "classification": "optional"
+    },
+    {
+      "name": "deadends",
+      "description": "Find notes with inbound but no outbound links",
+      "classification": "optional"
+    },
+    {
+      "name": "unresolved",
+      "description": "Find broken wikilinks",
+      "classification": "optional"
+    },
+    {
+      "name": "lens_status",
+      "description": "Lens index status and stats",
+      "classification": "optional"
+    },
+    {
+      "name": "lens_velocity",
+      "description": "Contact/note velocity trends",
+      "classification": "optional"
+    },
+    {
+      "name": "lens_heat",
+      "description": "Note activity heatmap",
+      "classification": "optional"
+    },
+    {
+      "name": "lens_consolidate",
+      "description": "Memory consolidation triggers",
+      "classification": "optional"
+    },
+    {
+      "name": "create",
+      "description": "Create a new note",
+      "classification": "gated"
+    },
+    {
+      "name": "append",
+      "description": "Append content to a note",
+      "classification": "gated"
+    },
+    {
+      "name": "prepend",
+      "description": "Prepend content to a note",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a note",
+      "classification": "gated"
+    },
+    {
+      "name": "rename",
+      "description": "Rename a note",
+      "classification": "gated"
+    },
+    {
+      "name": "move",
+      "description": "Move a note to a different path",
+      "classification": "gated"
+    },
+    {
+      "name": "tag",
+      "description": "Add or remove tags on a note",
+      "classification": "gated"
+    }
+  ]
+}

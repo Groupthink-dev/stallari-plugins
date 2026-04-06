@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/filesystem-v1.json",
+  "title": "filesystem-v1",
+  "description": "Filesystem service contract v1 — 7 operations across read, monitor, and write.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "filesystem-v1" },
+    "service": { "const": "filesystem" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "scan",
+      "description": "Recursively scan a directory tree",
+      "classification": "required"
+    },
+    {
+      "name": "read",
+      "description": "Read file contents",
+      "classification": "required"
+    },
+    {
+      "name": "stat",
+      "description": "Get file metadata (size, dates, permissions)",
+      "classification": "required"
+    },
+    {
+      "name": "list",
+      "description": "List directory entries",
+      "classification": "required"
+    },
+    {
+      "name": "watch",
+      "description": "Watch a path for changes (triggers on create, modify, delete)",
+      "classification": "gated"
+    },
+    {
+      "name": "write",
+      "description": "Write file contents",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a file or directory",
+      "classification": "gated"
+    }
+  ]
+}

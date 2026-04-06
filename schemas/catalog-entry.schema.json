@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/catalog-entry.schema.json",
+  "title": "Sidereal Catalog Entry",
+  "description": "Schema for entries in the registry catalog (plugins/*.json). Supports both plugin and pack types via discriminated union on the 'type' field.",
+  "type": "object",
+  "required": ["name", "type", "description", "version", "author", "tier"],
+  "additionalProperties": true,
+  "if": {
+    "properties": { "type": { "const": "plugin" } }
+  },
+  "then": {
+    "required": ["name", "type", "description", "version", "author", "tier", "licence", "contract", "repository", "install"]
+  },
+  "else": {
+    "if": {
+      "properties": { "type": { "const": "pack" } }
+    },
+    "then": {
+      "required": ["name", "type", "description", "version", "author", "tier"]
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["plugin", "pack"],
+      "description": "Entry type. Plugins provide MCP tools; packs are workflow manifests."
+    },
+    "description": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "author": {
+      "type": "string"
+    },
+    "licence": {
+      "type": "string",
+      "description": "SPDX licence identifier. Required for plugins."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["certified", "verified", "community"]
+    },
+    "contract": {
+      "type": "string",
+      "pattern": "^[a-z]+-v\\d+$",
+      "description": "Domain contract identifier. Required for plugins."
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri"
+    },
+    "install": {
+      "type": "object",
+      "required": ["runtime"],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["uv", "npm", "npx", "docker", "remote", "native"]
+        },
+        "package": { "type": "string" },
+        "binary": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "description": "Installation specification. Required for plugins."
+    },
+    "services": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Abstract service names this entry provides or uses."
+    },
+    "min_sidereal": {
+      "type": "string",
+      "description": "Minimum Sidereal version."
+    },
+    "pack_spec": {
+      "type": "string",
+      "description": "Pack spec version (e.g. \"1.0\"). Present only for type=pack."
+    },
+    "skill_count": {
+      "type": "integer",
+      "description": "Number of skills in this pack. Present only for type=pack."
+    },
+    "conformance": {
+      "type": "object",
+      "properties": {
+        "required": { "type": "string", "pattern": "^\\d+/\\d+$" },
+        "recommended": { "type": "string", "pattern": "^\\d+/\\d+$" },
+        "optional": { "type": "string", "pattern": "^\\d+/\\d+$" },
+        "gated": { "type": "string", "pattern": "^\\d+/\\d+$" },
+        "last_tested": { "type": "string", "format": "date" }
+      },
+      "description": "Contract conformance test results. Primarily for plugins."
+    },
+    "inference": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "purpose": { "type": "string" }
+      },
+      "description": "Optional inference declaration for entries that embed LLM calls."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes."
+    },
+    "setup_complexity": {
+      "type": ["string", "null"],
+      "enum": ["trivial", "moderate", "involved", "none", null],
+      "description": "Setup complexity from plugin setup.complexity. 'none' = no credentials needed. Null = not declared."
+    },
+    "auth_model": {
+      "type": ["string", "null"],
+      "enum": ["api_key", "oauth2", "basic", "file", "none", null],
+      "description": "Primary authentication model from plugin setup metadata."
+    },
+    "credential_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of credential fields required. 0 = no setup needed."
+    }
+  }
+}

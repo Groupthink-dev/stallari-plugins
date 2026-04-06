@@ -1,0 +1,148 @@
+pack: "1.3"
+name: product-operations-starter
+version: "1.1.0"
+description: >-
+  Starter pack for running product operations with Sidereal — release
+  announcements, customer onboarding, subscription monitoring, and contact
+  management. Fork and customise for your own product.
+icon: /icons/product-operations-starter.svg
+author:
+  name: groupthink-dev
+  url: https://github.com/groupthink-dev
+licence: MIT
+visibility: open
+tier: certified
+pricing: null
+
+min_sidereal: "0.47"
+
+requires:
+  services:
+    - service: transactional-email
+      operations: [send, list_contacts, list_templates, get_template, list_domains]
+    - service: vault
+      operations: [read, search, create]
+
+recommends:
+  services:
+    - service: billing
+      operations: [subscriptions, customers, products]
+    - service: transactional-email
+      operations: [create_contact, list_segments, create_broadcast, send_broadcast]
+
+data:
+  reads: [transactional-email, billing, vault]
+  writes: [transactional-email, vault]
+  stores: nothing
+  phones_home: false
+
+agents:
+  comms-ops:
+    role: operator
+    prompt: |
+      You are a product communications operator. You compose and send release
+      announcements, welcome emails, and manage contact synchronisation via
+      transactional email. All sends require explicit human confirmation —
+      you never auto-send regardless of confidence. You handle PII carefully:
+      hash or omit customer emails in all log output.
+
+  bizops:
+    role: operator
+    prompt: |
+      You are a product business operations agent. You produce subscription
+      dashboards and business metrics from the billing service. You have
+      read-only access — no subscription modifications. Revenue figures are
+      rounded in stdout and exact in vault notes (always publish: false).
+
+skills:
+  - name: release-announcement
+    agent: comms-ops
+    description: Compose and send a release announcement email to your product audience
+    tier: reasoning
+    category: notify
+    services_used:
+      - service: transactional-email
+        operations: [send, list_templates, list_contacts, list_segments]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Send a release announcement for a new product version. Accept product
+      name, version, and highlights as input. Look up templates and audience,
+      compose the email, present for human review, then send on approval.
+      Archive to vault with publish: false.
+
+  - name: customer-welcome
+    agent: comms-ops
+    description: Send a personalised welcome email to a new customer
+    tier: reasoning
+    category: notify
+    services_used:
+      - service: transactional-email
+        operations: [send, list_contacts, create_contact, get_template]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Welcome a new customer. Check if contact exists, create if needed,
+      select welcome template, personalise with name and product, present
+      for human review, send on approval. Log to vault with hashed email.
+
+  - name: subscription-check
+    agent: bizops
+    description: Read-only subscription dashboard with key business metrics
+    tier: reasoning
+    category: report
+    services_used:
+      - service: billing
+        operations: [subscriptions, customers, products]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Produce a subscription dashboard. If billing service is not configured,
+      report gracefully and exit. Fetch subscriptions grouped by status,
+      calculate MRR, churn rate, trial count. Format as markdown table.
+      Archive to vault with publish: false. No writes to billing service.
+
+  - name: contact-sync
+    agent: comms-ops
+    description: Sync vault person cards to transactional-email contact list
+    tier: reasoning
+    category: sync
+    services_used:
+      - service: transactional-email
+        operations: [list_contacts, create_contact]
+      - service: vault
+        operations: [read, search]
+    trigger:
+      on_demand: true
+    prompt: |
+      One-way sync: vault person cards (kind: person with email field) to
+      transactional-email contacts. Diff existing contacts against vault,
+      present batch for human review, create approved contacts. Never push
+      provider data back to vault. Never include raw emails in log output.
+
+workflows:
+  - name: new-customer
+    description: Full onboarding — welcome email then contact sync
+    steps:
+      - skill: customer-welcome
+      - skill: contact-sync
+        after: [customer-welcome]
+
+config:
+  user_inputs:
+    - key: product_name
+      type: string
+      label: Product name
+      description: "Your product name (used in email subjects and templates)"
+      required: true
+    - key: support_email
+      type: string
+      label: Support email
+      description: "Reply-to address for customer communications"
+      required: false
