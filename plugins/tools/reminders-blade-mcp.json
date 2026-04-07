@@ -54,9 +54,9 @@
   },
   "conformance": {
     "required": "3/3",
-    "recommended": "3/3",
-    "optional": "2/2",
-    "gated": "2/2",
+    "recommended": "4/4",
+    "optional": "1/1",
+    "gated": "3/3",
     "last_tested": "2026-04-07"
   }
 }
