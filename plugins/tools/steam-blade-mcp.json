@@ -1,0 +1,115 @@
+{
+  "name": "steam-blade-mcp",
+  "description": "Steam operations — profiles, achievements, game library, friends, presence, Store catalog, Workshop, and trading via Steam Web API",
+  "version": "0.1.0",
+  "author": "Groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/steam-blade-mcp.svg",
+  "tier": "community",
+  "contract": "gaming-v1",
+  "homepage": "https://github.com/Groupthink-dev/steam-blade-mcp",
+  "repository": "https://github.com/Groupthink-dev/steam-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "steam-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "STEAM_API_KEY",
+      "description": "Steam Web API key from steamcommunity.com/dev/apikey",
+      "secret": true
+    },
+    {
+      "name": "STEAM_USER_ID",
+      "description": "Your Steam64 ID (17-digit number)",
+      "default": ""
+    },
+    {
+      "name": "STEAM_WRITE_ENABLED",
+      "description": "Enable write operations (friend management)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "gamecontroller.fill",
+    "product": "Steam",
+    "blurb": "Steam profiles, achievements, game library, friends, presence, Store catalog, and Workshop. API key auth — no OAuth required.",
+    "help_text": "Get a Steam Web API key at steamcommunity.com/dev/apikey (requires a Steam account). Find your Steam64 ID at steamid.io.",
+    "help_links": [
+      {
+        "label": "Get Steam Web API Key",
+        "url": "https://steamcommunity.com/dev/apikey"
+      },
+      {
+        "label": "Steam Web API Documentation",
+        "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API"
+      },
+      {
+        "label": "Find Your Steam ID",
+        "url": "https://steamid.io"
+      }
+    ],
+    "fields": [
+      {
+        "key": "STEAM_API_KEY",
+        "label": "Steam Web API Key",
+        "secret": true,
+        "placeholder": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "required": true,
+        "help": "Register at steamcommunity.com/dev/apikey"
+      },
+      {
+        "key": "STEAM_USER_ID",
+        "label": "Steam64 ID",
+        "secret": false,
+        "placeholder": "76561198012345678",
+        "required": false,
+        "help": "Your 17-digit Steam ID. Find at steamid.io. Omit to require per-call."
+      },
+      {
+        "key": "STEAM_WRITE_ENABLED",
+        "label": "Enable Write Operations",
+        "secret": false,
+        "placeholder": "false",
+        "required": false,
+        "help": "Friend management operations"
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key={STEAM_API_KEY}&steamids={STEAM_USER_ID}",
+      "auth_style": "none"
+    },
+    "prerequisites": [
+      "Steam account",
+      "Steam Web API key (free)"
+    ]
+  },
+  "services": {
+    "gaming": {
+      "profile": "steam_profile",
+      "achievements": "steam_achievements",
+      "achievement_summary": "steam_achievement_summary",
+      "games_played": "steam_games",
+      "games_recent": "steam_games_recent",
+      "friends": "steam_friends",
+      "presence": "steam_presence",
+      "search_users": "steam_search_users",
+      "achievement_compare": "steam_achievement_compare",
+      "games_purchased": "steam_games",
+      "game_details": "steam_game_details",
+      "search_games": "steam_search_games",
+      "friend_add": "steam_friend_add",
+      "friend_remove": "steam_friend_remove"
+    }
+  },
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "untested",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "Steam Web API MCP with Storefront API for catalog search. API key auth (trivial setup vs Xbox OAuth2). Steam Web API covers player summaries, achievements, owned games, friends, presence. Storefront API covers app details and search (no auth needed). Steam deprecated chat messaging; friend add/remove requires session auth beyond Web API key. devices and achievement_groups not mapped (no Steam equivalent)."
+}
