@@ -1,6 +1,6 @@
 pack: "1.6"
 name: sidereal-core
-version: "3.2.0"
+version: "3.3.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, and the six
@@ -29,7 +29,7 @@ recommends:
     - service: email
       operations: [read, search]
     - service: tasks
-      operations: [read, create]
+      operations: [read, search, create, complete]
 
 data:
   reads: [vault, calendar, email, tasks]
