@@ -5,7 +5,7 @@
   "author": "groupthink-dev",
   "licence": "MIT",
   "tier": "certified",
-  "contract": "reminders-v1",
+  "contract": "tasks-v1",
   "repository": "https://github.com/groupthink-dev/reminders-blade-mcp",
   "multi_instance": false,
   "notes": "macOS only. Requires Reminders permission (auto-prompted on first AppleScript access).",
