@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/reminders-v1.json",
+  "title": "reminders-v1",
+  "description": "Apple Reminders service contract v1 — 10 operations across lists, items, search, due dates, and writes.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "reminders-v1" },
+    "service": { "const": "reminders" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "lists",
+      "description": "List all reminder lists with counts",
+      "classification": "required"
+    },
+    {
+      "name": "items",
+      "description": "Get reminders from a list with completion filters",
+      "classification": "required"
+    },
+    {
+      "name": "search",
+      "description": "Search reminders by title text across all lists",
+      "classification": "required"
+    },
+    {
+      "name": "item",
+      "description": "Get a single reminder by ID or name",
+      "classification": "recommended"
+    },
+    {
+      "name": "due",
+      "description": "Reminders due soon or overdue",
+      "classification": "recommended"
+    },
+    {
+      "name": "stats",
+      "description": "Aggregate statistics with per-list breakdown",
+      "classification": "optional"
+    },
+    {
+      "name": "create",
+      "description": "Create a new reminder with title, list, due date, priority, notes",
+      "classification": "gated"
+    },
+    {
+      "name": "complete",
+      "description": "Mark a reminder as completed or uncompleted",
+      "classification": "gated"
+    },
+    {
+      "name": "update",
+      "description": "Update reminder properties (title, due date, priority, notes, flagged)",
+      "classification": "gated"
+    },
+    {
+      "name": "delete",
+      "description": "Delete a reminder (irreversible)",
+      "classification": "gated"
+    }
+  ]
+}

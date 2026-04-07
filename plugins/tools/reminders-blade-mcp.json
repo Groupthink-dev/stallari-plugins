@@ -1,0 +1,62 @@
+{
+  "name": "reminders-blade-mcp",
+  "description": "Apple Reminders operations — lists, reminders, search, due dates, create, complete, update, delete",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "tier": "certified",
+  "contract": "reminders-v1",
+  "repository": "https://github.com/groupthink-dev/reminders-blade-mcp",
+  "multi_instance": false,
+  "notes": "macOS only. Requires Reminders permission (auto-prompted on first AppleScript access).",
+  "install": {
+    "runtime": "uv",
+    "package": "reminders-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "REMINDERS_WRITE_ENABLED",
+      "description": "Enable create/complete/update/delete operations",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "moderate",
+    "icon": "checklist",
+    "product": "Apple Reminders",
+    "blurb": "Read and manage Apple Reminders — lists, due dates, search, create, complete, and update reminders on macOS.",
+    "help_text": "Grant Reminders access when macOS prompts, or enable it in System Settings > Privacy & Security > Reminders for your terminal emulator.",
+    "fields": [
+      {
+        "key": "REMINDERS_WRITE_ENABLED",
+        "label": "Enable Write Operations",
+        "secret": false,
+        "placeholder": "false",
+        "required": false,
+        "help": "Set to 'true' to enable creating, completing, updating, and deleting reminders. All writes require additional confirmation."
+      }
+    ],
+    "test": {
+      "endpoint": "applescript://Reminders",
+      "auth_style": "none"
+    },
+    "prerequisites": [
+      "macOS 13 (Ventura) or later",
+      "Reminders permission for terminal (auto-prompted on first use)"
+    ],
+    "help_links": [
+      {
+        "label": "macOS Privacy & Security settings",
+        "url": "https://support.apple.com/guide/mac-help/change-privacy-security-settings-on-mac-mchl211c911f/mac"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "3/3",
+    "recommended": "3/3",
+    "optional": "2/2",
+    "gated": "2/2",
+    "last_tested": "2026-04-07"
+  }
+}
