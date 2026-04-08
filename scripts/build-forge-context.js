@@ -30,7 +30,7 @@ const SCRIPTS_GEN_DIR = join(ROOT, "scripts", "generated");
 const CORE_SERVICES = new Set(["email", "tasks", "calendar", "vault"]);
 
 /** Services that appear in DECLARED_SERVICES but have no contract yet. */
-const ADDITIONAL_SERVICES = ["code", "dns", "storage"];
+const ADDITIONAL_SERVICES = ["registry", "dns", "storage"];
 
 /** Classification display order. */
 const CLASSIFICATION_ORDER = ["required", "recommended", "optional", "gated"];

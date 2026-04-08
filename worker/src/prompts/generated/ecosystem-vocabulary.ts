@@ -34,7 +34,7 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 - **groupthink-operations** v1.3.0 [accounting, billing, transactional-email, vault]: Internal operations suite for Groupthink — Sidereal ecosystem communications, billing lifecycle, fi… (10 skills, 2 agents, free)
 - **sidereal-bastion** v1.1.0 [vault]: Advanced security operations and fleet management for Sidereal. Monitor credential expiry before ke… (9 skills, 2 agents, subscription $10/month)
 - **sidereal-estate** v1.1.0 [calendar, email, home, tasks, vault]: Multi-site property intelligence powered by Home Assistant. Energy portfolio management, predictive… (9 skills, 2 agents, subscription $5/month)
-- **sidereal-sysadmin** v3.3.0 [code, notifications, vault]: Registry admin, platform monitoring, licensing ops, and release management for operating the Sidere… (20 skills, 3 agents, free)`;
+- **sidereal-sysadmin** v3.4.0 [notifications, registry, vault]: Registry admin, platform monitoring, licensing ops, and release management for operating the Sidere… (21 skills, 3 agents, free)`;
 
 export const AGENT_NAMES = ["digital-assistant", "pkm-operator", "comms-operator", "scheduling-operator", "secops-operator", "fleet-operator", "home-operator", "bizops-operator"] as const;
 
