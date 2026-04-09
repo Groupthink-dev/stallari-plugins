@@ -15,7 +15,7 @@ import { DECLARED_SERVICES } from "./generated/declared-services.js";
 const ROOT = resolve(import.meta.dirname, "..");
 const PACKS_DIR = join(ROOT, "plugins", "packs");
 
-const VALID_PACK_VERSIONS = ["1.0", "1.1", "1.2", "1.3", "1.4"];
+const VALID_PACK_VERSIONS = ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6"];
 const VALID_VISIBILITIES = ["open", "sealed"];
 const VALID_ACCESS = ["public", "private"];
 const VALID_DATA_STORES = ["nothing", "local", "remote"];
