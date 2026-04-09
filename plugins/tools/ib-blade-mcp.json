@@ -1,0 +1,150 @@
+{
+  "name": "ib-blade-mcp",
+  "version": "0.1.0",
+  "description": "Interactive Brokers MCP Server — portfolio, market data, orders, scanners via Client Portal Gateway",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/ib-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "brokerage-v1",
+  "homepage": "https://github.com/Groupthink-dev/ib-blade-mcp",
+  "repository": "https://github.com/Groupthink-dev/ib-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "ib-blade-mcp",
+    "command": "ib-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "IB_GATEWAY_URL",
+      "description": "Client Portal Gateway URL (e.g. https://localhost:5000)"
+    },
+    {
+      "name": "IB_ACCOUNT_ID",
+      "description": "Default brokerage account ID (auto-detected if blank)"
+    },
+    {
+      "name": "IB_SSL_VERIFY",
+      "description": "Verify gateway SSL certificates (false for self-signed)",
+      "default": "true"
+    },
+    {
+      "name": "IB_WRITE_ENABLED",
+      "description": "Enable order operations (place, modify, cancel)",
+      "default": "false"
+    },
+    {
+      "name": "IB_MCP_API_TOKEN",
+      "description": "Bearer token for HTTP transport",
+      "secret": true
+    },
+    {
+      "name": "IB_MCP_TRANSPORT",
+      "description": "Transport mode (stdio or http)",
+      "default": "stdio"
+    }
+  ],
+  "setup": {
+    "auth_model": "gateway",
+    "complexity": "moderate",
+    "icon": "chart.line.uptrend.xyaxis",
+    "product": "Interactive Brokers",
+    "blurb": "Portfolio monitoring, market data, and order management via the IB Client Portal Gateway. 21 tools, triple order safety, token-efficient output.",
+    "help_text": "Download and run the IB Client Portal Gateway, then authenticate by opening its URL in a browser. This MCP connects to the already-authenticated gateway — your IB credentials never touch the MCP process.",
+    "help_links": [
+      {
+        "label": "Client Portal Gateway Setup",
+        "url": "https://www.interactivebrokers.com/en/trading/ib-api.php"
+      },
+      {
+        "label": "CP Gateway Documentation",
+        "url": "https://www.interactivebrokers.com/campus/ibkr-api-page/cpapi-v1/"
+      },
+      {
+        "label": "GitHub Repository",
+        "url": "https://github.com/Groupthink-dev/ib-blade-mcp"
+      }
+    ],
+    "fields": [
+      {
+        "key": "IB_GATEWAY_URL",
+        "label": "Gateway URL",
+        "secret": false,
+        "required": true,
+        "placeholder": "https://localhost:5000",
+        "help": "URL where Client Portal Gateway is running"
+      },
+      {
+        "key": "IB_ACCOUNT_ID",
+        "label": "Account ID",
+        "secret": false,
+        "required": false,
+        "placeholder": "U1234567",
+        "help": "Auto-detected from gateway if blank"
+      },
+      {
+        "key": "IB_SSL_VERIFY",
+        "label": "Verify SSL",
+        "secret": false,
+        "required": false,
+        "placeholder": "false",
+        "help": "Set false for the gateway's default self-signed certificate"
+      },
+      {
+        "key": "IB_WRITE_ENABLED",
+        "label": "Enable Trading",
+        "secret": false,
+        "required": false,
+        "placeholder": "false",
+        "help": "Place, modify, cancel orders. Real money operations."
+      }
+    ],
+    "test": {
+      "endpoint": "https://localhost:5000/v1/api/iserver/auth/status",
+      "auth_style": "none"
+    },
+    "prerequisites": [
+      "Interactive Brokers account",
+      "IB Client Portal Gateway running and authenticated",
+      "Python 3.12+"
+    ]
+  },
+  "services": {
+    "brokerage": {
+      "status": "ib_status",
+      "tickle": "ib_tickle",
+      "accounts": "ib_accounts",
+      "positions": "ib_positions",
+      "portfolio_summary": "ib_portfolio_summary",
+      "cash_balances": "ib_cash_balances",
+      "pnl": "ib_pnl",
+      "contract_search": "ib_contract_search",
+      "contract_detail": "ib_contract_detail",
+      "quote": "ib_quote",
+      "historical": "ib_historical",
+      "scanner_params": "ib_scanner_params",
+      "scanner_run": "ib_scanner_run",
+      "orders": "ib_orders",
+      "order_status": "ib_order_status",
+      "trades": "ib_trades",
+      "order_preview": "ib_order_preview",
+      "place_order": "ib_place_order",
+      "confirm_order": "ib_confirm_order",
+      "modify_order": "ib_modify_order",
+      "cancel_order": "ib_cancel_order"
+    }
+  },
+  "certification": {
+    "status": "certified",
+    "validated_version": "0.1.0",
+    "platform_tested": ["darwin-arm64", "linux-x86_64"],
+    "security_notes": "Gateway isolation — IB credentials managed by gateway, never exposed to MCP process. Triple order safety: env gate (IB_WRITE_ENABLED), confirm gate (per-tool parameter), and order preview (what-if). Bearer auth for HTTP transport. Credential scrubbing on all error paths."
+  },
+  "conformance": {
+    "required": "8/8",
+    "recommended": "6/6",
+    "optional": "2/2",
+    "gated": "5/5",
+    "last_tested": "2026-04-09"
+  }
+}

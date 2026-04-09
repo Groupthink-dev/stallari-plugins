@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/brokerage-v1.json",
+  "title": "brokerage-v1",
+  "description": "Brokerage service contract v1 — 21 operations across portfolio, market data, orders, scanners, and system management. Designed for securities brokerages (stocks, options, futures, forex). Gateway-authenticated with triple order safety (env gate + confirm gate + order preview).",
+  "type": "object",
+  "properties": {
+    "name": { "const": "brokerage-v1" },
+    "service": { "const": "brokerage" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "status",
+      "description": "Session status, auth state, write gate, rate limits",
+      "classification": "required"
+    },
+    {
+      "name": "tickle",
+      "description": "Keep session alive (heartbeat)",
+      "classification": "required"
+    },
+    {
+      "name": "accounts",
+      "description": "List linked brokerage accounts",
+      "classification": "required"
+    },
+    {
+      "name": "positions",
+      "description": "Open positions with P&L, market value, cost basis",
+      "classification": "required"
+    },
+    {
+      "name": "portfolio_summary",
+      "description": "NAV, cash, unrealised P&L, buying power, margin",
+      "classification": "required"
+    },
+    {
+      "name": "orders",
+      "description": "List live/recent orders with fill status",
+      "classification": "required"
+    },
+    {
+      "name": "contract_search",
+      "description": "Search for contracts by symbol or name",
+      "classification": "required"
+    },
+    {
+      "name": "quote",
+      "description": "Live market data snapshot: last, bid, ask, volume, change",
+      "classification": "required"
+    },
+    {
+      "name": "cash_balances",
+      "description": "Cash balances by currency",
+      "classification": "recommended"
+    },
+    {
+      "name": "pnl",
+      "description": "Daily and unrealised P&L",
+      "classification": "recommended"
+    },
+    {
+      "name": "contract_detail",
+      "description": "Contract info: exchange, currency, multiplier, tick size",
+      "classification": "recommended"
+    },
+    {
+      "name": "historical",
+      "description": "Historical OHLCV bars for charting and analysis",
+      "classification": "recommended"
+    },
+    {
+      "name": "order_status",
+      "description": "Detailed status of a specific order including fills",
+      "classification": "recommended"
+    },
+    {
+      "name": "trades",
+      "description": "Recent trade executions with price, time, exchange",
+      "classification": "recommended"
+    },
+    {
+      "name": "scanner_params",
+      "description": "Available market scanner types and filters",
+      "classification": "optional"
+    },
+    {
+      "name": "scanner_run",
+      "description": "Run a market scanner (top gainers, most active, etc.)",
+      "classification": "optional"
+    },
+    {
+      "name": "order_preview",
+      "description": "What-if preview: margin impact, commission, equity change",
+      "classification": "gated"
+    },
+    {
+      "name": "place_order",
+      "description": "Place order (real money). Requires write gate + confirm gate",
+      "classification": "gated"
+    },
+    {
+      "name": "confirm_order",
+      "description": "Reply to gateway order confirmation prompts",
+      "classification": "gated"
+    },
+    {
+      "name": "modify_order",
+      "description": "Modify quantity, price, or time-in-force on existing order",
+      "classification": "gated"
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancel an open order",
+      "classification": "gated"
+    }
+  ]
+}
