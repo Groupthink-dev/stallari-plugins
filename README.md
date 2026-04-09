@@ -162,6 +162,20 @@ services:
 
 See the [plugin schema](schemas/sidereal-plugin.schema.json) for the full spec.
 
+## Private Packs
+
+Sealed packs (proprietary, encrypted prompts) live in a separate private
+repository. The build tooling supports merging them via the
+`PRIVATE_PACKS_DIR` environment variable:
+
+```bash
+PRIVATE_PACKS_DIR=path/to/sealed/packs make build-api
+```
+
+When set, the build scripts read pre-sealed artifacts from the specified
+directory and merge them into the catalog alongside open packs. Sealing is a
+client-side operation — the CI pipeline only verifies sealed pack integrity.
+
 ## Local Development
 
 ```bash

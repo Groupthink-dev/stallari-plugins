@@ -57,7 +57,8 @@ Output in `dist/` is deployed to R2 by `sidereal-registry-infra`.
 Schema in `schemas/`. Format defined by `sidereal-pack-spec`. Each pack YAML
 declares skills, graph methodology, services, and sealed status.
 
-Current state: 102 skills across 12 packs (Pack Spec v1.6).
+Current state: 53 skills across 8 open packs (Pack Spec v1.6). Sealed packs
+are in a separate private repo (`sidereal-packs-private`).
 
 ## Conventions
 
