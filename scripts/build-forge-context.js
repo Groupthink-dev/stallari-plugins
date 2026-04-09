@@ -23,6 +23,7 @@ const ROOT = resolve(import.meta.dirname, "..");
 const CONTRACTS_DIR = join(ROOT, "schemas", "contracts");
 const AGENTS_FILE = join(ROOT, "data", "agents.yaml");
 const PACKS_DIR = join(ROOT, "plugins", "packs");
+const PRIVATE_PACKS_DIR = process.env.PRIVATE_PACKS_DIR || null;
 const WORKER_GEN_DIR = join(ROOT, "worker", "src", "prompts", "generated");
 const SCRIPTS_GEN_DIR = join(ROOT, "scripts", "generated");
 
@@ -166,13 +167,13 @@ async function loadAgents() {
   }
 }
 
-async function loadPacks() {
+async function loadPacksFromDir(dir) {
   const packs = [];
   try {
-    const files = await readdir(PACKS_DIR);
+    const files = await readdir(dir);
     for (const file of files.sort()) {
       if (!file.endsWith(".yaml") && !file.endsWith(".yml")) continue;
-      const raw = await readFile(join(PACKS_DIR, file), "utf-8");
+      const raw = await readFile(join(dir, file), "utf-8");
       const doc = parseYAML(raw);
       if (!doc?.pack || !doc?.name) continue;
 
@@ -200,7 +201,19 @@ async function loadPacks() {
       });
     }
   } catch {
-    console.warn("  ⚠ plugins/packs/ not readable — skipping pack catalog");
+    // Directory not readable — skip silently
+  }
+  return packs;
+}
+
+async function loadPacks() {
+  const packs = await loadPacksFromDir(PACKS_DIR);
+  if (PRIVATE_PACKS_DIR) {
+    const privatePacks = await loadPacksFromDir(PRIVATE_PACKS_DIR);
+    if (privatePacks.length > 0) {
+      console.log(`  Loaded ${privatePacks.length} pack(s) from PRIVATE_PACKS_DIR`);
+    }
+    packs.push(...privatePacks);
   }
   return packs;
 }

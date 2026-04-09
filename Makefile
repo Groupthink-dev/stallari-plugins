@@ -1,5 +1,10 @@
 .PHONY: validate validate-packs validate-all validate-manifests build-api generate contracts test clean
 
+# Optional: path to sealed pack YAMLs (private repo).
+# Set PRIVATE_PACKS_DIR to include sealed packs in the build.
+# Example: PRIVATE_PACKS_DIR=../sidereal-packs-private/packs make build-api
+PRIVATE_PACKS_DIR ?=
+
 # Validate all plugin manifests against the schema.
 # Requires: pip install check-jsonschema
 validate:
@@ -12,13 +17,13 @@ validate:
 
 # Generate context files from service contracts.
 generate:
-	@node scripts/build-forge-context.js
+	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/build-forge-context.js
 
 # Validate all pack YAML manifests against Pack Spec.
 # Requires: node >= 22, npm ci (for yaml parser)
 validate-packs: generate
 	@echo "Validating pack manifests..."
-	@node scripts/validate-packs.js
+	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/validate-packs.js
 	@echo "Done."
 
 # Validate everything.
@@ -46,7 +51,7 @@ contracts:
 # Build catalog from plugins/ and packs/.
 # Requires: node >= 22, npm ci (for yaml parser)
 build-api: generate
-	@node scripts/build-catalog.js
+	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/build-catalog.js
 
 # Run build-script tests (node:test).
 test:

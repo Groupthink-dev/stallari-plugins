@@ -14,6 +14,7 @@ import { DECLARED_SERVICES } from "./generated/declared-services.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const PACKS_DIR = join(ROOT, "plugins", "packs");
+const PRIVATE_PACKS_DIR = process.env.PRIVATE_PACKS_DIR || null;
 
 const VALID_PACK_VERSIONS = ["1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6"];
 const VALID_VISIBILITIES = ["open", "sealed"];
@@ -310,38 +311,46 @@ function validatePack(parsed) {
   return errors;
 }
 
-async function main() {
-  const files = (await readdir(PACKS_DIR)).filter(f => f.endsWith(".yaml") || f.endsWith(".yml")).sort();
-
-  if (files.length === 0) {
-    console.log("No pack manifests found.");
-    return;
+async function validateDir(dir) {
+  let files;
+  try {
+    files = (await readdir(dir)).filter(f => f.endsWith(".yaml") || f.endsWith(".yml")).sort();
+  } catch {
+    return 0;
   }
 
-  let totalErrors = 0;
-
+  let errors = 0;
   for (const file of files) {
-    const content = await readFile(join(PACKS_DIR, file), "utf-8");
+    const content = await readFile(join(dir, file), "utf-8");
     let parsed;
     try {
       parsed = parseYaml(content);
     } catch (err) {
       console.log(`  FAIL  ${file}: YAML parse error: ${err.message}`);
-      totalErrors++;
+      errors++;
       continue;
     }
 
-    const errors = validatePack(parsed);
-    if (errors.length === 0) {
+    const fileErrors = validatePack(parsed);
+    if (fileErrors.length === 0) {
       console.log(`  PASS  ${file}`);
     } else {
       console.log(`  FAIL  ${file}`);
-      for (const e of errors) console.log(`        - ${e}`);
-      totalErrors += errors.length;
+      for (const e of fileErrors) console.log(`        - ${e}`);
+      errors++;
     }
   }
+  return errors;
+}
 
-  console.log(`\n${files.length} packs validated, ${totalErrors} error(s).`);
+async function main() {
+  let totalErrors = await validateDir(PACKS_DIR);
+
+  if (PRIVATE_PACKS_DIR) {
+    console.log(`\nValidating private packs from PRIVATE_PACKS_DIR...`);
+    totalErrors += await validateDir(PRIVATE_PACKS_DIR);
+  }
+
   if (totalErrors > 0) process.exit(1);
 }
 

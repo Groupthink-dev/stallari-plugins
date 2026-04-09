@@ -12,11 +12,10 @@
 import { readdir, readFile, mkdir, writeFile, copyFile } from "node:fs/promises";
 import { join, resolve, basename, extname } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { sealPack, encryptPayload, addSealMetadata, createInspectionBundle } from "./seal-pack.js";
-
 const ROOT = resolve(import.meta.dirname, "..");
 const TOOLS_DIR = join(ROOT, "plugins", "tools");
 const PACKS_DIR = join(ROOT, "plugins", "packs");
+const PRIVATE_PACKS_DIR = process.env.PRIVATE_PACKS_DIR || null;
 const DATA_DIR = join(ROOT, "data");
 const DIST_DIR = join(ROOT, "dist");
 
@@ -291,15 +290,14 @@ function buildServices(entries) {
   );
 }
 
-/** Read and validate packs/*.yaml files */
-async function loadPacks() {
+/** Read YAML files from a single directory, returning parsed packs */
+async function loadPacksFromDir(dir) {
   let files;
   try {
-    files = (await readdir(PACKS_DIR)).filter(
+    files = (await readdir(dir)).filter(
       (f) => f.endsWith(".yaml") || f.endsWith(".yml"),
     );
   } catch {
-    // No packs directory — that's fine
     return [];
   }
 
@@ -307,7 +305,7 @@ async function loadPacks() {
   const packs = [];
 
   for (const file of files) {
-    const content = await readFile(join(PACKS_DIR, file), "utf-8");
+    const content = await readFile(join(dir, file), "utf-8");
     const pack = parseYaml(content);
 
     if (!pack.pack || !pack.name || !pack.version || !pack.skills) {
@@ -320,6 +318,19 @@ async function loadPacks() {
     packs.push({ manifest: pack, filename: file });
   }
 
+  return packs;
+}
+
+/** Read and validate packs from primary dir + optional PRIVATE_PACKS_DIR */
+async function loadPacks() {
+  const packs = await loadPacksFromDir(PACKS_DIR);
+  if (PRIVATE_PACKS_DIR) {
+    const privatePacks = await loadPacksFromDir(PRIVATE_PACKS_DIR);
+    if (privatePacks.length > 0) {
+      console.log(`  Loaded ${privatePacks.length} pack(s) from PRIVATE_PACKS_DIR`);
+    }
+    packs.push(...privatePacks);
+  }
   return packs;
 }
 
@@ -414,51 +425,17 @@ async function main() {
   );
 
   // Write individual pack manifests (for /packs/:name/versions/:version endpoint)
-  let sealedCount = 0;
+  // Note: sealing (encryption of sealed pack prompts) is handled by
+  // sidereal-registry-infra/scripts/seal-catalog.mjs as a post-process step.
+  // This script writes full manifests for all packs (open and sealed).
   for (const { manifest } of packs) {
     const slug = slugify(manifest.name);
     const packDir = join(DIST_DIR, "packs", slug, manifest.version);
     await mkdir(packDir, { recursive: true });
-
-    if (manifest.visibility === "sealed") {
-      // DD-120 Phase 0: reject sealed+public from non-first-party authors
-      const access = String(manifest.access || "public");
-      if (access !== "private") {
-        const authorUrl = manifest.author?.url;
-        const FIRST_PARTY = ["https://sidereal.cc"];
-        if (!authorUrl || !FIRST_PARTY.includes(authorUrl)) {
-          console.error(`  ERROR  ${manifest.name}: sealed packs require access: "private" unless published by a first-party author (DD-120)`);
-          process.exit(1);
-        }
-      }
-      // Sealed packs: strip prompts, encrypt payload, write key separately
-      const { publicManifest, payload } = sealPack(manifest);
-      const { encrypted, key } = encryptPayload(payload);
-      // DD-120 Phase 1: add seal_metadata to manifest
-      addSealMetadata(publicManifest, encrypted);
-      await writeFile(
-        join(packDir, "manifest.json"),
-        JSON.stringify(publicManifest, null, 2) + "\n",
-      );
-      await writeFile(join(packDir, "payload.enc"), encrypted);
-      await writeFile(join(packDir, "seal-key.hex"), key);
-      // DD-120 Phase 3: write inspection bundle for secops submission
-      const secopsDir = join(DIST_DIR, "secops");
-      await mkdir(secopsDir, { recursive: true });
-      const bundle = createInspectionBundle(manifest, publicManifest, encrypted, key);
-      const bundleName = `${slug}-${manifest.version}-inspection.json`;
-      await writeFile(
-        join(secopsDir, bundleName),
-        JSON.stringify(bundle, null, 2) + "\n",
-      );
-      sealedCount++;
-    } else {
-      // Open packs: write full manifest
-      await writeFile(
-        join(packDir, "manifest.json"),
-        JSON.stringify(manifest, null, 2) + "\n",
-      );
-    }
+    await writeFile(
+      join(packDir, "manifest.json"),
+      JSON.stringify(manifest, null, 2) + "\n",
+    );
   }
 
   const pluginCount = entries.filter((e) => e.type === "plugin").length;
@@ -468,7 +445,7 @@ async function main() {
   );
   console.log("Output: dist/catalog.json, dist/services.json");
   if (packCount > 0) {
-    console.log(`Output: dist/packs/ (${packCount} pack manifests, ${sealedCount} sealed)`);
+    console.log(`Output: dist/packs/ (${packCount} pack manifests)`);
   }
 }
 
