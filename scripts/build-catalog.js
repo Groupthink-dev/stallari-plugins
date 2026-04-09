@@ -9,7 +9,7 @@
  * Usage: node scripts/build-catalog.js
  */
 
-import { readdir, readFile, mkdir, writeFile, copyFile } from "node:fs/promises";
+import { readdir, readFile, mkdir, writeFile, copyFile, stat } from "node:fs/promises";
 import { join, resolve, basename, extname } from "node:path";
 import { parse as parseYaml } from "yaml";
 const ROOT = resolve(import.meta.dirname, "..");
@@ -315,7 +315,55 @@ async function loadPacksFromDir(dir) {
       continue;
     }
 
-    packs.push({ manifest: pack, filename: file });
+    packs.push({ manifest: pack, filename: file, sealed: false });
+  }
+
+  return packs;
+}
+
+/**
+ * Read pre-sealed pack artifacts from a directory structured as:
+ *   {dir}/{slug}/{version}/manifest.json
+ *
+ * Sealing happens client-side — the registry receives pre-sealed artifacts.
+ * This function reads the sealed manifests for catalog entry generation.
+ */
+async function loadSealedPacksFromDir(dir) {
+  let slugs;
+  try {
+    slugs = await readdir(dir);
+  } catch {
+    return [];
+  }
+
+  const packs = [];
+
+  for (const slug of slugs.sort()) {
+    const slugDir = join(dir, slug);
+    const slugStat = await stat(slugDir).catch(() => null);
+    if (!slugStat?.isDirectory()) continue;
+
+    const versions = await readdir(slugDir);
+    for (const version of versions.sort()) {
+      const packDir = join(slugDir, version);
+      const versionStat = await stat(packDir).catch(() => null);
+      if (!versionStat?.isDirectory()) continue;
+
+      const manifestPath = join(packDir, "manifest.json");
+      let manifest;
+      try {
+        manifest = JSON.parse(await readFile(manifestPath, "utf-8"));
+      } catch {
+        continue;
+      }
+
+      if (!manifest.name || !manifest.version) {
+        console.warn(`  ⚠ Skipping ${slug}/${version}: missing name or version`);
+        continue;
+      }
+
+      packs.push({ manifest, filename: null, sealed: true, sourceDir: packDir });
+    }
   }
 
   return packs;
@@ -325,11 +373,11 @@ async function loadPacksFromDir(dir) {
 async function loadPacks() {
   const packs = await loadPacksFromDir(PACKS_DIR);
   if (PRIVATE_PACKS_DIR) {
-    const privatePacks = await loadPacksFromDir(PRIVATE_PACKS_DIR);
-    if (privatePacks.length > 0) {
-      console.log(`  Loaded ${privatePacks.length} pack(s) from PRIVATE_PACKS_DIR`);
+    const sealedPacks = await loadSealedPacksFromDir(PRIVATE_PACKS_DIR);
+    if (sealedPacks.length > 0) {
+      console.log(`  Loaded ${sealedPacks.length} pre-sealed pack(s) from PRIVATE_PACKS_DIR`);
     }
-    packs.push(...privatePacks);
+    packs.push(...sealedPacks);
   }
   return packs;
 }
@@ -425,17 +473,32 @@ async function main() {
   );
 
   // Write individual pack manifests (for /packs/:name/versions/:version endpoint)
-  // Note: sealing (encryption of sealed pack prompts) is handled by
-  // sidereal-registry-infra/scripts/seal-catalog.mjs as a post-process step.
-  // This script writes full manifests for all packs (open and sealed).
-  for (const { manifest } of packs) {
+  // Open packs: write manifest from YAML data.
+  // Sealed packs: copy pre-sealed artifacts (manifest.json + payload.enc + seal-key.hex).
+  // Sealing is a client-side operation — CI never encrypts.
+  for (const { manifest, sealed, sourceDir } of packs) {
     const slug = slugify(manifest.name);
     const packDir = join(DIST_DIR, "packs", slug, manifest.version);
     await mkdir(packDir, { recursive: true });
-    await writeFile(
-      join(packDir, "manifest.json"),
-      JSON.stringify(manifest, null, 2) + "\n",
-    );
+
+    if (sealed && sourceDir) {
+      // Copy pre-sealed artifacts as-is
+      await copyFile(join(sourceDir, "manifest.json"), join(packDir, "manifest.json"));
+      const sealFiles = ["payload.enc", "seal-key.hex", "inspection.json"];
+      for (const f of sealFiles) {
+        try {
+          await copyFile(join(sourceDir, f), join(packDir, f));
+        } catch {
+          // inspection.json is optional
+          if (f !== "inspection.json") throw new Error(`Missing sealed artifact: ${sourceDir}/${f}`);
+        }
+      }
+    } else {
+      await writeFile(
+        join(packDir, "manifest.json"),
+        JSON.stringify(manifest, null, 2) + "\n",
+      );
+    }
   }
 
   const pluginCount = entries.filter((e) => e.type === "plugin").length;

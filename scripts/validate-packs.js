@@ -7,7 +7,7 @@
  * Exit code: 0 if all valid, 1 if any errors found.
  */
 
-import { readdir, readFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { DECLARED_SERVICES } from "./generated/declared-services.js";
@@ -343,12 +343,75 @@ async function validateDir(dir) {
   return errors;
 }
 
+/**
+ * Validate pre-sealed pack artifacts from a directory structured as:
+ *   {dir}/{slug}/{version}/manifest.json + payload.enc + seal-key.hex
+ *
+ * Structural validation only — cryptographic verification is done by
+ * sidereal-registry-infra/scripts/verify-sealed-packs.mjs.
+ */
+async function validateSealedDir(dir) {
+  let slugs;
+  try {
+    slugs = await readdir(dir);
+  } catch {
+    return 0;
+  }
+
+  let errors = 0;
+  for (const slug of slugs.sort()) {
+    const slugDir = join(dir, slug);
+    const slugStat = await stat(slugDir).catch(() => null);
+    if (!slugStat?.isDirectory()) continue;
+
+    const versions = await readdir(slugDir);
+    for (const version of versions.sort()) {
+      const packDir = join(slugDir, version);
+      const versionStat = await stat(packDir).catch(() => null);
+      if (!versionStat?.isDirectory()) continue;
+
+      const label = `${slug}/${version}`;
+      const fileErrors = [];
+
+      // Check required files exist
+      for (const f of ["manifest.json", "payload.enc", "seal-key.hex"]) {
+        const exists = await stat(join(packDir, f)).catch(() => null);
+        if (!exists) fileErrors.push(`missing ${f}`);
+      }
+
+      // Validate manifest structure
+      let manifest;
+      try {
+        manifest = JSON.parse(await readFile(join(packDir, "manifest.json"), "utf-8"));
+      } catch (err) {
+        fileErrors.push(`manifest.json parse error: ${err.message}`);
+      }
+
+      if (manifest) {
+        if (!manifest.name) fileErrors.push("missing name");
+        if (!manifest.version) fileErrors.push("missing version");
+        if (manifest.visibility !== "sealed") fileErrors.push(`visibility is "${manifest.visibility}", expected "sealed"`);
+        if (!manifest.seal_metadata) fileErrors.push("missing seal_metadata");
+      }
+
+      if (fileErrors.length === 0) {
+        console.log(`  PASS  ${label} (sealed)`);
+      } else {
+        console.log(`  FAIL  ${label} (sealed)`);
+        for (const e of fileErrors) console.log(`        - ${e}`);
+        errors++;
+      }
+    }
+  }
+  return errors;
+}
+
 async function main() {
   let totalErrors = await validateDir(PACKS_DIR);
 
   if (PRIVATE_PACKS_DIR) {
-    console.log(`\nValidating private packs from PRIVATE_PACKS_DIR...`);
-    totalErrors += await validateDir(PRIVATE_PACKS_DIR);
+    console.log(`\nValidating pre-sealed packs from PRIVATE_PACKS_DIR...`);
+    totalErrors += await validateSealedDir(PRIVATE_PACKS_DIR);
   }
 
   if (totalErrors > 0) process.exit(1);

@@ -15,7 +15,7 @@
  * Usage: node scripts/build-forge-context.js
  */
 
-import { readdir, readFile, mkdir, writeFile } from "node:fs/promises";
+import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parse as parseYAML } from "yaml";
 
@@ -177,28 +177,7 @@ async function loadPacksFromDir(dir) {
       const doc = parseYAML(raw);
       if (!doc?.pack || !doc?.name) continue;
 
-      const skills = Array.isArray(doc.skills) ? doc.skills : [];
-      const agents = doc.agents ? Object.keys(doc.agents) : [];
-      const services = extractPackServices(doc);
-      const visibility = doc.visibility ?? "open";
-      const tier = doc.tier ?? "community";
-      const pricing = doc.pricing;
-      const isFree = !pricing || pricing.model === "free" || pricing === null;
-
-      packs.push({
-        name: doc.name,
-        version: doc.version ?? "1.0.0",
-        description: doc.description ?? "",
-        skillCount: skills.length,
-        agentCount: agents.length,
-        agents,
-        services,
-        visibility,
-        tier,
-        isFree,
-        pricingLabel: isFree ? "free" : `${pricing.model} $${pricing.amount}/${pricing.interval ?? "once"}`,
-        isBundled: !!doc.bundled,
-      });
+      packs.push(packDocToEntry(doc));
     }
   } catch {
     // Directory not readable — skip silently
@@ -206,14 +185,78 @@ async function loadPacksFromDir(dir) {
   return packs;
 }
 
+/**
+ * Read pre-sealed pack artifacts from a directory structured as:
+ *   {dir}/{slug}/{version}/manifest.json
+ *
+ * Sealed manifests have prompts replaced with "[sealed]" but all metadata
+ * (name, description, skills list, services, etc.) is preserved.
+ */
+async function loadSealedPacksFromDir(dir) {
+  const packs = [];
+  try {
+    const slugs = await readdir(dir);
+    for (const slug of slugs.sort()) {
+      const slugDir = join(dir, slug);
+      const slugStat = await stat(slugDir).catch(() => null);
+      if (!slugStat?.isDirectory()) continue;
+
+      const versions = await readdir(slugDir);
+      for (const version of versions.sort()) {
+        const packDir = join(slugDir, version);
+        const versionStat = await stat(packDir).catch(() => null);
+        if (!versionStat?.isDirectory()) continue;
+
+        try {
+          const raw = await readFile(join(packDir, "manifest.json"), "utf-8");
+          const doc = JSON.parse(raw);
+          if (!doc?.name) continue;
+          packs.push(packDocToEntry(doc));
+        } catch {
+          continue;
+        }
+      }
+    }
+  } catch {
+    // Directory not readable — skip silently
+  }
+  return packs;
+}
+
+/** Extract a forge-vocabulary pack entry from a pack document (YAML or sealed manifest). */
+function packDocToEntry(doc) {
+  const skills = Array.isArray(doc.skills) ? doc.skills : [];
+  const agents = doc.agents ? Object.keys(doc.agents) : [];
+  const services = extractPackServices(doc);
+  const visibility = doc.visibility ?? "open";
+  const tier = doc.tier ?? "community";
+  const pricing = doc.pricing;
+  const isFree = !pricing || pricing.model === "free" || pricing === null;
+
+  return {
+    name: doc.name,
+    version: doc.version ?? "1.0.0",
+    description: doc.description ?? "",
+    skillCount: skills.length,
+    agentCount: agents.length,
+    agents,
+    services,
+    visibility,
+    tier,
+    isFree,
+    pricingLabel: isFree ? "free" : `${pricing.model} $${pricing.amount}/${pricing.interval ?? "once"}`,
+    isBundled: !!doc.bundled,
+  };
+}
+
 async function loadPacks() {
   const packs = await loadPacksFromDir(PACKS_DIR);
   if (PRIVATE_PACKS_DIR) {
-    const privatePacks = await loadPacksFromDir(PRIVATE_PACKS_DIR);
-    if (privatePacks.length > 0) {
-      console.log(`  Loaded ${privatePacks.length} pack(s) from PRIVATE_PACKS_DIR`);
+    const sealedPacks = await loadSealedPacksFromDir(PRIVATE_PACKS_DIR);
+    if (sealedPacks.length > 0) {
+      console.log(`  Loaded ${sealedPacks.length} pre-sealed pack(s) from PRIVATE_PACKS_DIR`);
     }
-    packs.push(...privatePacks);
+    packs.push(...sealedPacks);
   }
   return packs;
 }
