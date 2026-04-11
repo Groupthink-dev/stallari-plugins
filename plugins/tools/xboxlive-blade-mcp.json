@@ -1,6 +1,6 @@
 {
   "name": "xboxlive-blade-mcp",
-  "title": "Xbox Live",
+  "title": "Xbox Live (Blade)",
   "description": "Xbox Live operations — profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, messaging",
   "version": "0.1.0",
   "author": "groupthink-dev",
@@ -93,7 +93,10 @@
     ],
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["Xboxlive.signin", "Xboxlive.offline_access"],
+      "scopes": [
+        "Xboxlive.signin",
+        "Xboxlive.offline_access"
+      ],
       "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps"
     }
   },
@@ -121,7 +124,9 @@
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",
-    "platform_tested": ["darwin-arm64"],
+    "platform_tested": [
+      "darwin-arm64"
+    ],
     "security_notes": "OAuth2 via Azure AD. Write gates on messaging, friend management, and SmartGlass power commands. Confirm gates on destructive console operations."
   },
   "conformance": {

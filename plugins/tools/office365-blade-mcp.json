@@ -1,13 +1,17 @@
 {
   "name": "office365-blade-mcp",
-  "title": "Microsoft 365",
+  "title": "Microsoft Office 365",
   "description": "Microsoft 365 operations via Graph API — email, calendar, tasks (To Do + Planner). Token-efficient, write-gated, dual auth.",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/office365-blade-mcp.svg",
   "tier": "certified",
-  "contract": ["email-v1", "calendar-v1", "tasks-v1"],
+  "contract": [
+    "email-v1",
+    "calendar-v1",
+    "tasks-v1"
+  ],
   "repository": "https://github.com/groupthink-dev/office365-blade-mcp",
   "install": {
     "runtime": "uv",
@@ -76,7 +80,12 @@
     ],
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["Mail.ReadWrite", "Mail.Send", "Calendars.ReadWrite", "Tasks.ReadWrite"],
+      "scopes": [
+        "Mail.ReadWrite",
+        "Mail.Send",
+        "Calendars.ReadWrite",
+        "Tasks.ReadWrite"
+      ],
       "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
     },
     "prerequisites": [

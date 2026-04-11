@@ -22,5 +22,6 @@
     "optional": "2/3",
     "last_tested": "2026-03-25"
   },
-  "notes": "v2 domain adapter. Proxies to provider MCPs (fastmail-blade-mcp, gmail-blade-mcp) with parameter/response normalisation."
+  "notes": "v2 domain adapter. Proxies to provider MCPs (fastmail-blade-mcp, gmail-blade-mcp) with parameter/response normalisation.",
+  "hidden": true
 }

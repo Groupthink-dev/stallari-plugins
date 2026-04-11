@@ -1,6 +1,6 @@
 {
   "name": "onedrive-blade-mcp",
-  "title": "OneDrive",
+  "title": "Microsoft OneDrive",
   "description": "OneDrive and SharePoint file operations via Microsoft Graph API — browse, read, search, upload, share, delta sync",
   "version": "0.1.0",
   "author": "groupthink-dev",
@@ -76,7 +76,10 @@
     ],
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["Files.ReadWrite.All", "Sites.ReadWrite.All"],
+      "scopes": [
+        "Files.ReadWrite.All",
+        "Sites.ReadWrite.All"
+      ],
       "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
     },
     "prerequisites": [

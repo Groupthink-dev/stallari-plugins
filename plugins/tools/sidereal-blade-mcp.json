@@ -27,5 +27,6 @@
     "optional": "7/7",
     "last_tested": "2026-03-25"
   },
-  "notes": "Vault tools from sidereal-blade (29 tools) + lens tools from sidereal-lens (11 tools). Both map to the vault service via the vault-v1 contract."
+  "notes": "Vault tools from sidereal-blade (29 tools) + lens tools from sidereal-lens (11 tools). Both map to the vault service via the vault-v1 contract.",
+  "hidden": true
 }

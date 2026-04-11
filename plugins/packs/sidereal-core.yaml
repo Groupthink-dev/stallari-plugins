@@ -1,7 +1,7 @@
 pack: "1.6"
 name: sidereal-core
 title: "Sidereal Core"
-featured: true
+featured: false
 version: "3.3.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,

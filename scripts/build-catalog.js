@@ -397,6 +397,7 @@ async function main() {
   // Plugins
   for (const file of pluginFiles) {
     const raw = JSON.parse(await readFile(join(TOOLS_DIR, file), "utf-8"));
+    if (raw.hidden) continue;
     entries.push(pluginToCatalogEntry(raw));
   }
 

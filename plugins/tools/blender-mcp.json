@@ -1,6 +1,6 @@
 {
   "name": "blender-mcp",
-  "title": "Blender",
+  "title": "Blender 3D",
   "description": "Blender 3D modelling via TCP socket addon — object CRUD, materials, scene inspection, code execution, screenshot capture",
   "version": "1.5.5",
   "author": "ahujasid",

@@ -1,6 +1,6 @@
 {
   "name": "caldav-blade-mcp",
-  "title": "CalDAV Calendar",
+  "title": "Calendar (CalDAV)",
   "description": "CalDAV calendar operations — protocol-level access to any CalDAV server",
   "version": "0.1.0",
   "author": "groupthink-dev",

@@ -1,78 +1,78 @@
 {
-    "name": "ntfy-blade-mcp",
-    "title": "ntfy",
-    "description": "ntfy push notification MCP \u2014 publish, poll, topic reservation, and token management. Double-gate security with PII scrubbing.",
-    "version": "0.1.0",
-    "author": "groupthink-dev",
-    "licence": "MIT",
-    "icon": "/icons/ntfy-blade-mcp.svg",
-    "contract": "notifications-push-v1",
-    "tier": "certified",
-    "repository": "https://github.com/groupthink-dev/ntfy-blade-mcp",
-    "install": {
-        "runtime": "uv",
-        "package": "ntfy-blade-mcp"
+  "name": "ntfy-blade-mcp",
+  "title": "ntfy Notifications",
+  "description": "ntfy push notification MCP — publish, poll, topic reservation, and token management. Double-gate security with PII scrubbing.",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/ntfy-blade-mcp.svg",
+  "contract": "notifications-push-v1",
+  "tier": "certified",
+  "repository": "https://github.com/groupthink-dev/ntfy-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "ntfy-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "NTFY_BASE_URL",
+      "description": "ntfy server URL (e.g. https://ntfy.sh or self-hosted)",
+      "secret": false
     },
-    "env": [
-        {
-            "name": "NTFY_BASE_URL",
-            "description": "ntfy server URL (e.g. https://ntfy.sh or self-hosted)",
-            "secret": false
-        },
-        {
-            "name": "NTFY_TOKEN",
-            "description": "Bearer token (tk_...). Optional for public topics",
-            "secret": true
-        },
-        {
-            "name": "NTFY_DEFAULT_TOPIC",
-            "description": "Default topic when none specified in publish"
-        },
-        {
-            "name": "NTFY_WRITE_ENABLED",
-            "description": "Enable write operations (publish, cancel, reserve, tokens)",
-            "default": "false"
-        }
-    ],
-    "setup": {
-        "auth_model": "bearer_token",
-        "complexity": "simple",
-        "icon": "bell.badge.fill",
-        "product": "Access Token",
-        "help_text": "Create an access token in your ntfy server \u2192 Account \u2192 Access tokens. For self-hosted servers, use the admin credentials.",
-        "help_url": "https://docs.ntfy.sh/config/#access-tokens",
-        "blurb": "Push notifications via ntfy \u2014 publish with priority, tags, markdown, actions, and scheduled delivery. Double-gate security: env gate + per-call confirmation.",
-        "fields": [
-            {
-                "key": "NTFY_BASE_URL",
-                "label": "Server URL",
-                "secret": false,
-                "placeholder": "https://ntfy.sh"
-            },
-            {
-                "key": "NTFY_TOKEN",
-                "label": "Access Token",
-                "secret": true,
-                "placeholder": "tk_..."
-            }
-        ],
-        "test": {
-            "endpoint": "/v1/health",
-            "auth_style": "bearer"
-        },
-        "help_links": [
-            {
-                "label": "ntfy Documentation",
-                "url": "https://docs.ntfy.sh/"
-            },
-            {
-                "label": "ntfy Access Tokens",
-                "url": "https://docs.ntfy.sh/config/#access-tokens"
-            }
-        ]
+    {
+      "name": "NTFY_TOKEN",
+      "description": "Bearer token (tk_...). Optional for public topics",
+      "secret": true
     },
-    "conformance": {
-        "required": "10/10",
-        "last_tested": "2026-04-09"
+    {
+      "name": "NTFY_DEFAULT_TOPIC",
+      "description": "Default topic when none specified in publish"
+    },
+    {
+      "name": "NTFY_WRITE_ENABLED",
+      "description": "Enable write operations (publish, cancel, reserve, tokens)",
+      "default": "false"
     }
+  ],
+  "setup": {
+    "auth_model": "bearer_token",
+    "complexity": "simple",
+    "icon": "bell.badge.fill",
+    "product": "Access Token",
+    "help_text": "Create an access token in your ntfy server → Account → Access tokens. For self-hosted servers, use the admin credentials.",
+    "help_url": "https://docs.ntfy.sh/config/#access-tokens",
+    "blurb": "Push notifications via ntfy — publish with priority, tags, markdown, actions, and scheduled delivery. Double-gate security: env gate + per-call confirmation.",
+    "fields": [
+      {
+        "key": "NTFY_BASE_URL",
+        "label": "Server URL",
+        "secret": false,
+        "placeholder": "https://ntfy.sh"
+      },
+      {
+        "key": "NTFY_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "tk_..."
+      }
+    ],
+    "test": {
+      "endpoint": "/v1/health",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "ntfy Documentation",
+        "url": "https://docs.ntfy.sh/"
+      },
+      {
+        "label": "ntfy Access Tokens",
+        "url": "https://docs.ntfy.sh/config/#access-tokens"
+      }
+    ]
+  },
+  "conformance": {
+    "required": "10/10",
+    "last_tested": "2026-04-09"
+  }
 }

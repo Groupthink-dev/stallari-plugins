@@ -1,6 +1,6 @@
 {
   "name": "steam-blade-mcp",
-  "title": "Steam",
+  "title": "Steam Games",
   "description": "Steam gaming platform — library, achievements, friends, store data, market prices",
   "version": "0.1.0",
   "author": "groupthink-dev",
@@ -92,7 +92,9 @@
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",
-    "platform_tested": ["darwin-arm64"],
+    "platform_tested": [
+      "darwin-arm64"
+    ],
     "security_notes": "API key auth. Read-only. No write operations. Per-endpoint rate limiting."
   },
   "conformance": {

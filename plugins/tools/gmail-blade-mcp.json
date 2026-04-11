@@ -1,6 +1,6 @@
 {
   "name": "gmail-blade-mcp",
-  "title": "Gmail",
+  "title": "Google Gmail",
   "description": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation.",
   "version": "0.2.0",
   "author": "groupthink-dev",
@@ -38,7 +38,10 @@
     ],
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["https://www.googleapis.com/auth/gmail.modify", "https://www.googleapis.com/auth/gmail.send"],
+      "scopes": [
+        "https://www.googleapis.com/auth/gmail.modify",
+        "https://www.googleapis.com/auth/gmail.send"
+      ],
       "setup_url": "https://console.cloud.google.com/apis/credentials"
     },
     "prerequisites": [

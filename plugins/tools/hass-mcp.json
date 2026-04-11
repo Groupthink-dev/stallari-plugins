@@ -1,6 +1,6 @@
 {
   "name": "hass-mcp",
-  "title": "Home Assistant",
+  "title": "Home Assistant (community)",
   "description": "Home Assistant operations via REST API — entity state, history, areas, services, automations, camera snapshots, energy monitoring",
   "version": "0.3.0",
   "author": "bendavid",
