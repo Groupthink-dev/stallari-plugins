@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/leo-modem-v1.json",
+  "title": "leo-modem-v1",
+  "description": "LEO satellite modem/terminal service contract v1 — 9 operations across telemetry, signal quality, and hardware control for Starlink, OneWeb, Kuiper, and similar LEO terminals.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "leo-modem-v1" },
+    "service": { "const": "leo-modem" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    { "name": "status", "description": "Terminal identity, connectivity state, throughput, signal quality, and uptime", "classification": "required" },
+    { "name": "alerts", "description": "Active hardware and environment alert flags with descriptions", "classification": "required" },
+    { "name": "obstruction", "description": "Signal obstruction data — directional map, fraction obstructed, timing", "classification": "required" },
+    { "name": "history", "description": "Recent throughput, latency, and power telemetry (raw or summarised)", "classification": "required" },
+    { "name": "diagnostics", "description": "Hardware version, firmware, self-test results, alignment stats", "classification": "required" },
+    { "name": "location", "description": "Terminal GPS coordinates (may require user opt-in)", "classification": "recommended" },
+    { "name": "reboot", "description": "Restart the terminal", "classification": "gated" },
+    { "name": "stow", "description": "Stow or unstow the terminal for storage or transport", "classification": "gated" },
+    { "name": "power_schedule", "description": "Read or configure power-save sleep schedule", "classification": "gated" }
+  ]
+}

@@ -10,6 +10,7 @@
   "tier": "certified",
   "homepage": "https://github.com/Groupthink-dev/starlink-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/starlink-blade-mcp",
+  "contract": "leo-modem-v1",
   "multi_instance": false,
   "highlights": [
     { "icon": "\ud83d\udce1", "text": "Status \u2014 real-time connectivity, throughput, SNR, and antenna orientation" },
