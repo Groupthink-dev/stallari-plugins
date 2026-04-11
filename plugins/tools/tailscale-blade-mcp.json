@@ -1,0 +1,125 @@
+{
+  "name": "tailscale-blade-mcp",
+  "title": "Tailscale",
+  "description": "Tailscale network monitoring and security — device inventory, ACL policy review, DNS configuration, auth key auditing, users, and audit logs",
+  "tagline": "Monitor and secure your tailnet — devices, ACLs, keys, DNS, and audit trail",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/tailscale-blade-mcp.svg",
+  "tier": "certified",
+  "contract": "vpn-v1",
+  "repository": "https://github.com/groupthink-dev/tailscale-blade-mcp",
+  "multi_instance": true,
+  "highlights": [
+    { "icon": "📡", "text": "Devices — hostname, OS, IP, online/offline, key expiry, tags, update status" },
+    { "icon": "🔐", "text": "ACLs — groups, rules, SSH rules, tag owners. Who can talk to whom." },
+    { "icon": "🔑", "text": "Keys — auth key hygiene: reusable, ephemeral, preauth flags, expiry" },
+    { "icon": "🌐", "text": "DNS — nameservers, MagicDNS, search paths, split DNS rules" },
+    { "icon": "📋", "text": "Audit — configuration change log: who changed what, when" },
+    { "icon": "🛡️", "text": "SecOps — KEY_EXPIRY_OFF, KEY_EXPIRED, UNAUTHORIZED flagging at a glance" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/tailscale-blade-mcp" },
+    { "label": "Tailscale API Docs", "url": "https://tailscale.com/api" },
+    { "label": "Tailscale Admin Console", "url": "https://login.tailscale.com/admin" },
+    { "label": "HexSleeves/tailscale-mcp (community)", "url": "https://github.com/HexSleeves/tailscale-mcp" }
+  ],
+  "readme": "### What it does\n\nGives your AI agent structured access to Tailscale tailnets via the official REST API v2. Monitor device health, audit ACL policies, inspect DNS configuration, review auth key hygiene, list users, and trace configuration changes — all through 17 focused MCP tools with token-efficient output.\n\nBuilt on raw [httpx](https://www.python-httpx.org/) async — no third-party Tailscale library needed. The API is clean REST with Bearer auth, no pagination, and JSON responses.\n\n### How it differs from other Tailscale MCPs\n\n| | This plugin | HexSleeves/tailscale-mcp | jaxxstorm/tailscale-mcp |\n|---|---|---|---|\n| Focus | Monitoring + security (17 tools) | Management (~15 tools) | Read-only (~5 tools) |\n| Design for | LLM agents (token-efficient) | Claude Code | General MCP |\n| Output | Pipe-delimited, compact | Full JSON | Full JSON |\n| Write safety | Dual-gated (env + confirm) | Direct writes | Read-only |\n| Audit log | Yes | No | No |\n| ACL summary | Parsed groups/rules/SSH/tags | Raw JSON | Raw JSON |\n| Key hygiene | Flags reusable, expiry status | Basic listing | No |\n\n### SecOps-first device output\n\nEvery device line flags security-relevant state at a glance:\n\n```\nmacbook | os=mac | ip=100.100.1.1 | online | expires=2026-07-11 | id=n123\nnas | os=linux | ip=100.100.1.2 | online | KEY_EXPIRY_OFF | UPDATE_AVAILABLE | tags=server,infra | id=n456\nphone | os=iOS | ip=100.100.1.3 | OFFLINE | last=2d ago | id=n789\nrogue | os=win | ip=100.100.1.4 | UNAUTHORIZED | id=n000\n```\n\n- `KEY_EXPIRY_OFF` — device has key expiry disabled (standing risk)\n- `KEY_EXPIRED` — device key has expired (needs re-auth)\n- `UNAUTHORIZED` — device is pending authorization\n- `OFFLINE` with `last=` — last-seen relative time for stale device detection\n- `UPDATE_AVAILABLE` — client update available\n\n### Token efficiency\n\nThe Tailscale API returns verbose JSON. This plugin reformats everything into compact output:\n\n- Device listing: ~40 tokens per device (vs ~400 raw)\n- ACL policy: parsed into groups, rules, SSH rules, tag owners (~30/rule)\n- Auth keys: ~25 tokens per key with flag summary\n- Audit log: ~25 tokens per entry\n\n### Safety model\n\nRead tools work immediately — devices, ACLs, DNS, keys, users, webhooks, audit log.\n\nWrite operations require `TAILSCALE_WRITE_ENABLED=true`. Destructive operations additionally require `confirm=true`:\n\n| Operation | Gate |\n|-----------|------|\n| Authorize/deauthorize device | write |\n| Set device tags | write |\n| Expire device key | write |\n| Approve subnet routes | write |\n| Create auth key | write |\n| Delete auth key | write + confirm |\n| Delete device | write + confirm |\n\n### Authentication\n\nTwo auth methods supported:\n\n- **API access token** (`tskey-api-*`) — personal, inherits user permissions, 1-90 day expiry\n- **OAuth bearer token** — scoped, not tied to a user, 1-hour expiry. Create OAuth client in admin console, request token via `client_credentials` flow.\n\nBoth are passed as `TAILSCALE_API_KEY`. The API auto-detects the tailnet from the token (use `-` as tailnet, which is the default).\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| ts_info | read | Health check — device counts, online/offline, key warnings, settings |\n| ts_devices | read | All devices — hostname, OS, IP, key expiry, tags, updates |\n| ts_device | read | Full detail — addresses, client version, key status, user |\n| ts_device_routes | read | Routes — advertised subnets, approved/unapproved |\n| ts_dns | read | DNS — nameservers, MagicDNS, search paths, split DNS |\n| ts_acl | read | ACL policy — groups, rules, SSH rules, tag owners |\n| ts_acl_validate | gated | Validate a policy without applying |\n| ts_keys | read | Auth keys — flags, tags, expiry |\n| ts_users | read | Users — name, role, status, device count |\n| ts_webhooks | read | Webhooks — endpoint URL, event subscriptions |\n| ts_audit_log | read | Config changes — who, what, when |\n| ts_authorize_device | gated | Authorize or deauthorize a device |\n| ts_set_tags | gated | Set ACL tags on a device |\n| ts_expire_device | gated | Force key expiry on a device |\n| ts_approve_routes | gated | Approve advertised subnet routes |\n| ts_create_key | gated | Create an auth key |\n| ts_delete_key | gated | Revoke an auth key (confirm required) |\n| ts_delete_device | gated | Remove a device (confirm required) |",
+  "install": {
+    "runtime": "uv",
+    "package": "tailscale-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "TAILSCALE_API_KEY",
+      "description": "Tailscale API access token or OAuth bearer token",
+      "secret": true
+    },
+    {
+      "name": "TAILSCALE_TAILNET",
+      "description": "Tailnet name or '-' for auto-detect",
+      "default": "-"
+    },
+    {
+      "name": "TAILSCALE_WRITE_ENABLED",
+      "description": "Enable write operations (authorize, tag, expire, keys, routes)",
+      "default": "false"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "network",
+    "product": "Tailscale",
+    "blurb": "Monitor your Tailscale tailnet — device health, ACL policies, DNS configuration, auth key hygiene, user management, and configuration audit logs.",
+    "help_text": "Generate an API access token in the Tailscale admin console (Settings > Keys). The tailnet is auto-detected from your token — no additional configuration needed.",
+    "help_links": [
+      {
+        "label": "Tailscale Admin Console",
+        "url": "https://login.tailscale.com/admin/settings/keys"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://tailscale.com/api"
+      }
+    ],
+    "fields": [
+      {
+        "key": "TAILSCALE_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "tskey-api-...",
+        "required": true
+      },
+      {
+        "key": "TAILSCALE_WRITE_ENABLED",
+        "label": "Enable write operations",
+        "type": "boolean",
+        "secret": false,
+        "required": false,
+        "help": "Allow device authorization, tagging, key management, and route approval"
+      }
+    ],
+    "test": {
+      "tool": "ts_info",
+      "expect": "Devices:"
+    },
+    "prerequisites": [
+      "Tailscale account",
+      "API access token (Settings > Keys in admin console)"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "tailscale-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vpn"],
+      "label": "Security posture audit",
+      "body": "Run ts_info for tailnet health. Check ts_devices for devices with KEY_EXPIRY_OFF, KEY_EXPIRED, or UNAUTHORIZED flags. Review ts_acl for overly permissive rules. List ts_keys to find reusable keys without tags. Check ts_audit_log for recent policy changes."
+    },
+    {
+      "type": "workflow",
+      "target": "tailscale-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vpn"],
+      "label": "Stale device cleanup",
+      "body": "List ts_devices and identify OFFLINE devices with last-seen times. For devices offline more than 30 days, review ts_device for full detail. If confirmed stale, use ts_expire_device to force re-authentication or ts_delete_device to remove."
+    },
+    {
+      "type": "workflow",
+      "target": "tailscale-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vpn"],
+      "label": "Route and DNS review",
+      "body": "Check ts_dns for nameserver configuration and split DNS rules. For each subnet router (devices with tags like tag:server), run ts_device_routes to verify only expected subnets are advertised and approved. Review ts_acl to confirm route access matches intended policy."
+    }
+  ],
+  "conformance": {
+    "required": "0/0",
+    "recommended": "0/0",
+    "optional": "0/0",
+    "last_tested": "2026-04-11"
+  }
+}

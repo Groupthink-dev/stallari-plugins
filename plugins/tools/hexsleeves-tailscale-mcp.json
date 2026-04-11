@@ -1,0 +1,81 @@
+{
+  "name": "hexsleeves-tailscale-mcp",
+  "title": "Tailscale (Full Management)",
+  "description": "Comprehensive Tailscale management — ~15 tools covering devices, ACLs, DNS, keys, and network configuration",
+  "version": "0.4.0",
+  "author": "HexSleeves",
+  "licence": "MIT",
+  "icon": "/icons/hexsleeves-tailscale-mcp.svg",
+  "tier": "community",
+  "contract": "vpn-v1",
+  "repository": "https://github.com/HexSleeves/tailscale-mcp",
+  "multi_instance": false,
+  "highlights": [
+    { "icon": "⚙️", "text": "~15 tools — device management, ACL editing, DNS config" },
+    { "icon": "🔄", "text": "CLI + API hybrid — some tools use the Tailscale binary" },
+    { "icon": "📋", "text": "npm + Docker — multiple install methods" },
+    { "icon": "🔐", "text": "OAuth + API key — both auth methods supported" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/HexSleeves/tailscale-mcp" },
+    { "label": "npm Package", "url": "https://www.npmjs.com/package/@hexsleeves/tailscale-mcp" }
+  ],
+  "install": {
+    "runtime": "npx",
+    "package": "@hexsleeves/tailscale-mcp"
+  },
+  "env": [
+    {
+      "name": "TAILSCALE_API_KEY",
+      "description": "Tailscale API access token",
+      "secret": true
+    },
+    {
+      "name": "TAILSCALE_TAILNET",
+      "description": "Tailnet organization name"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "network",
+    "product": "Tailscale",
+    "blurb": "Full Tailscale management with ~15 tools — devices, ACLs, DNS, keys, and network config. For comprehensive configuration management.",
+    "help_text": "Enter your Tailscale API key and tailnet name. This MCP provides full management capability including ACL editing and DNS configuration changes.",
+    "help_links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/HexSleeves/tailscale-mcp"
+      }
+    ],
+    "fields": [
+      {
+        "key": "TAILSCALE_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "tskey-api-...",
+        "required": true
+      },
+      {
+        "key": "TAILSCALE_TAILNET",
+        "label": "Tailnet",
+        "secret": false,
+        "placeholder": "example.com",
+        "required": true
+      }
+    ],
+    "prerequisites": [
+      "Tailscale account",
+      "API access token",
+      "Node.js runtime"
+    ]
+  },
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "untested",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "Community listing for HexSleeves/tailscale-mcp (80+ stars). Full management MCP with ~15 tools including ACL editing. For monitoring and security visibility with token-efficient output, use the certified tailscale-blade-mcp instead."
+}
