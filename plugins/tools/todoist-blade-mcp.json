@@ -2,6 +2,7 @@
   "name": "todoist-blade-mcp",
   "title": "Todoist",
   "description": "Todoist task management — projects, sections, tasks, labels, comments, incremental sync, batch commands, filter queries",
+  "tagline": "Todoist tasks with dual API and incremental sync",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -57,6 +58,47 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\u2705", "text": "Tasks \u2014 create, update, complete, delete with full metadata" },
+    { "icon": "\ud83d\udcc1", "text": "Projects \u2014 hierarchical projects with sections and nesting" },
+    { "icon": "\ud83c\udff7\ufe0f", "text": "Labels \u2014 tag-based filtering and organisation" },
+    { "icon": "\ud83d\udcac", "text": "Comments \u2014 task and project comments for context" },
+    { "icon": "\ud83d\udd04", "text": "Incremental sync \u2014 Sync v9 API for efficient delta updates" },
+    { "icon": "\u26a1", "text": "Batch commands \u2014 multiple operations in a single API call" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/todoist-blade-mcp" },
+    { "label": "Todoist REST API v2", "url": "https://developer.todoist.com/rest/v2/" },
+    { "label": "Todoist Sync API v9", "url": "https://developer.todoist.com/sync/v9/" },
+    { "label": "Get API Token", "url": "https://app.todoist.com/app/settings/integrations/developer" }
+  ],
+  "readme": "### What it does\n\nTodoist gives your AI agent full access to Todoist\u2019s task management platform \u2014 projects, sections, tasks, labels, comments, and filter queries. Built on both the REST v2 and Sync v9 APIs for maximum efficiency.\n\nYour agent can list projects, create tasks with due dates and labels, add comments, complete items, and run Todoist filter queries to find exactly the tasks you need.\n\n### Dual API architecture\n\nThis plugin uses two Todoist APIs strategically:\n\n- **REST v2** for simple CRUD operations \u2014 clean, predictable, one resource per call\n- **Sync v9** for incremental sync and batch commands \u2014 fetch only what changed since the last sync, execute multiple operations in a single round trip\n\nThe Sync API\u2019s incremental model is especially efficient for agents that poll task state repeatedly. After the initial sync, subsequent calls transfer only deltas.\n\n### Safety model\n\nRead operations work immediately \u2014 list projects, get tasks, search with filters, read comments.\n\nWrite operations (create, update, complete, delete, batch) require `TODOIST_WRITE_ENABLED=true`. Disabled by default, so your agent can browse your task database freely without risk of accidental modifications.\n\n### Tool coverage\n\n| Category | Capabilities |\n|----------|--------------|\n| Tasks | Create, read, update, complete, delete, filter queries |\n| Projects | List, create, sections, hierarchy |\n| Labels | List, create, assign |\n| Comments | Task and project comments |\n| Sync | Incremental delta sync |\n| Batch | Multiple commands in one call |",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "todoist-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Triage inbox and organise into projects",
+      "body": "List tasks in the inbox, assign each to the appropriate project with labels and due dates, then add sections to projects that need better structure."
+    },
+    {
+      "type": "workflow",
+      "target": "todoist-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Run a filter query and batch-update results",
+      "body": "Query tasks using Todoist filter syntax to find overdue items, then use batch commands to reschedule them with updated due dates in a single API call."
+    },
+    {
+      "type": "workflow",
+      "target": "todoist-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Create a project with structured tasks",
+      "body": "Create a new project, add sections for phases or categories, then populate each section with tasks including due dates, labels, and priority levels."
+    }
+  ],
   "conformance": {
     "required": "3/3",
     "recommended": "4/4",

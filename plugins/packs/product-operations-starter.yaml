@@ -15,6 +15,84 @@ licence: MIT
 visibility: open
 tier: certified
 pricing: null
+tagline: "Release announcements, onboarding, and subscription metrics for your product"
+
+readme:
+  format: markdown
+  body: |
+    # Product Operations Starter Pack
+
+    A starter kit for running product operations with Sidereal — release
+    announcements, customer onboarding, subscription monitoring, and
+    contact management. Designed to be forked and customised for your
+    own product.
+
+    ## What it does
+
+    This pack connects your vault to transactional email and billing
+    services, giving you four operational skills:
+
+    ### Release announcements
+
+    Compose and send version release emails to your product audience.
+    Provide the product name, version, and highlights — the pack looks
+    up your templates and audience segments, composes the email, and
+    presents it for human review before sending. Every send is archived
+    to your vault.
+
+    ### Customer welcome
+
+    Send personalised welcome emails to new customers. The pack checks
+    if a contact exists, creates one if needed, selects and personalises
+    the welcome template, and waits for human approval before sending.
+
+    ### Subscription dashboard
+
+    Read-only subscription metrics from your billing provider — MRR,
+    churn rate, trial counts, subscriptions grouped by status. Formatted
+    as a markdown table and archived to your vault. No billing writes.
+
+    ### Contact sync
+
+    One-way sync from vault person cards to your transactional email
+    contact list. Diffs existing contacts against vault records and
+    presents the batch for human review before creating new contacts.
+
+    ## Who this is for
+
+    Product teams and solo founders who want to automate the repetitive
+    parts of product operations (release comms, onboarding) without
+    building custom tooling. Fork this pack and customise the templates,
+    audience segments, and billing integration for your product.
+
+    ## Safety model
+
+    - **All email sends require explicit human confirmation** — the pack
+      never auto-sends regardless of confidence
+    - Billing access is **read-only** — no subscription modifications
+    - Customer emails are **hashed in logs** and exact only in vault
+      notes (always `publish: false`)
+    - Contact sync is **one-way** (vault to provider) and batch-reviewed
+
+highlights:
+  - icon: "\U0001F4E3"
+    text: "Release announcements — compose, review, and send version emails to your audience"
+  - icon: "\U0001F44B"
+    text: "Customer onboarding — personalised welcome emails with human-in-the-loop"
+  - icon: "\U0001F4CA"
+    text: "Subscription dashboard — MRR, churn, trials from your billing provider"
+  - icon: "\U0001F4C7"
+    text: "Contact sync — one-way vault-to-provider sync with batch review"
+  - icon: "\U0001F512"
+    text: "All sends require human approval — no auto-send, ever"
+
+links:
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Pack Spec
+    url: https://sidereal.cc/docs/pack-spec
 
 min_sidereal: "0.47"
 

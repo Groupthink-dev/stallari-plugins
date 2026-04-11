@@ -8,7 +8,49 @@
   "icon": "/icons/blender-mcp.svg",
   "tier": "community",
   "contract": null,
+  "tagline": "AI-driven 3D modelling inside Blender",
   "repository": "https://github.com/ahujasid/blender-mcp",
+  "highlights": [
+    { "icon": "\ud83e\uddf1", "text": "Objects \u2014 create, modify, delete meshes, lights, cameras" },
+    { "icon": "\ud83c\udfa8", "text": "Materials \u2014 assign and edit PBR materials and textures" },
+    { "icon": "\ud83d\uddbc\ufe0f", "text": "Scene inspection \u2014 list objects, hierarchy, transforms" },
+    { "icon": "\ud83d\udcf8", "text": "Screenshots \u2014 capture viewport for visual feedback" },
+    { "icon": "\ud83d\udc0d", "text": "Code execution \u2014 run arbitrary Blender Python scripts" },
+    { "icon": "\ud83c\udf0d", "text": "Asset libraries \u2014 Poly Haven, Hyper3D Rodin, Sketchfab" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/ahujasid/blender-mcp" },
+    { "label": "Blender Downloads", "url": "https://www.blender.org/download/" },
+    { "label": "Blender Python API", "url": "https://docs.blender.org/api/current/" },
+    { "label": "Poly Haven Assets", "url": "https://polyhaven.com" }
+  ],
+  "readme": "### What it does\n\nBlender MCP connects your AI agent to a running Blender instance via a TCP socket addon. Your agent can create and manipulate 3D objects, assign materials, inspect the scene graph, execute Python scripts, and capture viewport screenshots for visual feedback.\n\nDescribe what you want to build in natural language and the agent translates it into Blender operations \u2014 creating meshes, positioning objects, setting up lighting, and iterating based on screenshots.\n\n### How it works\n\nTwo components work together: a Blender addon that runs a TCP socket server inside Blender, and the MCP server that bridges AI tool calls to that socket. Install the addon in Blender, start the socket server, then connect the MCP.\n\n### Asset integrations\n\nOptional integrations with Poly Haven (free HDRIs, textures, models), Hyper3D Rodin (AI-generated 3D models), and Sketchfab (3D model marketplace) let your agent pull in assets directly.\n\n### Safety note\n\nThe `execute_blender_code` tool runs arbitrary Python inside Blender. This is the expected pattern for addon-based MCPs but means the agent has full scripting access to your Blender session. No write gates \u2014 all operations execute immediately.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "blender-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Build a scene from a description",
+      "body": "Describe a 3D scene in natural language. The agent creates objects, positions them, assigns materials, sets up lighting, then captures a screenshot for review and iteration."
+    },
+    {
+      "type": "workflow",
+      "target": "blender-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Iterate on a model with visual feedback",
+      "body": "Inspect the current scene, capture a viewport screenshot, discuss changes, then execute modifications and capture again to compare before and after."
+    },
+    {
+      "type": "workflow",
+      "target": "blender-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Script a batch operation",
+      "body": "Write and execute a Blender Python script to batch-process objects \u2014 rename, reposition, apply modifiers, or export selected meshes to a target format."
+    }
+  ],
   "install": {
     "runtime": "uv",
     "package": "blender-mcp"

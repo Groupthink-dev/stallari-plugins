@@ -2,6 +2,7 @@
   "name": "mastodon-blade-mcp",
   "title": "Mastodon",
   "description": "Mastodon operations — timelines, statuses, notifications, search, interactions, multi-instance",
+  "tagline": "Browse, post, and interact across the fediverse",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -84,6 +85,47 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\ud83d\udce8", "text": "Timelines — home, local, federated, hashtag, and list feeds" },
+    { "icon": "\ud83d\udd0d", "text": "Search — accounts, statuses, and hashtags across the fediverse" },
+    { "icon": "\ud83d\udd14", "text": "Notifications — mentions, boosts, favourites, follow requests" },
+    { "icon": "\u270d\ufe0f", "text": "Compose — post, reply, boost, favourite, bookmark" },
+    { "icon": "\ud83c\udf10", "text": "Multi-instance — manage multiple accounts from one server" },
+    { "icon": "\ud83d\udd12", "text": "Write-gated — posting disabled by default, explicit opt-in" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/mastodon-blade-mcp" },
+    { "label": "Mastodon API Docs", "url": "https://docs.joinmastodon.org/api/" },
+    { "label": "Creating Access Tokens", "url": "https://docs.joinmastodon.org/client/token/" },
+    { "label": "OAuth Scopes Reference", "url": "https://docs.joinmastodon.org/api/oauth-scopes/" }
+  ],
+  "readme": "### What it does\n\nMastodon Blade MCP gives your AI agent access to the Mastodon social network — reading timelines, searching content, managing notifications, and composing posts. It works with any Mastodon-compatible instance (Mastodon, Pleroma, GoToSocial, Akkoma) through the standard Mastodon API.\n\nYour agent can catch up on your home timeline, search for discussions on a topic, check notifications, and draft or publish posts — all from a single conversation.\n\n### Multi-instance support\n\nConfigure multiple accounts across different instances using `MASTODON_PROVIDERS`. Each provider gets its own instance URL and token, and your agent can switch between them within a session. Useful for managing personal and project accounts separately.\n\n### Safety model\n\nAll write operations (posting, replying, boosting, favouriting, following) are disabled by default:\n\n- **Read-only by default** — timelines, search, and notifications work immediately\n- **Write gate** — set `MASTODON_WRITE_ENABLED=true` to unlock posting and interactions\n- **Confirm gate** — each write tool requires `confirm: true` per call\n\nThis prevents accidental posts or follows while still allowing full read access for monitoring and research.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "mastodon-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["social"],
+      "label": "Catch up on the fediverse",
+      "body": "Pull the home timeline and notifications, summarise trending discussions, and flag any mentions or replies that need a response."
+    },
+    {
+      "type": "workflow",
+      "target": "mastodon-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["social"],
+      "label": "Research a topic across instances",
+      "body": "Search for hashtags and accounts related to a topic, review recent statuses from key accounts, and bookmark notable posts for later reference."
+    },
+    {
+      "type": "workflow",
+      "target": "mastodon-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["social"],
+      "label": "Draft and publish a thread",
+      "body": "Compose a multi-part thread with content warnings and hashtags, preview the posts, then publish them sequentially with reply chains intact."
+    }
+  ],
   "conformance": {
     "required": "4/4",
     "recommended": "6/6",

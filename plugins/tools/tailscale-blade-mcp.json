@@ -8,7 +8,7 @@
   "licence": "MIT",
   "icon": "/icons/tailscale-blade-mcp.svg",
   "tier": "certified",
-  "contract": "vpn-v1",
+  "contract": "overlay-network-v1",
   "repository": "https://github.com/groupthink-dev/tailscale-blade-mcp",
   "multi_instance": true,
   "highlights": [
@@ -95,7 +95,7 @@
       "type": "workflow",
       "target": "tailscale-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vpn"],
+      "shared_services": ["overlay-network"],
       "label": "Security posture audit",
       "body": "Run ts_info for tailnet health. Check ts_devices for devices with KEY_EXPIRY_OFF, KEY_EXPIRED, or UNAUTHORIZED flags. Review ts_acl for overly permissive rules. List ts_keys to find reusable keys without tags. Check ts_audit_log for recent policy changes."
     },
@@ -103,7 +103,7 @@
       "type": "workflow",
       "target": "tailscale-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vpn"],
+      "shared_services": ["overlay-network"],
       "label": "Stale device cleanup",
       "body": "List ts_devices and identify OFFLINE devices with last-seen times. For devices offline more than 30 days, review ts_device for full detail. If confirmed stale, use ts_expire_device to force re-authentication or ts_delete_device to remove."
     },
@@ -111,7 +111,7 @@
       "type": "workflow",
       "target": "tailscale-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vpn"],
+      "shared_services": ["overlay-network"],
       "label": "Route and DNS review",
       "body": "Check ts_dns for nameserver configuration and split DNS rules. For each subnet router (devices with tags like tag:server), run ts_device_routes to verify only expected subnets are advertised and approved. Review ts_acl to confirm route access matches intended policy."
     }

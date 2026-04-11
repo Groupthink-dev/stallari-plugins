@@ -91,6 +91,32 @@
       "OAuth2 API credentials from Enterprise portal"
     ]
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "starlink-enterprise-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Fleet health check",
+      "body": "List all user terminals to get a fleet overview. For each terminal, check online/offline status and signal quality metrics. Identify terminals with degraded performance (high latency, low throughput, frequent obstructions). Cross-reference with service line assignments to determine which sites are affected."
+    },
+    {
+      "type": "workflow",
+      "target": "starlink-enterprise-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Data usage audit",
+      "body": "Pull data usage for the current billing period across all service lines. Identify terminals with unusually high consumption. Compare against service plan limits to flag lines approaching overages. Produce a summary with per-terminal and per-service-line breakdowns."
+    },
+    {
+      "type": "workflow",
+      "target": "starlink-enterprise-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Service availability assessment",
+      "body": "For a new deployment site, check service availability at the target address or coordinates. Review available service plans and pricing. If available, inspect nearby terminal telemetry for real-world performance data at similar locations."
+    }
+  ],
   "conformance": {
     "required": "0/0",
     "recommended": "0/0",

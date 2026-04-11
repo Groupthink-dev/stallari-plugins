@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sidereal.dev/schemas/contracts/overlay-network-v1.json",
+  "title": "overlay-network-v1",
+  "description": "Overlay network service contract v1 — 14 operations across device inventory, access control, DNS configuration, key management, and audit logging for Tailscale, ZeroTier, Nebula, and similar overlay networks.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "overlay-network-v1" },
+    "service": { "const": "overlay-network" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    { "name": "info", "description": "Network health check — device counts, online/offline, key expiry warnings, settings", "classification": "required" },
+    { "name": "devices", "description": "List all devices — hostname, OS, IP, online/offline, key expiry, tags", "classification": "required" },
+    { "name": "device", "description": "Full detail for a single device — addresses, client version, key status, user", "classification": "required" },
+    { "name": "device_routes", "description": "Subnet routes for a device — advertised, approved/unapproved status", "classification": "required" },
+    { "name": "acl", "description": "Access control policy — groups, rules, SSH rules, who can reach what", "classification": "required" },
+    { "name": "dns", "description": "DNS configuration — nameservers, search paths, split DNS rules", "classification": "required" },
+    { "name": "keys", "description": "Auth keys — reusable/ephemeral/preauthorized flags, tags, expiry", "classification": "recommended" },
+    { "name": "users", "description": "Users — name, role, status, device count, online/last seen", "classification": "recommended" },
+    { "name": "audit_log", "description": "Configuration change log — who changed what, when", "classification": "recommended" },
+    { "name": "authorize_device", "description": "Authorize or deauthorize a device on the network", "classification": "gated" },
+    { "name": "set_tags", "description": "Set access control tags on a device", "classification": "gated" },
+    { "name": "expire_device", "description": "Force key expiry — device must re-authenticate", "classification": "gated" },
+    { "name": "approve_routes", "description": "Approve advertised subnet routes on a device", "classification": "gated" },
+    { "name": "manage_keys", "description": "Create or revoke auth keys", "classification": "gated" }
+  ]
+}

@@ -7,7 +7,49 @@
   "licence": "MIT",
   "tier": "community",
   "contract": null,
+  "tagline": "Polymarket and Kalshi prediction data in one place",
+  "repository": "https://github.com/shaanmajid/prediction-mcp",
   "homepage": "https://github.com/shaanmajid/prediction-mcp",
+  "highlights": [
+    { "icon": "\ud83d\udcca", "text": "Polymarket \u2014 search events, prices, orderbooks, no auth needed" },
+    { "icon": "\ud83c\udfb0", "text": "Kalshi \u2014 markets, positions, balance, and trading" },
+    { "icon": "\ud83d\udd0d", "text": "Relevance scoring \u2014 results ranked by query relevance" },
+    { "icon": "\ud83d\udcb1", "text": "Orderbooks \u2014 live bid/ask depth for any market" },
+    { "icon": "\ud83d\udd13", "text": "Zero-config Polymarket \u2014 no API key required for read-only access" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/shaanmajid/prediction-mcp" },
+    { "label": "npm Package", "url": "https://www.npmjs.com/package/prediction-mcp" },
+    { "label": "Polymarket", "url": "https://polymarket.com" },
+    { "label": "Kalshi API Docs", "url": "https://trading-api.readme.io/reference" }
+  ],
+  "readme": "### What it does\n\nPrediction Markets aggregates data from Polymarket and Kalshi into a single MCP. Search for prediction markets on any topic, check current prices and probability estimates, browse orderbooks, and \u2014 with Kalshi credentials \u2014 view positions and place trades.\n\nPolymarket access is completely free and requires no authentication. Kalshi features unlock progressively with API credentials.\n\n### Two-tier access\n\n- **Polymarket (no auth)** \u2014 search events, get market prices, browse orderbooks. Works out of the box.\n- **Kalshi (API key + RSA key)** \u2014 search markets, view balance and positions, place orders. Requires Kalshi account and API credentials.\n\n### Safety note\n\nPolymarket tools are read-only. However, the Kalshi `kalshi_create_order` tool can place real-money trades and currently lacks a confirm gate. Exercise caution with Kalshi credentials enabled \u2014 consider using Kalshi\u2019s demo environment for testing.\n\n### Relevance scoring\n\nSearch results are ranked by relevance to your query rather than by volume or recency, making it easier to find niche markets on specific topics.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "prediction-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Research prediction market consensus",
+      "body": "Search Polymarket for events related to a topic, compare current prices across related markets, and summarise the implied probability distribution."
+    },
+    {
+      "type": "workflow",
+      "target": "prediction-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Monitor a specific market",
+      "body": "Look up a Polymarket or Kalshi market by topic, check current bid/ask prices and orderbook depth, and assess liquidity before acting."
+    },
+    {
+      "type": "workflow",
+      "target": "prediction-mcp",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Review Kalshi portfolio positions",
+      "body": "Check Kalshi account balance, list open positions with current market prices, and evaluate unrealised P&L across active contracts."
+    }
+  ],
   "install": {
     "runtime": "npx",
     "package": "prediction-mcp"

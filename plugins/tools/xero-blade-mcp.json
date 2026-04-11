@@ -8,6 +8,48 @@
   "icon": "/icons/xero-blade-mcp.svg",
   "tier": "certified",
   "contract": "accounting-v1",
+  "tagline": "Xero accounting and AU payroll in your AI workflow",
+  "highlights": [
+    { "icon": "\ud83d\udcb0", "text": "Invoices \u2014 create, send, void, and track payment status" },
+    { "icon": "\ud83d\udccb", "text": "Bills \u2014 accounts payable with line items and due dates" },
+    { "icon": "\ud83d\udc65", "text": "Contacts \u2014 customers and suppliers with full address book" },
+    { "icon": "\ud83d\udcca", "text": "Reports \u2014 P&L, balance sheet, trial balance, aged receivables" },
+    { "icon": "\ud83d\udcb3", "text": "Payments \u2014 record and reconcile against invoices and bills" },
+    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 all mutations behind explicit confirm flag" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/xero-blade-mcp" },
+    { "label": "Xero Developer Portal", "url": "https://developer.xero.com" },
+    { "label": "Xero API Reference", "url": "https://developer.xero.com/documentation/api/accounting/overview" },
+    { "label": "Create an App", "url": "https://developer.xero.com/app/manage" }
+  ],
+  "readme": "### What it does\n\nXero gives your AI agent full access to Xero Accounting and Payroll AU APIs. Manage contacts, create and send invoices, track bills, record payments, and pull financial reports \u2014 all from conversation.\n\nYour agent can check outstanding invoices, create a bill for a new supplier, pull this month\u2019s P&L, or reconcile a payment \u2014 without switching to the Xero dashboard.\n\n### Token efficiency\n\nXero API responses include extensive pagination metadata, tracking categories, and internal reference fields. Each tool strips these down to the essential fields \u2014 a typical invoice list returns ~40% fewer tokens than raw API output.\n\n### Safety model\n\nAll tools follow a read-free, write-gated, confirm-gated pattern:\n\n- **Reads** work immediately \u2014 list contacts, view invoices, pull reports\n- **Writes** require explicit confirmation \u2014 create invoices, record payments\n- **Destructive operations** are double-gated \u2014 voiding invoices, deleting contacts\n\n### Contract coverage\n\nFull 39/39 accounting-v1 contract compliance across transactions, contacts, settings, and reports. Includes Australian Payroll (pay runs, employees, leave, super) when Payroll AU scope is granted.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "xero-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["accounting"],
+      "label": "End-of-month accounts review",
+      "body": "Pull the P&L and balance sheet reports, check aged receivables for overdue invoices, and review recent payments against outstanding bills."
+    },
+    {
+      "type": "workflow",
+      "target": "xero-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["accounting"],
+      "label": "Invoice a new client",
+      "body": "Create or look up the contact, create a draft invoice with line items, review it for accuracy, then approve and send via Xero."
+    },
+    {
+      "type": "workflow",
+      "target": "xero-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["accounting"],
+      "label": "Reconcile supplier payments",
+      "body": "List unpaid bills for a supplier, match them against recent bank transactions, record payments, and verify the supplier\u2019s account balance is zero."
+    }
+  ],
   "repository": "https://github.com/groupthink-dev/xero-blade-mcp",
   "install": {
     "runtime": "uv",

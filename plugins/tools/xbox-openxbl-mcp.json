@@ -8,7 +8,39 @@
   "icon": "/icons/xbox-openxbl-mcp.svg",
   "tier": "community",
   "contract": "gaming-v1",
+  "tagline": "Xbox profiles and achievements via simple API key",
   "repository": null,
+  "highlights": [
+    { "icon": "\ud83c\udfae", "text": "Profiles \u2014 gamertag, gamerscore, avatar, account age" },
+    { "icon": "\ud83c\udfc6", "text": "Achievements \u2014 full unlock history and summaries" },
+    { "icon": "\ud83d\udfe2", "text": "Presence \u2014 online status and current activity" },
+    { "icon": "\ud83d\udc65", "text": "Friends \u2014 friends list and user search" },
+    { "icon": "\ud83d\udd11", "text": "Simple auth \u2014 one API key, no OAuth dance" }
+  ],
+  "links": [
+    { "label": "OpenXBL Registration", "url": "https://xbl.io" },
+    { "label": "OpenXBL API Docs", "url": "https://xbl.io/api" },
+    { "label": "OpenXBL Pricing", "url": "https://xbl.io/pricing" }
+  ],
+  "readme": "### What it does\n\nXbox Live (Community) connects your AI agent to Xbox Live data through the OpenXBL proxy at xbl.io. Look up any gamertag\u2019s profile, browse achievement history, check who\u2019s online, and search for players \u2014 all with a single API key.\n\nThis is the low-friction alternative to the full xboxlive-blade-mcp. No Azure app registration, no OAuth browser flow \u2014 just paste an API key and go.\n\n### Trade-offs\n\nOpenXBL is a community proxy, not the official Xbox API. Coverage is limited to read-only operations: profiles, achievements, presence, and friends. There\u2019s no SmartGlass console control, no messaging, no game clips, and no Store catalog. If you need those, use xboxlive-blade-mcp instead.\n\n### Safety model\n\nAll operations are read-only. The OpenXBL API does not expose any write endpoints, so there is no risk of accidental modifications to your Xbox account.\n\n### Rate limits\n\nFree tier includes limited daily requests. Paid plans ($3/month) provide higher throughput for automation workloads.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "xbox-openxbl-mcp",
+      "target_type": "plugin",
+      "shared_services": ["gaming"],
+      "label": "Check a friend\u2019s gaming activity",
+      "body": "Search for a gamertag, pull their profile and achievement summary, then check their online presence to see what they\u2019re currently playing."
+    },
+    {
+      "type": "workflow",
+      "target": "xbox-openxbl-mcp",
+      "target_type": "plugin",
+      "shared_services": ["gaming"],
+      "label": "Compare achievement progress",
+      "body": "Look up two gamertags, fetch achievement summaries for both, and compare gamerscore and completion rates across shared games."
+    }
+  ],
   "install": {
     "runtime": "uv",
     "package": "xbox-openxbl-mcp"

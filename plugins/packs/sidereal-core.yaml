@@ -16,6 +16,91 @@ visibility: open
 tier: certified
 pricing: null
 bundled: true
+tagline: "Six operators, 25 skills — the platform foundation bundled with every install"
+
+readme:
+  format: markdown
+  body: |
+    # Sidereal Core Pack
+
+    The foundation pack bundled with every Sidereal installation — six
+    operator agents and 25 skills covering PKM, communications, scheduling,
+    security, fleet operations, and notification delivery.
+
+    ## What it does
+
+    Sidereal Core provides the operational backbone for the platform. It
+    defines the six core operator agents and their skills, covering the
+    full spectrum of daily automation:
+
+    ### PKM operations (pkm-operator)
+    - **process-inbox** — classify and file vault inbox items with
+      confidence-based routing
+    - **daily-digest** — morning briefing combining calendar, tasks,
+      efforts, and recent activity
+    - **weekly-digest** — week-at-a-glance with effort status and metrics
+    - **decompose-inbox** — break text blobs into discrete vault artefacts
+    - **morning-sweep** — interactive triage across all sources with
+      human approval
+
+    ### Communications (comms-operator)
+    - **email-triage** — scan inbox for messages relevant to active
+      domains of influence
+
+    ### Scheduling (scheduling-operator)
+    - **calendar-sync** — detect conflicts, match events to efforts
+    - **schedule-event** — interactive event creation with free/busy
+    - **process-calendar-handoffs** — process structured handoff notes
+
+    ### Security (secops-operator)
+    - **darwin-state-audit** — full macOS security posture audit
+    - **tcc-drift-monitor** — privacy grant change detection
+    - **credential-expiry-watch** — token and cert freshness monitoring
+    - **network-exposure-scan** — unexpected listener detection
+    - **security-correlation** — cross-source event correlation
+    - **fleet-trust-audit** — peer enrollment integrity
+
+    ### Fleet (fleet-operator)
+    - **platform-health** — daemon, MCP, Lens, and identity provider
+    - **version-drift-check** — component versions across fleet peers
+    - **dispatch-analytics** — success rates and performance trends
+    - **mcp-lifecycle** — unused or unhealthy MCP server detection
+    - **capacity-forecast** — resource trend analysis
+    - **upgrade-coordinator** — fleet-wide upgrade planning
+
+    ### Notifications (notifications-operator)
+    - **notification-channel-status** — delivery channel health
+    - **notification-delivery-audit** — per-channel delivery stats
+    - **delivery-report** — daily aggregate of all deliveries
+
+    ## Safety model
+
+    Every operator follows least-privilege access:
+    - Email access is **read-only** unless explicitly instructed
+    - Calendar reads are unrestricted; writes require confirmation
+    - Security operators **never modify system state** — read-only probes
+    - Fleet operators **report findings** — no auto-remediation
+    - Notification operators **route only** — they do not generate content
+
+highlights:
+  - icon: "\U0001F916"
+    text: "6 operator agents — PKM, comms, scheduling, security, fleet, and notifications"
+  - icon: "\U0001F9E9"
+    text: "25 skills spanning vault ops, email triage, calendar, secops, fleet health, and delivery"
+  - icon: "\U0001F4E6"
+    text: "Bundled — ships with every Sidereal installation, zero configuration needed"
+  - icon: "\U0001F6E1\uFE0F"
+    text: "Least-privilege — read-only by default, write-gated where mutations exist"
+  - icon: "\U0001F50D"
+    text: "Observable — dispatch analytics, delivery audits, and platform health probes"
+
+links:
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Pack Spec
+    url: https://sidereal.cc/docs/pack-spec
+  - label: Sidereal Website
+    url: https://sidereal.cc
 
 min_sidereal: "0.54"
 

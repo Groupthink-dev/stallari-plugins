@@ -2,6 +2,7 @@
   "name": "onedrive-blade-mcp",
   "title": "Microsoft OneDrive",
   "description": "OneDrive and SharePoint file operations via Microsoft Graph API — browse, read, search, upload, share, delta sync",
+  "tagline": "Browse, search, and sync files across OneDrive and SharePoint",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -97,6 +98,47 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\ud83d\udcc1", "text": "Browse — navigate folders and files across OneDrive and SharePoint" },
+    { "icon": "\ud83d\udd0d", "text": "Search — full-text search across all drives and sites" },
+    { "icon": "\ud83d\udce4", "text": "Upload — create and update files with write gate" },
+    { "icon": "\ud83d\udd17", "text": "Share — generate sharing links with scoped permissions" },
+    { "icon": "\ud83d\udd04", "text": "Delta sync — incremental change tracking for efficient polling" },
+    { "icon": "\ud83d\udd11", "text": "Dual auth — device code for interactive, client credentials for headless" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/onedrive-blade-mcp" },
+    { "label": "OneDrive API Reference", "url": "https://learn.microsoft.com/en-us/onedrive/developer/rest-api/" },
+    { "label": "Azure App Registration", "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" },
+    { "label": "SharePoint REST API", "url": "https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins/get-to-know-the-sharepoint-rest-service" }
+  ],
+  "readme": "### What it does\n\nOneDrive Blade MCP gives your AI agent access to files stored in OneDrive and SharePoint through the Microsoft Graph API. Your agent can browse folder hierarchies, read file contents, search across drives, upload documents, create sharing links, and track incremental changes with delta sync.\n\nOne MCP server covers personal OneDrive, OneDrive for Business, and SharePoint document libraries.\n\n### Delta sync\n\nThe delta sync capability tracks changes since the last sync token, returning only new, modified, or deleted items. This is far more efficient than listing entire directories and is ideal for agents that need to monitor a folder for new documents or detect file changes between sessions.\n\n### Token efficiency\n\nGraph API file metadata includes dozens of fields (creation info, hashes, parentReference chains, SharePoint-specific facets). Each tool's concise formatter extracts name, path, size, modified date, and download URL — dropping internal IDs and nested metadata. Directory listings stay compact even for large folders.\n\n### Safety model\n\nFile operations follow a read-free, write-gated pattern:\n\n- **Reads** work immediately — browse, read, search, list, delta\n- **Writes** require `ONEDRIVE_WRITE_ENABLED=true` — upload, move, delete, share\n- **Destructive operations** are double-gated — delete files, revoke shares",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "onedrive-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["drive"],
+      "label": "Find and retrieve a document",
+      "body": "Search across OneDrive and SharePoint for a document by name or content, browse the containing folder for context, and read the file contents for analysis."
+    },
+    {
+      "type": "workflow",
+      "target": "onedrive-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["drive"],
+      "label": "Monitor a folder for new files",
+      "body": "Use delta sync to check a shared folder for files added since the last check, list the new items with metadata, and read any documents that match specific criteria."
+    },
+    {
+      "type": "workflow",
+      "target": "onedrive-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["drive"],
+      "label": "Upload and share a report",
+      "body": "Upload a generated report to a specific OneDrive folder, create a sharing link with view-only permissions, and verify the file appears in the target directory."
+    }
+  ],
   "conformance": {
     "required": "3/3",
     "recommended": "1/1",

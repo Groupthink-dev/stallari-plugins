@@ -2,11 +2,26 @@
   "name": "hass-mcp",
   "title": "Home Assistant (community)",
   "description": "Home Assistant operations via REST API — entity state, history, areas, services, automations, camera snapshots, energy monitoring",
+  "tagline": "Community Home Assistant with camera snapshots",
   "version": "0.3.0",
   "author": "bendavid",
   "licence": "MIT",
   "icon": "/icons/hass-mcp.svg",
   "repository": "https://github.com/bendavid/hass-mcp",
+  "highlights": [
+    { "icon": "\ud83c\udfe0", "text": "Entity state \u2014 query entities by domain, area, or device class" },
+    { "icon": "\ud83d\udcca", "text": "History \u2014 state change history and long-term statistics" },
+    { "icon": "\ud83d\udcf7", "text": "Camera snapshots \u2014 capture and retrieve camera images" },
+    { "icon": "\u26a1", "text": "Energy \u2014 solar, grid, and device-level energy monitoring" },
+    { "icon": "\ud83e\udd16", "text": "Automations \u2014 list, trigger, and manage automation rules" },
+    { "icon": "\ud83c\udf10", "text": "Multi-instance \u2014 connect to multiple HA instances" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/bendavid/hass-mcp" },
+    { "label": "Home Assistant REST API", "url": "https://developers.home-assistant.io/docs/api/rest/" },
+    { "label": "Home Assistant Authentication", "url": "https://developers.home-assistant.io/docs/auth_api/" }
+  ],
+  "readme": "### What it does\n\nHass MCP is a community-maintained Home Assistant plugin that provides entity state queries, history lookups, device control, automation management, camera snapshots, and energy monitoring through the HA REST API.\n\nIt covers the core Home Assistant operations most users need: checking device states, reviewing state history, triggering automations, calling services, and capturing camera images.\n\n### Community plugin\n\nThis is a verified community plugin maintained by bendavid. It implements the `home-v1` service contract and is interchangeable with the Home Assistant Blade for users who prefer the community version. It passes conformance testing on all required and recommended operations, with automation creation being the only missing gated capability.\n\n### Comparison with Home Assistant Blade\n\n| Feature | Hass MCP | HA Blade |\n|---------|----------|---------|\n| Maintainer | Community (bendavid) | Sidereal (certified) |\n| Camera snapshots | Yes | No |\n| Multi-site | Yes | Yes (native providers) |\n| Automation create | No | Yes |\n| Write gating | Not gated | Explicit write gate |\n| Token efficiency | Standard | Concise formatters |\n\n### Setup\n\nSetup is straightforward: provide the Home Assistant URL and a Long-Lived Access Token created from Profile > Security in your HA instance. Multi-instance support works by running multiple plugin instances with different URL/token pairs.",
   "tier": "verified",
   "contract": "home-v1",
   "install": {
@@ -66,6 +81,32 @@
       }
     ]
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "hass-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Morning home status check",
+      "body": "Query all entity states, summarise which devices are on, check overnight security events, and report any sensors in an abnormal state."
+    },
+    {
+      "type": "workflow",
+      "target": "hass-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Review camera activity",
+      "body": "List camera entities, capture current snapshots from each, and compare with historical state to identify any motion events during overnight hours."
+    },
+    {
+      "type": "workflow",
+      "target": "hass-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home", "energy"],
+      "label": "Track solar production vs grid usage",
+      "body": "Pull energy statistics for the past day, compare solar production against grid consumption, and identify peak usage periods where battery or load-shifting could help."
+    }
+  ],
   "conformance": {
     "required": "4/4",
     "recommended": "5/5",

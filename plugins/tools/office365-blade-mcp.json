@@ -2,6 +2,7 @@
   "name": "office365-blade-mcp",
   "title": "Microsoft Office 365",
   "description": "Microsoft 365 operations via Graph API — email, calendar, tasks (To Do + Planner). Token-efficient, write-gated, dual auth.",
+  "tagline": "Email, calendar, and tasks through Microsoft Graph",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -137,6 +138,47 @@
       "complete": "o365_complete_task"
     }
   },
+  "highlights": [
+    { "icon": "\u2709\ufe0f", "text": "Email — inbox, search, threads, send, reply, folders" },
+    { "icon": "\ud83d\udcc5", "text": "Calendar — events, free/busy, today/week views, RSVP" },
+    { "icon": "\u2705", "text": "Tasks — To Do lists, Planner tasks, create, complete" },
+    { "icon": "\ud83d\udd10", "text": "Write-gated — reads work immediately, writes need explicit opt-in" },
+    { "icon": "\ud83d\udd11", "text": "Dual auth — device code for interactive, client credentials for headless" },
+    { "icon": "\ud83d\udcca", "text": "Token-efficient — concise formatters strip Graph API verbosity" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/office365-blade-mcp" },
+    { "label": "Microsoft Graph API", "url": "https://learn.microsoft.com/en-us/graph/overview" },
+    { "label": "Azure App Registration", "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade" },
+    { "label": "Graph Permissions Reference", "url": "https://learn.microsoft.com/en-us/graph/permissions-reference" }
+  ],
+  "readme": "### What it does\n\nOffice 365 Blade MCP gives your AI agent access to Microsoft 365 email, calendar, and tasks through the Microsoft Graph API. One MCP server covers three service contracts — `email-v1`, `calendar-v1`, and `tasks-v1` — so you can triage your inbox, check your schedule, and manage your task list in a single conversation.\n\nYour agent can read and search email, send replies, browse calendar events, check free/busy slots, create meetings, and manage To Do and Planner tasks.\n\n### Token efficiency\n\nMicrosoft Graph API responses are notoriously large — a single email message can return 50+ fields including internal routing headers, change keys, and OData metadata. Each tool includes a concise formatter that extracts subject, sender, date, body preview, and flags — dropping everything else. This keeps context windows clean across sessions with dozens of API calls.\n\n### Safety model\n\nAll operations follow a read-free, write-gated pattern:\n\n- **Reads** work immediately — inbox, search, events, tasks, free/busy\n- **Writes** require `O365_WRITE_ENABLED=true` — send, reply, create event, update task\n- **Destructive operations** are double-gated — delete email, cancel events\n\n### Authentication\n\nTwo auth modes are supported:\n\n- **Device code flow** (default) — interactive setup, user authenticates in the browser\n- **Client credentials flow** — headless/CI environments with a client secret\n\nBoth require an Azure AD app registration with appropriate Graph API permissions.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "office365-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["email", "calendar"],
+      "label": "Morning email and calendar review",
+      "body": "Pull today's calendar events and inbox messages, identify scheduling conflicts, flag emails that need replies, and summarise the day's commitments."
+    },
+    {
+      "type": "workflow",
+      "target": "office365-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["email", "tasks"],
+      "label": "Convert emails to tasks",
+      "body": "Search the inbox for action items, create To Do tasks from relevant messages, move processed emails to an archive folder, and verify the task list reflects the new items."
+    },
+    {
+      "type": "workflow",
+      "target": "office365-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Schedule a meeting across attendees",
+      "body": "Check free/busy availability for multiple attendees, find the first open slot that works for everyone, create the calendar event, and confirm the invitation was sent."
+    }
+  ],
   "conformance": {
     "email-v1": {
       "required": "3/3",

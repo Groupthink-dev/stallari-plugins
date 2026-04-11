@@ -11,6 +11,80 @@ licence: MIT
 visibility: open
 tier: community
 pricing: null
+tagline: "Find orphans, broken links, and stale notes before they become debt"
+
+readme:
+  format: markdown
+  body: |
+    # Vault Gardener Pack
+
+    Structural hygiene for your Obsidian vault — find orphaned notes,
+    broken wikilinks, and stale content that needs attention. The pack
+    surfaces problems; you decide what to fix.
+
+    ## What it does
+
+    Three skills keep your vault's link graph healthy:
+
+    ### Find orphans
+
+    Searches for notes with zero inbound links (true orphans) and notes
+    with inbound links but zero outbound links (dead ends). Results are
+    grouped by folder and sorted by last modified date. Daily logs,
+    archived notes, and templates are excluded automatically.
+
+    Runs weekly on Sundays at 3am.
+
+    ### Check links
+
+    Scans all notes for wikilinks that resolve to non-existent files.
+    For each broken link, suggests whether it should be created (the
+    note is missing but should exist), fixed (likely a typo or renamed
+    note), or removed (stale reference).
+
+    Runs on demand.
+
+    ### Stale content
+
+    Finds notes not modified in over 180 days, excluding archives and
+    reference material. For each stale note, checks whether it still
+    has recent inbound links, is an active effort or project, or is a
+    person/org card (which may be valid even if old). Produces a
+    prioritised list of candidates for review or archival.
+
+    Runs monthly on the first of each month.
+
+    ## Who this is for
+
+    Anyone with a growing Obsidian vault who wants to keep structural
+    debt under control. Works well alongside the Daily Productivity
+    pack — Gardener handles vault hygiene while Daily Productivity
+    handles content operations.
+
+    ## Safety model
+
+    - The pack **never deletes or moves notes** — it only produces
+      reports and suggestions
+    - All findings are appended to vault health notes for tracking
+    - Human review is required before any remediation
+
+highlights:
+  - icon: "\U0001F50D"
+    text: "Orphan detection — notes with no inbound or outbound links surfaced automatically"
+  - icon: "\U0001F517"
+    text: "Broken link scanner — wikilinks to non-existent notes with fix suggestions"
+  - icon: "\U0001F4C6"
+    text: "Stale content finder — notes untouched for 180+ days, prioritised for review"
+  - icon: "\U0001F6E1\uFE0F"
+    text: "Read-only — never deletes or moves notes, only reports findings"
+
+links:
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Obsidian
+    url: https://obsidian.md
 
 min_sidereal: "0.29"
 

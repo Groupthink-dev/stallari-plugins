@@ -12,6 +12,71 @@ licence: MIT
 visibility: open
 tier: community
 pricing: null
+tagline: "Inbox classified and calendar briefing ready before you finish coffee"
+
+readme:
+  format: markdown
+  body: |
+    # Morning Triage Pack
+
+    A lightweight morning automation for Sidereal — scan your inbox, classify
+    messages by urgency, and combine the results with today's calendar into
+    a single morning briefing note.
+
+    ## What it does
+
+    This pack runs two skills in sequence on a configurable morning schedule:
+
+    ### 1. Inbox triage
+
+    Scans unread email from the last 24 hours and classifies each message:
+    - **Urgent** — requires response today, time-sensitive, from known contacts
+    - **Review** — informational, needs reading but not immediate action
+    - **Low** — newsletters, notifications, marketing
+
+    Urgent messages are flagged. Low-priority messages are moved to a
+    filtered folder. The original messages are never deleted or archived.
+
+    ### 2. Daily briefing
+
+    Combines the triage results with today's calendar events:
+    - Chronological event list with conflict highlighting
+    - Urgent emails matched to calendar context (e.g., meeting prep needed)
+    - Action items extracted and optionally created as tasks
+
+    The briefing is written to a vault note at the daily log path.
+
+    ## Who this is for
+
+    This is a community pack designed as a simple starting point for
+    morning automation. If you need more comprehensive daily productivity
+    (effort tracking, weekly reviews, inbox processing), see the
+    **Daily Productivity** certified pack instead.
+
+    ## Safety model
+
+    - Email is **read-only** — messages are classified and flagged but
+      never deleted or archived
+    - Task creation is optional and only fires when the tasks service
+      is configured
+
+highlights:
+  - icon: "\U0001F4E8"
+    text: "Urgency classification — urgent, review, and low-priority buckets"
+  - icon: "\U0001F4C5"
+    text: "Calendar-aware — matches urgent emails to today's meetings and events"
+  - icon: "\u26A1"
+    text: "Two-step pipeline — triage first, then briefing with combined context"
+  - icon: "\U0001F512"
+    text: "Read-only email — never deletes or archives your messages"
+
+links:
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Pack Spec
+    url: https://sidereal.cc/docs/pack-spec
 
 min_sidereal: "0.29"
 

@@ -2,6 +2,7 @@
   "name": "paddle-billing-blade-mcp",
   "title": "Paddle Billing",
   "description": "Paddle Billing API operations — products, prices, subscriptions, transactions, webhooks. Token-efficient, write-gated, confirm-gated for destructive ops.",
+  "tagline": "Subscriptions, products, and revenue through Paddle",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -64,6 +65,47 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\ud83d\udce6", "text": "Products & prices — catalog management with currency support" },
+    { "icon": "\ud83d\udd04", "text": "Subscriptions — lifecycle management, pause, resume, cancel" },
+    { "icon": "\ud83d\udcb3", "text": "Transactions — payment history, invoices, refunds" },
+    { "icon": "\ud83d\udd14", "text": "Webhooks — event delivery configuration and simulation" },
+    { "icon": "\ud83e\uddea", "text": "Sandbox first — defaults to sandbox, production is opt-in" },
+    { "icon": "\ud83d\udee1\ufe0f", "text": "Confirm-gated — destructive operations require explicit confirmation" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/paddle-billing-blade-mcp" },
+    { "label": "Paddle Developer Docs", "url": "https://developer.paddle.com/" },
+    { "label": "API Authentication", "url": "https://developer.paddle.com/concepts/about/authentication" },
+    { "label": "Paddle Sandbox", "url": "https://sandbox-vendors.paddle.com/" }
+  ],
+  "readme": "### What it does\n\nPaddle Billing Blade MCP gives your AI agent access to your Paddle billing platform — products, prices, subscriptions, transactions, customers, and webhooks. Your agent can check subscription health, look up transaction history, manage product catalog entries, and configure webhook endpoints.\n\nIdeal for SaaS billing operations where you want to query revenue data, investigate customer issues, or manage your product catalog without switching to the Paddle dashboard.\n\n### Sandbox-first\n\nThe server defaults to Paddle's sandbox environment (`PADDLE_ENVIRONMENT=sandbox`). This means you can safely explore the full API surface — creating test products, simulating transactions, configuring webhooks — without any risk to production billing data. Switch to `production` only when you are ready for live operations.\n\n### Token efficiency\n\nPaddle API responses include extensive metadata (event history, relationship expansions, pagination cursors). Each tool's concise formatter extracts the fields that matter for decision-making — product name, price, status, customer email, subscription dates — keeping context windows clean.\n\n### Safety model\n\nBilling operations carry real financial consequences, so the safety model is conservative:\n\n- **Reads** work immediately — list products, view subscriptions, check transactions\n- **Writes** require confirmation — create products, update prices, configure webhooks\n- **Destructive operations** are double-gated — cancel subscriptions, process refunds\n\nThe sandbox default adds an additional layer of safety for exploratory use.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "paddle-billing-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["billing"],
+      "label": "Review subscription health",
+      "body": "List active subscriptions, check for past-due payments or failed renewals, review transaction history for recent charges, and flag accounts that need attention."
+    },
+    {
+      "type": "workflow",
+      "target": "paddle-billing-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["billing"],
+      "label": "Set up a new product and pricing",
+      "body": "Create a product in the catalog, configure pricing tiers with currency options, verify the product appears correctly, and optionally set up a webhook endpoint for purchase events."
+    },
+    {
+      "type": "workflow",
+      "target": "paddle-billing-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["billing"],
+      "label": "Investigate a customer billing issue",
+      "body": "Search for the customer's subscription, review their transaction history and payment methods, check for failed charges, and determine whether a refund or subscription adjustment is needed."
+    }
+  ],
   "conformance": {
     "required": "6/6",
     "recommended": "8/8",

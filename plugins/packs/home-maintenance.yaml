@@ -17,6 +17,87 @@ licence: MIT
 visibility: open
 tier: certified
 pricing: null
+tagline: "Drop a photo, get a classified maintenance ticket with contractor matches"
+
+readme:
+  format: markdown
+  body: |
+    # Home Maintenance Pack
+
+    Property maintenance tracking for Sidereal — drop a photo, voice memo,
+    or text note into an ingest folder and the pack classifies the issue,
+    assesses urgency, drafts a job description, and matches contractors
+    from your vault.
+
+    ## What it does
+
+    This pack turns unstructured maintenance observations into structured,
+    trackable vault notes. It supports multiple properties, each with its
+    own maintenance folder and cost CSV register.
+
+    ### Ingest pipeline
+
+    When a file appears in your maintenance ingest folder:
+    1. The **classifier** reads the content (image description, voice
+       transcript, or text) and extracts structured fields: issue type,
+       property, urgency, and description.
+    2. A **job description** is drafted, suitable for sending to a
+       tradesperson.
+    3. **Contractor matching** searches your vault for person and
+       organisation cards relevant to the issue type (plumber, electrician,
+       etc.).
+    4. A structured **maintenance note** is created with frontmatter
+       tracking status, urgency, cost, and contractor matches.
+
+    ### Monthly audit
+
+    On the first of each month, the pack audits all open maintenance items
+    across your configured properties. It flags overdue items based on
+    urgency-appropriate thresholds and generates a summary table.
+
+    ### Resolution logging
+
+    When you close a maintenance item, the pack updates the note status,
+    records the cost, and appends to the property's cost CSV for
+    Excel-compatible expense tracking.
+
+    ## Issue types
+
+    plumbing, electrical, structural, cosmetic, appliance, landscaping,
+    pest, other
+
+    ## Urgency levels
+
+    - **critical** — safety risk or active damage (today)
+    - **high** — functional loss (this week)
+    - **medium** — degraded but usable (this month)
+    - **low** — cosmetic or preventive (no deadline)
+
+    ## Safety model
+
+    - All notes include `llm_generated: true` — nothing is hidden
+    - Notes are never deleted, only status-updated
+    - Cost CSV is append-only for audit trail integrity
+
+highlights:
+  - icon: "\U0001F4F7"
+    text: "Drop-and-classify — photos, voice memos, or text notes become structured tickets"
+  - icon: "\U0001F527"
+    text: "Contractor matching — searches vault person and org cards for relevant tradespeople"
+  - icon: "\U0001F4CA"
+    text: "Cost tracking — per-property CSV registers, Excel-compatible"
+  - icon: "\U0001F4C5"
+    text: "Monthly audit — flags overdue items with urgency-appropriate thresholds"
+  - icon: "\U0001F3E0"
+    text: "Multi-property — separate maintenance folders and cost tracking per property"
+
+links:
+  - label: Pack Spec
+    url: https://sidereal.cc/docs/pack-spec
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
 
 min_sidereal: "0.35"
 

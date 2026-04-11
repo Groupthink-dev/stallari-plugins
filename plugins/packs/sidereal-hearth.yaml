@@ -16,6 +16,78 @@ licence: MIT
 visibility: open
 tier: certified
 pricing: null
+tagline: "Smart home intelligence — site health, device inventory, and scene control"
+
+readme:
+  format: markdown
+  body: |
+    # Sidereal Hearth Pack
+
+    Smart home intelligence for Sidereal — monitor site health, track
+    device inventories, and manage scenes across your connected home.
+    Built for Home Assistant with Google Home support in testing preview.
+
+    ## What it does
+
+    Hearth connects your Home Assistant instances to your Sidereal vault,
+    providing three core skills:
+
+    ### Site status
+
+    Queries critical sensor domains across all configured HA sites —
+    temperature, humidity, power, battery, alarm panels, locks, and
+    climate systems. Findings are organised by physical area and written
+    to structured registry notes. Entities in alarm or unavailable state
+    trigger immediate alerts.
+
+    ### Device inventory
+
+    Enumerates all HA entities across sites, categorises by domain
+    (light, switch, sensor, climate, lock, cover, media player, camera,
+    etc.), maps entities to physical areas, and diffs against the
+    previous inventory to flag additions, removals, and newly-unavailable
+    devices.
+
+    ### Scene manager
+
+    Lists available scenes grouped by site and activates scenes on
+    request with human confirmation. Every activation is logged to a
+    vault scene log for audit trail.
+
+    ## Multi-site support
+
+    Hearth is designed for multi-site deployments. Each site has its own
+    slug, HA instance name, and vault path. Status reports and device
+    inventories are generated per-site with consistent naming.
+
+    ## Safety model
+
+    - Read operations (entity state, area list, entity list) work
+      immediately
+    - Scene activation requires **explicit human confirmation** before
+      execution
+    - Every action is logged to the vault decision ledger
+    - Registry notes use `llm_generated: true` frontmatter
+
+highlights:
+  - icon: "\U0001F3E0"
+    text: "Multi-site monitoring — health summaries across all your HA instances"
+  - icon: "\U0001F4CB"
+    text: "Device inventory — full entity enumeration with change detection between runs"
+  - icon: "\U0001F3AC"
+    text: "Scene management — list and activate scenes with vault audit logging"
+  - icon: "\U0001F6A8"
+    text: "Alarm detection — entities in alarm or unavailable state trigger immediate alerts"
+  - icon: "\U0001F50C"
+    text: "Home Assistant native — built on the HA entity and area model"
+
+links:
+  - label: Home Assistant
+    url: https://www.home-assistant.io
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
 
 min_sidereal: "0.40"
 

@@ -19,6 +19,7 @@ export const DECLARED_SERVICES: string[] = [
   "messages",
   "network",
   "notifications",
+  "overlay-network",
   "postal",
   "prediction-market",
   "registry",
@@ -27,5 +28,4 @@ export const DECLARED_SERVICES: string[] = [
   "tasks",
   "transactional-email",
   "vault",
-  "vpn",
 ];

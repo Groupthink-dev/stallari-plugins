@@ -2,6 +2,7 @@
   "name": "ntfy-blade-mcp",
   "title": "ntfy Notifications",
   "description": "ntfy push notification MCP — publish, poll, topic reservation, and token management. Double-gate security with PII scrubbing.",
+  "tagline": "Push notifications with priority, scheduling, and PII scrubbing",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -71,6 +72,47 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\ud83d\udce4", "text": "Publish — push messages with priority, tags, and markdown" },
+    { "icon": "\u23f0", "text": "Scheduling — delayed delivery with at/in syntax" },
+    { "icon": "\ud83d\udcf2", "text": "Actions — attach view, broadcast, and HTTP action buttons" },
+    { "icon": "\ud83d\udd10", "text": "Double-gate — env gate plus per-call confirmation on writes" },
+    { "icon": "\ud83e\uddf9", "text": "PII scrubbing — automatic redaction of sensitive data" },
+    { "icon": "\ud83c\udf10", "text": "Self-hosted or ntfy.sh — works with any ntfy server" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/ntfy-blade-mcp" },
+    { "label": "ntfy Documentation", "url": "https://docs.ntfy.sh/" },
+    { "label": "ntfy Publishing API", "url": "https://docs.ntfy.sh/publish/" },
+    { "label": "Self-Hosting Guide", "url": "https://docs.ntfy.sh/install/" }
+  ],
+  "readme": "### What it does\n\nntfy Blade MCP gives your AI agent the ability to send push notifications to any device subscribed to an ntfy topic. It supports rich messages with priority levels, emoji tags, markdown formatting, click actions, and scheduled delivery.\n\nYour agent can send alerts, poll for incoming messages on a topic, manage topic reservations, and handle access tokens — all through a single MCP server.\n\n### Token efficiency\n\nntfy's API is already lightweight, but the MCP adds concise formatting for poll results and topic listings, stripping internal metadata and returning only actionable fields.\n\n### Safety model\n\nPublishing notifications is a visible action (devices will buzz), so all write operations are double-gated:\n\n- **Environment gate** — `NTFY_WRITE_ENABLED` must be `true` to unlock publish, cancel, reserve, and token operations\n- **Confirm gate** — each write tool requires `confirm: true` per call\n- **PII scrubbing** — automatic redaction of email addresses, phone numbers, and other sensitive patterns before messages leave the MCP\n\nRead operations (polling topics, listing reservations) work immediately with no gates.\n\n### Compatibility\n\nWorks with the public ntfy.sh service or any self-hosted ntfy server. Bearer token authentication is optional for public topics but recommended for private ones.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "ntfy-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["notifications"],
+      "label": "Send a priority alert",
+      "body": "Publish a high-priority notification with emoji tags and a click-through URL to a specific ntfy topic. The message is PII-scrubbed before delivery."
+    },
+    {
+      "type": "workflow",
+      "target": "ntfy-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["notifications"],
+      "label": "Schedule a reminder notification",
+      "body": "Compose a notification with scheduled delivery for a future time, attach action buttons for snooze or dismiss, and verify the message appears in the topic's pending queue."
+    },
+    {
+      "type": "workflow",
+      "target": "ntfy-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["notifications"],
+      "label": "Poll and respond to incoming messages",
+      "body": "Poll a topic for recent messages, filter by priority or tag, and take action on each message — forwarding high-priority items or acknowledging routine ones."
+    }
+  ],
   "conformance": {
     "required": "10/10",
     "last_tested": "2026-04-09"

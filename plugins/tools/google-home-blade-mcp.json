@@ -2,6 +2,7 @@
   "name": "google-home-blade-mcp",
   "title": "Google Home",
   "description": "Google Home / Nest device control via SDM API — thermostats, cameras, doorbells, event streams",
+  "tagline": "Nest thermostat, camera, and doorbell control via SDM",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -9,6 +10,21 @@
   "tier": "certified",
   "contract": "home-v1",
   "repository": "https://github.com/groupthink-dev/google-home-blade-mcp",
+  "highlights": [
+    { "icon": "\ud83c\udf21\ufe0f", "text": "Thermostats \u2014 read temperature, set mode, adjust setpoints, fan control" },
+    { "icon": "\ud83d\udcf7", "text": "Cameras \u2014 stream URLs, snapshot events, motion and person detection" },
+    { "icon": "\ud83d\udeaa", "text": "Doorbells \u2014 press events, chime status, visitor detection" },
+    { "icon": "\ud83d\udce1", "text": "Event streams \u2014 real-time Pub/Sub for device state changes" },
+    { "icon": "\ud83c\udfe0", "text": "Structure-aware \u2014 devices grouped by rooms and structures" },
+    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 reads always work, commands require explicit opt-in" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/google-home-blade-mcp" },
+    { "label": "Device Access Console", "url": "https://console.nest.google.com/device-access" },
+    { "label": "SDM API Documentation", "url": "https://developers.google.com/nest/device-access/api" },
+    { "label": "Google Cloud Console", "url": "https://console.cloud.google.com/" }
+  ],
+  "readme": "### What it does\n\nGoogle Home Blade connects your AI agent to Google Nest devices through the Smart Device Management (SDM) API. It provides tools for reading device state, controlling thermostats, viewing camera streams, monitoring doorbell events, and subscribing to real-time device event streams via Pub/Sub.\n\nYour agent can check the current temperature across your home, adjust thermostat setpoints, view camera feeds, and react to doorbell presses or motion events \u2014 all through a structured tool interface.\n\n### Device support\n\nThe SDM API exposes Nest thermostats, cameras, and doorbells. Devices are organised by structure (home) and room, so your agent understands the physical layout. Supported device traits include temperature, humidity, HVAC mode, fan control, camera live stream, and event history.\n\n### Safety model\n\nAll tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately \u2014 list devices, check temperature, view camera status\n- **Commands** require `GOOGLE_HOME_WRITE_ENABLED=true` \u2014 set thermostat, change mode, toggle fan\n\nEvent streams (Pub/Sub) are read-only and available without the write gate.\n\n### Setup complexity\n\nThis plugin has the most involved setup of any Blade MCP \u2014 it requires a Google Cloud project, SDM API access ($5 USD one-time Device Access Console fee), OAuth 2.0 credentials, and optionally a Pub/Sub subscription for event streams. The `make auth` command handles the OAuth flow once credentials are configured.",
   "install": {
     "runtime": "uv",
     "package": "google-home-blade-mcp"
@@ -108,6 +124,32 @@
       }
     ]
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "google-home-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Evening comfort routine",
+      "body": "Check current thermostat readings across the house, lower the temperature in bedrooms for sleeping, and confirm the changes took effect."
+    },
+    {
+      "type": "workflow",
+      "target": "google-home-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Review doorbell activity",
+      "body": "Pull recent doorbell press events and camera motion detections, summarise visitor activity for the day, and check if any events occurred during away hours."
+    },
+    {
+      "type": "workflow",
+      "target": "google-home-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Monitor home climate while away",
+      "body": "Subscribe to thermostat state changes via Pub/Sub, alert if temperature drifts outside a safe range, and adjust HVAC mode remotely if needed."
+    }
+  ],
   "conformance": {
     "required": "4/4",
     "recommended": "5/5",

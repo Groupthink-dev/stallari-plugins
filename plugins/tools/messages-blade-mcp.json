@@ -2,6 +2,7 @@
   "name": "messages-blade-mcp",
   "title": "Apple Messages",
   "description": "Apple Messages (iMessage) operations — conversations, search, contacts, attachments, send",
+  "tagline": "Read, search, and send via iMessage on macOS",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -64,6 +65,37 @@
       }
     ]
   },
+  "highlights": [
+    { "icon": "\ud83d\udcac", "text": "Conversations — browse recent chats with contact resolution" },
+    { "icon": "\ud83d\udd0d", "text": "Search — full-text search across message history" },
+    { "icon": "\ud83d\udcce", "text": "Attachments — list and locate shared files and images" },
+    { "icon": "\u2709\ufe0f", "text": "Send — compose and send iMessages with confirmation gate" },
+    { "icon": "\ud83d\udd12", "text": "Privacy — reads local chat.db, no cloud API or sync" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/messages-blade-mcp" },
+    { "label": "Full Disk Access Guide", "url": "https://support.apple.com/guide/mac-help/allow-access-to-files-in-security-privacy-mchld5a35146/mac" },
+    { "label": "iMessage Setup", "url": "https://support.apple.com/en-au/108768" }
+  ],
+  "readme": "### What it does\n\nApple Messages MCP gives your AI agent read access to your iMessage and SMS conversations on macOS. It reads directly from the local Messages database (`chat.db`) — no cloud API, no Apple ID authentication, no network requests for reads.\n\nYour agent can browse recent conversations, search message history by keyword or contact, list attachments, and — when enabled — send messages via AppleScript automation.\n\n### Privacy model\n\nAll data stays local. The MCP reads `~/Library/Messages/chat.db` using SQLite, which requires Full Disk Access for the host terminal process. No data leaves the machine for read operations. Contact names are resolved locally from the address book.\n\n### Safety model\n\nSending messages is irreversible and disabled by default:\n\n- **Read-only by default** — conversations, search, and attachments work immediately\n- **Write gate** — set `MESSAGES_WRITE_ENABLED=true` to unlock send operations\n- **Confirm gate** — each send requires `confirm: true` per call\n- **TCC automation** — macOS will prompt for Automation permission on first send\n\n### Requirements\n\nmacOS only. Requires Full Disk Access granted to the terminal emulator (Terminal, iTerm2, Ghostty, or Warp). Child processes inherit the grant, so the MCP binary does not need separate access. Messages app must be configured with iMessage or SMS Relay.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "messages-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["messages"],
+      "label": "Search for a past conversation",
+      "body": "Search message history for a keyword or contact, review the matching conversations with timestamps, and extract the relevant details or decisions from the thread."
+    },
+    {
+      "type": "workflow",
+      "target": "messages-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["messages"],
+      "label": "Catch up on recent messages",
+      "body": "Browse the most recent conversations, summarise unread threads, and identify any messages that need a reply or follow-up action."
+    }
+  ],
   "conformance": {
     "required": "3/3",
     "recommended": "3/3",

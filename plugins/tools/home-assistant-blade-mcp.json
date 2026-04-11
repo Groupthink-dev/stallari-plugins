@@ -2,6 +2,7 @@
   "name": "home-assistant-blade-mcp",
   "title": "Home Assistant",
   "description": "Home Assistant operations — entities, state, history, device control, automations, energy, multi-site management",
+  "tagline": "Multi-site Home Assistant control with write gating",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -9,6 +10,21 @@
   "tier": "certified",
   "contract": "home-v1",
   "repository": "https://github.com/groupthink-dev/home-assistant-blade-mcp",
+  "highlights": [
+    { "icon": "\ud83c\udfe0", "text": "Entities & state \u2014 query any entity, filter by domain, area, or floor" },
+    { "icon": "\ud83d\udcca", "text": "History & energy \u2014 state history, energy monitoring, long-term statistics" },
+    { "icon": "\ud83c\udfae", "text": "Device control \u2014 call services, activate scenes, trigger automations" },
+    { "icon": "\ud83e\udd16", "text": "Automations \u2014 list, toggle, create, and manage automation rules" },
+    { "icon": "\ud83c\udf10", "text": "Multi-site \u2014 manage multiple HA instances from a single plugin" },
+    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 reads always work, device commands require explicit opt-in" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/home-assistant-blade-mcp" },
+    { "label": "Home Assistant REST API", "url": "https://developers.home-assistant.io/docs/api/rest/" },
+    { "label": "Creating Access Tokens", "url": "https://www.home-assistant.io/docs/authentication/#your-account-profile" },
+    { "label": "Home Assistant Documentation", "url": "https://www.home-assistant.io/docs/" }
+  ],
+  "readme": "### What it does\n\nHome Assistant Blade gives your AI agent full operational control over one or more Home Assistant instances. 36 tools cover entity state queries, device control, automation management, energy monitoring, history analysis, and scene activation.\n\nYour agent can check which lights are on, review energy consumption for the past week, trigger an automation, activate a scene, and manage smart home devices across multiple sites \u2014 all in a single conversation.\n\n### Multi-site support\n\nUnlike most Home Assistant integrations, this plugin supports multiple instances natively. Set `HA_PROVIDERS` to a comma-separated list of site names, then configure per-provider URL and token environment variables. Each tool call is scoped to a specific provider, so your agent can compare energy usage between two homes or check device status across sites.\n\n### Token efficiency\n\nHome Assistant's REST API returns verbose entity state payloads with deep attribute nesting. Each tool includes a concise formatter that extracts only the fields your agent needs. Entity lists are filtered by domain, area, or floor so you never waste context on irrelevant devices.\n\n### Safety model\n\nAll 36 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately \u2014 entity state, history, energy stats, automation list\n- **Writes** require `HA_WRITE_ENABLED=true` \u2014 call services, activate scenes, toggle automations, create automations\n\nThis means your agent can monitor your home freely but cannot change anything without explicit permission.",
   "multi_instance": true,
   "install": {
     "runtime": "uv",
@@ -80,6 +96,32 @@
       }
     ]
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "home-assistant-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Evening shutdown routine",
+      "body": "Check which lights and devices are still on across the house, turn off non-essential items, arm the security system, and confirm the final state."
+    },
+    {
+      "type": "workflow",
+      "target": "home-assistant-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home", "energy"],
+      "label": "Weekly energy audit",
+      "body": "Pull energy consumption data for the past week, compare usage across areas, identify the highest-consuming devices, and suggest automation rules to reduce waste."
+    },
+    {
+      "type": "workflow",
+      "target": "home-assistant-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["smart_home"],
+      "label": "Cross-site status check",
+      "body": "Query entity states across multiple Home Assistant instances, compare climate readings between sites, and flag any offline devices or triggered alarms."
+    }
+  ],
   "conformance": {
     "required": "4/4",
     "recommended": "5/5",

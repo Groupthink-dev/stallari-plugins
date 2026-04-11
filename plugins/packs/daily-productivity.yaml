@@ -15,6 +15,83 @@ licence: MIT
 visibility: open
 tier: certified
 pricing: null
+tagline: "From first coffee to weekly wrap-up — your full productivity cycle, automated"
+
+readme:
+  format: markdown
+  body: |
+    # Daily Productivity Pack
+
+    The complete daily and weekly productivity cycle for Sidereal — seven
+    skills covering email triage, inbox processing, daily and weekly digests,
+    effort tracking, flagged email actions, and an interactive morning sweep.
+
+    ## What it does
+
+    This pack automates the repetitive parts of knowledge work while keeping
+    you in control of decisions. It runs on a configurable schedule (daily
+    digest and email triage each morning, weekly review on Sundays) and
+    offers on-demand skills for inbox processing and interactive triage.
+
+    Three agents collaborate: a **PKM operator** for vault operations and
+    digests, a **comms operator** for email triage and flag processing, and
+    a **digital assistant** orchestrator for the morning sweep.
+
+    ## Daily cycle
+
+    1. **Email triage** scans recent inbox messages, classifies urgency
+       against your active domains of influence, and creates handoff notes
+       for anything that needs attention.
+    2. **Inbox processing** classifies and files items from your vault inbox,
+       using confidence thresholds to decide what to auto-file, flag, or
+       leave for human review.
+    3. **Daily digest** combines calendar events, tasks, active efforts, and
+       inbox status into a scannable morning briefing note.
+    4. **Flag triage** processes colour-coded flagged emails — each flag
+       colour triggers a specific action (urgent handoff, vault filing,
+       reply drafting, calendar scheduling).
+
+    ## Weekly cycle
+
+    5. **Weekly digest** produces a week-at-a-glance summary with effort
+       status changes, completed tasks, and dispatch metrics.
+    6. **Effort digest** generates per-effort status snapshots with
+       objectives, job progress, blockers, and next steps.
+
+    ## Interactive
+
+    7. **Morning sweep** aggregates pending work from all sources, classifies
+       each item as DISPATCH/PREP/YOURS/SKIP, and presents the list for
+       human approval before dispatching.
+
+    ## Safety model
+
+    - Email access is **read-only** — the comms operator never sends,
+      deletes, or archives email
+    - Inbox filing uses confidence thresholds (>=0.85 auto-file, 0.60-0.84
+      flag, <0.60 leave in place)
+    - The morning sweep always presents work for **human approval** before
+      dispatching to operators
+
+highlights:
+  - icon: "\U0001F4CB"
+    text: "7 skills — daily digest, email triage, inbox processing, flag triage, weekly digest, effort digest, morning sweep"
+  - icon: "\U0001F916"
+    text: "3 agents — PKM operator, comms operator, and orchestrator working in concert"
+  - icon: "\U0001F550"
+    text: "Configurable schedules — set your own digest, triage, and weekly review hours"
+  - icon: "\U0001F512"
+    text: "Read-only email — triage never sends, deletes, or archives your messages"
+  - icon: "\U0001F3AF"
+    text: "Confidence thresholds — auto-file high-confidence items, flag the rest for review"
+
+links:
+  - label: Pack Spec
+    url: https://sidereal.cc/docs/pack-spec
+  - label: Sidereal Documentation
+    url: https://sidereal.cc/docs
+  - label: Source Code
+    url: https://github.com/groupthink-dev/sidereal-plugins
 
 min_sidereal: "0.38"
 

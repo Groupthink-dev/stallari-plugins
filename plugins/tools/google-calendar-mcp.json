@@ -2,6 +2,7 @@
   "name": "google-calendar-mcp",
   "title": "Google Calendar",
   "description": "Google Calendar via REST API — events, calendars, freebusy, create/update/delete",
+  "tagline": "Google Calendar events and scheduling via REST API",
   "version": "0.1.0",
   "author": "community",
   "licence": "MIT",
@@ -9,6 +10,20 @@
   "tier": "community",
   "contract": "calendar-v1",
   "repository": "https://github.com/anthropics/google-calendar-mcp",
+  "highlights": [
+    { "icon": "\ud83d\udcc5", "text": "Events \u2014 list, create, update, delete calendar events" },
+    { "icon": "\ud83d\udd0d", "text": "Search \u2014 query events by keyword, date range, and calendar" },
+    { "icon": "\u23f0", "text": "Free/busy \u2014 check availability across multiple calendars" },
+    { "icon": "\ud83d\udcc6", "text": "Multi-calendar \u2014 manage events across all Google calendars" },
+    { "icon": "\ud83d\udd10", "text": "OAuth 2.0 \u2014 standard Google consent flow, no stored passwords" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/anthropics/google-calendar-mcp" },
+    { "label": "Google Calendar API", "url": "https://developers.google.com/calendar/api/v3/reference" },
+    { "label": "Google Cloud Console", "url": "https://console.cloud.google.com/apis/credentials" },
+    { "label": "Enable Calendar API", "url": "https://console.cloud.google.com/apis/library/calendar-json.googleapis.com" }
+  ],
+  "readme": "### What it does\n\nGoogle Calendar MCP connects your AI agent to Google Calendar through the official REST API. It provides tools for listing calendars, querying events by date range, creating and updating events, deleting events, and checking free/busy availability.\n\nYour agent can check today's schedule, find open meeting slots, create new events with attendees, and manage calendar entries \u2014 all through a standard Google OAuth consent flow.\n\n### Community plugin\n\nThis is a curated community plugin maintained by Anthropic. It implements the `calendar-v1` service contract, making it interchangeable with the CalDAV Blade for Google Calendar users who prefer the native REST API over CalDAV protocol access.\n\n### Setup\n\nSetup requires a Google Cloud project with the Calendar API enabled and OAuth 2.0 credentials (Desktop app type). On first run, the plugin opens a browser for the standard Google consent flow. Subsequent sessions use the stored refresh token.\n\n### Comparison with CalDAV Blade\n\n| Feature | Google Calendar MCP | CalDAV Blade |\n|---------|--------------------|--------------|\n| Protocol | Google REST API | CalDAV (RFC 4791) |\n| Auth | OAuth 2.0 | Username + password |\n| Providers | Google only | Any CalDAV server |\n| Setup | Moderate (Cloud project) | Simple (URL + credentials) |",
   "install": {
     "runtime": "node",
     "package": "@anthropic/google-calendar-mcp"
@@ -30,6 +45,24 @@
       "OAuth 2.0 credentials (Desktop app type)"
     ]
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "google-calendar-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Check availability and schedule a meeting",
+      "body": "Query free/busy across attendee calendars, find the next open slot that works for everyone, and create the event with a title, location, and description."
+    },
+    {
+      "type": "workflow",
+      "target": "google-calendar-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Review and clean up the week ahead",
+      "body": "List all events for the coming week, identify conflicts or back-to-back meetings, and suggest adjustments or cancellations to create focus-time blocks."
+    }
+  ],
   "conformance": {
     "required": "untested",
     "recommended": "untested",

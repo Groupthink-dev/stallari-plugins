@@ -1,0 +1,132 @@
+{
+  "name": "tessie-mcp",
+  "title": "Tesla (Tessie)",
+  "description": "Tesla vehicle monitoring and control via the Tessie API — state, battery, charging, climate, drives, and 26 vehicle commands with confirmation-gated safety.",
+  "tagline": "Tesla vehicle control with summary-first responses and built-in safety gates",
+  "version": "2.0.0",
+  "author": "keithah",
+  "licence": "MIT",
+  "icon": "/icons/tessie-mcp.svg",
+  "tier": "community",
+  "homepage": "https://github.com/keithah/tessie-mcp",
+  "repository": "https://github.com/keithah/tessie-mcp",
+  "contract": "vehicle-v1",
+  "multi_instance": false,
+  "highlights": [
+    { "icon": "🚗", "text": "State — location, climate, locks, battery, odometer at a glance" },
+    { "icon": "🔋", "text": "Battery — charge level, limit, rate, time remaining, scheduled charging" },
+    { "icon": "🗺️", "text": "Drives — search recent trips with date filtering, coordinate paths for mapping" },
+    { "icon": "🎛️", "text": "Commands — 26 operations: lock, climate, charging, sentry, seat heating, and more" },
+    { "icon": "🛡️", "text": "Safety — destructive commands require explicit confirm:true per invocation" },
+    { "icon": "⚡", "text": "Efficient — summary-first responses, 15-30s LRU cache, in-flight dedup" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/keithah/tessie-mcp" },
+    { "label": "Tessie Dashboard", "url": "https://dash.tessie.com" },
+    { "label": "Tessie API Docs", "url": "https://developer.tessie.com" },
+    { "label": "Smithery Listing", "url": "https://smithery.ai/server/@keithah/tessie-mcp" }
+  ],
+  "readme": "### What it does\n\nTessie MCP gives your AI agent read and control access to Tesla vehicles through the [Tessie](https://tessie.com) third-party API. Tessie wraps Tesla's Fleet API, handling OAuth, vehicle wake-up, retries, and the vehicle security protocol — so you get a single API key instead of a multi-step OAuth registration.\n\nYour agent can check vehicle state (location, battery, climate, locks), search driving history, plot trip coordinates, and issue 26 vehicle commands (lock/unlock, start/stop charging, climate control, sentry mode, seat heating, and more).\n\nBuilt by [keithah](https://github.com/keithah) and published on [Smithery](https://smithery.ai/server/@keithah/tessie-mcp). TypeScript/Node.js, MIT licensed.\n\n### How it differs from other vehicle MCPs\n\n| | Tessie MCP | Tesla Fleet API MCP | WiCAN Vehicle MCP |\n|---|---|---|---|\n| Vehicle support | Tesla only | Tesla only | Any OBD-II |\n| Interface | Tessie cloud API | Tesla Fleet API (direct) | Local hardware (OBD-II → MQTT) |\n| Auth complexity | API key (trivial) | OAuth 2.1 + EC key pair (hard) | MQTT credentials (easy) |\n| Wake handling | Automatic | Manual | N/A (always listening) |\n| Remote commands | 26 operations | Full Fleet API | DTC clear, raw CAN |\n| Powerwall/Solar | No | Yes | No |\n| Subscription cost | ~$5/mo (Tessie) | Free | None |\n| Works offline | No | No | Yes (local network) |\n\nTessie is the fastest path to Tesla vehicle control — single API key, automatic wake-up, no OAuth dance. Trade-off: you depend on Tessie's availability and pay a monthly subscription.\n\n### How it works\n\nThe server uses a summary-first design — responses are pre-mapped to concise snapshots rather than dumping raw API payloads. An LRU cache (200 entries, 15-30s TTL with jitter) minimises API calls, and VIN-scoped invalidation ensures state is fresh after commands.\n\nAll 6 tools funnel through a single `TessieClient` with automatic retry (3 attempts, exponential backoff on 429/5xx) and in-flight request deduplication.\n\n### Token efficiency\n\nTessie's raw API returns large JSON payloads (vehicle state is 200+ fields). The MCP server maps responses to summary-first output — only the fields relevant to each tool are included. A `fetch_vehicle_state` response is typically 10–15 lines; `fetch_vehicle_battery` is 5–8 lines.\n\nThe LRU cache (15-30s TTL with jitter to prevent stampedes) means repeated queries within the TTL window cost zero API calls and return instantly.\n\n### Safety model\n\nRead tools work immediately — vehicle state, battery, drives.\n\nThe `manage_vehicle_command` tool gates destructive operations: only `flash_lights`, `honk`, and `wake` execute without confirmation. All other operations (lock, unlock, charging, climate, sentry, seat heating) require `params.confirm: true` on each invocation.\n\nThe full command list:\n\n| Safe (no confirm) | Gated (confirm required) |\n|---|---|\n| flash_lights, honk, wake | lock, unlock, start_charging, stop_charging, set_charge_limit, set_charging_amps, set_temperature, start_climate, stop_climate, start_defrost, stop_defrost, start_steering_wheel_heater, stop_steering_wheel_heater, set_cabin_overheat_protection, set_cabin_overheat_protection_temp, enable_sentry_mode, disable_sentry_mode, enable_speed_limit, disable_speed_limit, clear_speed_limit_pin, set_seat_heating, set_seat_cooling, set_speed_limit |\n\n### Tessie vs Tesla Fleet API\n\n| | Tessie API | Tesla Fleet API |\n|---|---|---|\n| Auth | Single API key | OAuth 2.1 + EC key pair + public endpoint |\n| Wake handling | Automatic | Manual |\n| Setup time | 2 minutes | 30+ minutes |\n| Cost | Tessie subscription (~$5/mo) | Free |\n| Coverage | Vehicle state + commands | Vehicle + Energy + Fleet |\n| Rate limits | Tessie-managed | Tesla-imposed |\n\nTessie is ideal for personal use. If you need Powerwall/Solar control or manage a fleet, use a Fleet API MCP instead.\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| get_active_context | read | Vehicle roster with next-step guidance |\n| fetch_vehicle_state | read | Location, climate, locks, battery snapshot |\n| fetch_vehicle_battery | read | Charging-focused battery view (level, limit, rate, schedule) |\n| search_drives | read | Recent drives with optional date range |\n| get_driving_path | read | Coordinate series for mapping or analysis |\n| manage_vehicle_command | gated | 26 operations: lock, unlock, charge, climate, sentry, seats, and more |",
+  "install": {
+    "runtime": "node",
+    "package": "@keithah/tessie-mcp"
+  },
+  "env": [
+    {
+      "name": "TESSIE_API_KEY",
+      "description": "Tessie API key from dash.tessie.com/settings/api",
+      "secret": true
+    },
+    {
+      "name": "TESSIE_MCP_DEBUG",
+      "description": "Enable debug logging (sanitised, no secrets)",
+      "default": "false",
+      "secret": false
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "car.fill",
+    "product": "Tesla (via Tessie)",
+    "blurb": "Monitor and control your Tesla vehicles through the Tessie API. Check state, battery, and driving history. Issue commands for locks, charging, climate, sentry mode, and more — all with per-invocation safety confirmation.",
+    "help_text": "You need a Tessie account with an active subscription and at least one Tesla vehicle linked. Generate an API key at dash.tessie.com > Settings > Developer.\n\nTessie handles Tesla OAuth, vehicle wake-up, and the vehicle security protocol on your behalf. No Tesla Developer account registration or public key hosting is required.\n\nThe API key grants access to all vehicles on your Tessie account. There is no per-vehicle scoping — treat the key as a credential for your entire fleet.",
+    "help_links": [
+      {
+        "label": "Get API Key",
+        "url": "https://dash.tessie.com/settings/api"
+      },
+      {
+        "label": "Tessie API Reference",
+        "url": "https://developer.tessie.com"
+      }
+    ],
+    "fields": [
+      {
+        "key": "TESSIE_API_KEY",
+        "label": "API Key",
+        "type": "string",
+        "secret": true,
+        "placeholder": "your-tessie-api-key",
+        "required": true,
+        "help": "Generate at dash.tessie.com > Settings > Developer"
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.tessie.com/vehicles",
+      "auth_style": "bearer"
+    },
+    "prerequisites": [
+      "Tessie account with active subscription",
+      "At least one Tesla vehicle linked in Tessie"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "tessie-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vehicle"],
+      "label": "Morning vehicle check",
+      "body": "Call get_active_context to see all vehicles, then fetch_vehicle_state for the primary car. Report battery level, charge status, location, climate state, sentry mode, and door/window status."
+    },
+    {
+      "type": "workflow",
+      "target": "tessie-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vehicle"],
+      "label": "Pre-condition the cabin",
+      "body": "Check fetch_vehicle_state for current interior temperature and climate status. If climate is off, use manage_vehicle_command with operation set_temperature and desired temp, then start_climate. Confirm both operations."
+    },
+    {
+      "type": "workflow",
+      "target": "tessie-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vehicle"],
+      "label": "Weekly driving summary",
+      "body": "Call search_drives with a 7-day date range. Summarise total trips, distance, and energy consumed. Optionally call get_driving_path for the longest trip to visualise the route."
+    },
+    {
+      "type": "workflow",
+      "target": "tessie-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vehicle"],
+      "label": "Overnight charging optimisation",
+      "body": "Call fetch_vehicle_battery for current SoC and charge limit. If below target, use manage_vehicle_command to set_charge_limit and start_charging. Check again in the morning with fetch_vehicle_battery to confirm the charge completed."
+    },
+    {
+      "type": "workflow",
+      "target": "tessie-mcp",
+      "target_type": "plugin",
+      "shared_services": ["vehicle"],
+      "label": "Lock check before bed",
+      "body": "Call fetch_vehicle_state to check door lock status and sentry mode. If unlocked, use manage_vehicle_command with operation lock and confirm=true. If sentry is disabled, enable it."
+    }
+  ],
+  "conformance": {
+    "required": "3/3",
+    "recommended": "2/2",
+    "gated": "1/1",
+    "last_tested": "2026-04-11"
+  }
+}

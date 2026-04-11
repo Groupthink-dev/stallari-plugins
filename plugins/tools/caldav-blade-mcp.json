@@ -2,6 +2,7 @@
   "name": "caldav-blade-mcp",
   "title": "Calendar (CalDAV)",
   "description": "CalDAV calendar operations — protocol-level access to any CalDAV server",
+  "tagline": "Universal calendar access over the CalDAV protocol",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
@@ -9,6 +10,21 @@
   "tier": "certified",
   "contract": "calendar-v1",
   "repository": "https://github.com/groupthink-dev/caldav-blade-mcp",
+  "highlights": [
+    { "icon": "\ud83d\udcc5", "text": "Events \u2014 list, search, create, update, delete across all calendars" },
+    { "icon": "\u23f0", "text": "Today & week views \u2014 token-efficient daily and weekly snapshots" },
+    { "icon": "\ud83d\udcca", "text": "Free/busy \u2014 check availability across calendar sets" },
+    { "icon": "\ud83d\udd00", "text": "Batch operations \u2014 fetch multiple date ranges in a single call" },
+    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 reads always work, writes require explicit opt-in" },
+    { "icon": "\ud83c\udf10", "text": "Any provider \u2014 iCloud, Fastmail, Google, Nextcloud, Radicale" }
+  ],
+  "links": [
+    { "label": "Source Code", "url": "https://github.com/groupthink-dev/caldav-blade-mcp" },
+    { "label": "CalDAV Specification (RFC 4791)", "url": "https://datatracker.ietf.org/doc/html/rfc4791" },
+    { "label": "iCloud App-Specific Passwords", "url": "https://support.apple.com/en-us/102654" },
+    { "label": "Fastmail CalDAV Setup", "url": "https://www.fastmail.help/hc/en-us/articles/1500000278342-Server-names-and-ports" }
+  ],
+  "readme": "### What it does\n\nCalDAV Blade gives your AI agent direct protocol-level access to any CalDAV calendar server \u2014 iCloud, Fastmail, Google, Nextcloud, Radicale, or any standards-compliant provider. 13 tools cover the full calendar lifecycle: listing calendars, querying events by date range, searching by keyword, creating and updating events, checking free/busy availability, and moving events between calendars.\n\n### Token efficiency\n\nCalendar APIs return verbose iCalendar data full of timezone definitions, recurrence rules, and organiser metadata. Each tool includes a concise formatter that extracts only the fields your agent needs \u2014 title, time, location, description, and attendees. The `cal_today` and `cal_week` views provide pre-formatted daily and weekly snapshots in a single call, and `cal_events_batch` fetches multiple date ranges without round-trips.\n\n### Safety model\n\nAll 13 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately \u2014 list calendars, query events, check availability\n- **Writes** require `CALDAV_WRITE_ENABLED=true` \u2014 create, update, delete, move events\n\nThis means your agent can explore your calendar freely but cannot make changes unless you explicitly enable write access.\n\n### Provider compatibility\n\n| Provider | CalDAV URL | Auth |\n|----------|-----------|------|\n| iCloud | `https://caldav.icloud.com` | App-specific password |\n| Fastmail | `https://caldav.fastmail.com/dav/calendars` | API token |\n| Google | `https://apidata.googleusercontent.com/caldav/v2` | OAuth or app password |\n| Nextcloud | `https://your-server/remote.php/dav` | Username + password |",
   "install": {
     "runtime": "uv",
     "package": "caldav-blade-mcp"
@@ -69,6 +85,32 @@
       "auth_style": "basic"
     }
   },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "caldav-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Morning schedule briefing",
+      "body": "Fetch today's events with cal_today, check for double-bookings using cal_freebusy, and summarise the day's commitments with travel time and prep notes."
+    },
+    {
+      "type": "workflow",
+      "target": "caldav-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Reschedule a conflicting meeting",
+      "body": "Search for the conflicting event, check free/busy slots across attendees' calendars, then update the event to the next available window."
+    },
+    {
+      "type": "workflow",
+      "target": "caldav-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["calendar"],
+      "label": "Weekly calendar audit",
+      "body": "Pull the full week view with cal_week, identify gaps and over-scheduled days, and flag events that overlap with known focus-time blocks."
+    }
+  ],
   "conformance": {
     "required": "4/4",
     "recommended": "3/3",
