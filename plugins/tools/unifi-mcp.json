@@ -9,18 +9,38 @@
   "licence": "MIT",
   "icon": "/icons/unifi-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": "network-v1",
   "repository": "https://github.com/sirkirby/unifi-mcp",
   "multi_instance": false,
   "highlights": [
-    { "icon": "⚙️", "text": "161 tools — full network configuration management" },
-    { "icon": "🔄", "text": "Preview-then-confirm — safe write operations" },
-    { "icon": "📋", "text": "Claude Code plugin — available as npm package" },
-    { "icon": "🔐", "text": "TOTP 2FA — built-in support" }
+    {
+      "icon": "⚙️",
+      "text": "161 tools — full network configuration management"
+    },
+    {
+      "icon": "🔄",
+      "text": "Preview-then-confirm — safe write operations"
+    },
+    {
+      "icon": "📋",
+      "text": "Claude Code plugin — available as npm package"
+    },
+    {
+      "icon": "🔐",
+      "text": "TOTP 2FA — built-in support"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/sirkirby/unifi-mcp" },
-    { "label": "npm Package", "url": "https://www.npmjs.com/package/unifi-mcp" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/sirkirby/unifi-mcp"
+    },
+    {
+      "label": "npm Package",
+      "url": "https://www.npmjs.com/package/unifi-mcp"
+    }
   ],
   "install": {
     "runtime": "npx",

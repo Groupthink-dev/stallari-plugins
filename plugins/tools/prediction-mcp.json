@@ -6,24 +6,53 @@
   "author": "shaanmajid",
   "licence": "MIT",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": null,
   "tagline": "Polymarket and Kalshi prediction data in one place",
   "repository": "https://github.com/shaanmajid/prediction-mcp",
   "homepage": "https://github.com/shaanmajid/prediction-mcp",
   "highlights": [
-    { "icon": "\ud83d\udcca", "text": "Polymarket \u2014 search events, prices, orderbooks, no auth needed" },
-    { "icon": "\ud83c\udfb0", "text": "Kalshi \u2014 markets, positions, balance, and trading" },
-    { "icon": "\ud83d\udd0d", "text": "Relevance scoring \u2014 results ranked by query relevance" },
-    { "icon": "\ud83d\udcb1", "text": "Orderbooks \u2014 live bid/ask depth for any market" },
-    { "icon": "\ud83d\udd13", "text": "Zero-config Polymarket \u2014 no API key required for read-only access" }
+    {
+      "icon": "📊",
+      "text": "Polymarket — search events, prices, orderbooks, no auth needed"
+    },
+    {
+      "icon": "🎰",
+      "text": "Kalshi — markets, positions, balance, and trading"
+    },
+    {
+      "icon": "🔍",
+      "text": "Relevance scoring — results ranked by query relevance"
+    },
+    {
+      "icon": "💱",
+      "text": "Orderbooks — live bid/ask depth for any market"
+    },
+    {
+      "icon": "🔓",
+      "text": "Zero-config Polymarket — no API key required for read-only access"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/shaanmajid/prediction-mcp" },
-    { "label": "npm Package", "url": "https://www.npmjs.com/package/prediction-mcp" },
-    { "label": "Polymarket", "url": "https://polymarket.com" },
-    { "label": "Kalshi API Docs", "url": "https://trading-api.readme.io/reference" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/shaanmajid/prediction-mcp"
+    },
+    {
+      "label": "npm Package",
+      "url": "https://www.npmjs.com/package/prediction-mcp"
+    },
+    {
+      "label": "Polymarket",
+      "url": "https://polymarket.com"
+    },
+    {
+      "label": "Kalshi API Docs",
+      "url": "https://trading-api.readme.io/reference"
+    }
   ],
-  "readme": "### What it does\n\nPrediction Markets aggregates data from Polymarket and Kalshi into a single MCP. Search for prediction markets on any topic, check current prices and probability estimates, browse orderbooks, and \u2014 with Kalshi credentials \u2014 view positions and place trades.\n\nPolymarket access is completely free and requires no authentication. Kalshi features unlock progressively with API credentials.\n\n### Two-tier access\n\n- **Polymarket (no auth)** \u2014 search events, get market prices, browse orderbooks. Works out of the box.\n- **Kalshi (API key + RSA key)** \u2014 search markets, view balance and positions, place orders. Requires Kalshi account and API credentials.\n\n### Safety note\n\nPolymarket tools are read-only. However, the Kalshi `kalshi_create_order` tool can place real-money trades and currently lacks a confirm gate. Exercise caution with Kalshi credentials enabled \u2014 consider using Kalshi\u2019s demo environment for testing.\n\n### Relevance scoring\n\nSearch results are ranked by relevance to your query rather than by volume or recency, making it easier to find niche markets on specific topics.",
+  "readme": "### What it does\n\nPrediction Markets aggregates data from Polymarket and Kalshi into a single MCP. Search for prediction markets on any topic, check current prices and probability estimates, browse orderbooks, and — with Kalshi credentials — view positions and place trades.\n\nPolymarket access is completely free and requires no authentication. Kalshi features unlock progressively with API credentials.\n\n### Two-tier access\n\n- **Polymarket (no auth)** — search events, get market prices, browse orderbooks. Works out of the box.\n- **Kalshi (API key + RSA key)** — search markets, view balance and positions, place orders. Requires Kalshi account and API credentials.\n\n### Safety note\n\nPolymarket tools are read-only. However, the Kalshi `kalshi_create_order` tool can place real-money trades and currently lacks a confirm gate. Exercise caution with Kalshi credentials enabled — consider using Kalshi’s demo environment for testing.\n\n### Relevance scoring\n\nSearch results are ranked by relevance to your query rather than by volume or recency, making it easier to find niche markets on specific topics.",
   "scenarios": [
     {
       "type": "workflow",
@@ -96,7 +125,9 @@
     ],
     "test": {
       "endpoint": "https://gamma-api.polymarket.com/events?limit=1",
-      "expected_status": [200]
+      "expected_status": [
+        200
+      ]
     },
     "help": [
       {

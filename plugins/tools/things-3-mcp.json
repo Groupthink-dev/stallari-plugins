@@ -8,6 +8,8 @@
   "licence": "MIT",
   "icon": "/icons/things-3-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "tasks-v1",
   "repository": "https://github.com/groupthink-dev/things-3-mcp",
   "install": {
@@ -37,20 +39,50 @@
     ]
   },
   "highlights": [
-    { "icon": "\ud83d\udce5", "text": "Inbox \u2014 capture and triage tasks in the Things inbox" },
-    { "icon": "\u2b50", "text": "Today \u2014 view and manage today\u2019s focused task list" },
-    { "icon": "\ud83d\udcc1", "text": "Projects \u2014 browse projects, areas, headings, and checklists" },
-    { "icon": "\ud83c\udff7\ufe0f", "text": "Tags \u2014 filter and organise tasks by tag" },
-    { "icon": "\u2795", "text": "Create \u2014 add tasks with dates, tags, projects, checklists" },
-    { "icon": "\ud83d\udd04", "text": "Sync \u2014 changes sync to Things Cloud on all devices" }
+    {
+      "icon": "📥",
+      "text": "Inbox — capture and triage tasks in the Things inbox"
+    },
+    {
+      "icon": "⭐",
+      "text": "Today — view and manage today’s focused task list"
+    },
+    {
+      "icon": "📁",
+      "text": "Projects — browse projects, areas, headings, and checklists"
+    },
+    {
+      "icon": "🏷️",
+      "text": "Tags — filter and organise tasks by tag"
+    },
+    {
+      "icon": "➕",
+      "text": "Create — add tasks with dates, tags, projects, checklists"
+    },
+    {
+      "icon": "🔄",
+      "text": "Sync — changes sync to Things Cloud on all devices"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/things-3-mcp" },
-    { "label": "Things 3 Website", "url": "https://culturedcode.com/things/" },
-    { "label": "URL Scheme Documentation", "url": "https://culturedcode.com/things/support/articles/2803573/" },
-    { "label": "AppleScript Guide", "url": "https://culturedcode.com/things/support/articles/2803572/" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/things-3-mcp"
+    },
+    {
+      "label": "Things 3 Website",
+      "url": "https://culturedcode.com/things/"
+    },
+    {
+      "label": "URL Scheme Documentation",
+      "url": "https://culturedcode.com/things/support/articles/2803573/"
+    },
+    {
+      "label": "AppleScript Guide",
+      "url": "https://culturedcode.com/things/support/articles/2803572/"
+    }
   ],
-  "readme": "### What it does\n\nThings 3 gives your AI agent access to Cultured Code\u2019s GTD task manager on macOS. Browse your inbox, today list, upcoming and someday tasks, projects, areas, and tags \u2014 and create new tasks with full metadata.\n\nYour agent can review what\u2019s due today, capture new tasks into the inbox, create structured projects with headings and checklists, and search across your entire task database.\n\n### macOS integration\n\nThis plugin uses two native interfaces: AppleScript for reading Things\u2019 database, and the Things URL scheme for creating and modifying tasks. No API keys, no cloud configuration \u2014 just Things 3 installed on your Mac.\n\nChanges sync automatically via Things Cloud to your iPhone, iPad, and other Macs.\n\n### Safety model\n\nRead operations (inbox, today, projects, areas, tags, search) work immediately.\n\nTask creation uses the Things URL scheme, which opens Things briefly to process the command. This is a native macOS interaction \u2014 no network requests involved.\n\n### GTD workflow support\n\n| View | What you can do |\n|------|-----------------|\n| Inbox | Browse and triage uncategorised captures |\n| Today | See today\u2019s focused list |\n| Upcoming | Review scheduled tasks with dates |\n| Someday | Browse deferred items |\n| Projects | Navigate project hierarchies with headings |\n| Areas | Browse areas of responsibility |\n| Tags | Filter tasks by any tag |\n| Logbook | Review completed tasks |",
+  "readme": "### What it does\n\nThings 3 gives your AI agent access to Cultured Code’s GTD task manager on macOS. Browse your inbox, today list, upcoming and someday tasks, projects, areas, and tags — and create new tasks with full metadata.\n\nYour agent can review what’s due today, capture new tasks into the inbox, create structured projects with headings and checklists, and search across your entire task database.\n\n### macOS integration\n\nThis plugin uses two native interfaces: AppleScript for reading Things’ database, and the Things URL scheme for creating and modifying tasks. No API keys, no cloud configuration — just Things 3 installed on your Mac.\n\nChanges sync automatically via Things Cloud to your iPhone, iPad, and other Macs.\n\n### Safety model\n\nRead operations (inbox, today, projects, areas, tags, search) work immediately.\n\nTask creation uses the Things URL scheme, which opens Things briefly to process the command. This is a native macOS interaction — no network requests involved.\n\n### GTD workflow support\n\n| View | What you can do |\n|------|-----------------|\n| Inbox | Browse and triage uncategorised captures |\n| Today | See today’s focused list |\n| Upcoming | Review scheduled tasks with dates |\n| Someday | Browse deferred items |\n| Projects | Navigate project hierarchies with headings |\n| Areas | Browse areas of responsibility |\n| Tags | Filter tasks by any tag |\n| Logbook | Review completed tasks |",
   "scenarios": [
     {
       "type": "workflow",
@@ -58,7 +90,7 @@
       "target_type": "plugin",
       "shared_services": [],
       "label": "Morning task triage",
-      "body": "Review the Things inbox for uncategorised captures, move items to appropriate projects with due dates and tags, then check today\u2019s list to confirm priorities."
+      "body": "Review the Things inbox for uncategorised captures, move items to appropriate projects with due dates and tags, then check today’s list to confirm priorities."
     },
     {
       "type": "workflow",

@@ -8,6 +8,8 @@
   "licence": "MIT",
   "icon": "/icons/shopify-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "ecommerce-v1",
   "repository": "https://github.com/groupthink-dev/shopify-blade-mcp",
   "install": {
@@ -57,20 +59,50 @@
     ]
   },
   "highlights": [
-    { "icon": "\ud83d\udce6", "text": "Products \u2014 CRUD, variants, images, metafields, collections" },
-    { "icon": "\ud83d\uded2", "text": "Orders \u2014 list, search, fulfill, cancel, refund, edit" },
-    { "icon": "\ud83d\udc64", "text": "Customers \u2014 search, create, update, order history" },
-    { "icon": "\ud83d\udce6", "text": "Inventory \u2014 stock levels, adjustments, location management" },
-    { "icon": "\ud83c\udff7\ufe0f", "text": "Discounts \u2014 create and manage discount codes and automatic discounts" },
-    { "icon": "\ud83d\udcca", "text": "Analytics \u2014 sales reports, order summaries, product performance" }
+    {
+      "icon": "📦",
+      "text": "Products — CRUD, variants, images, metafields, collections"
+    },
+    {
+      "icon": "🛒",
+      "text": "Orders — list, search, fulfill, cancel, refund, edit"
+    },
+    {
+      "icon": "👤",
+      "text": "Customers — search, create, update, order history"
+    },
+    {
+      "icon": "📦",
+      "text": "Inventory — stock levels, adjustments, location management"
+    },
+    {
+      "icon": "🏷️",
+      "text": "Discounts — create and manage discount codes and automatic discounts"
+    },
+    {
+      "icon": "📊",
+      "text": "Analytics — sales reports, order summaries, product performance"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/shopify-blade-mcp" },
-    { "label": "Shopify Admin API Reference", "url": "https://shopify.dev/docs/api/admin-graphql" },
-    { "label": "Create Custom App", "url": "https://shopify.dev/docs/apps/auth/admin-app-access-tokens" },
-    { "label": "API Scopes Reference", "url": "https://shopify.dev/docs/api/usage/access-scopes" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/shopify-blade-mcp"
+    },
+    {
+      "label": "Shopify Admin API Reference",
+      "url": "https://shopify.dev/docs/api/admin-graphql"
+    },
+    {
+      "label": "Create Custom App",
+      "url": "https://shopify.dev/docs/apps/auth/admin-app-access-tokens"
+    },
+    {
+      "label": "API Scopes Reference",
+      "url": "https://shopify.dev/docs/api/usage/access-scopes"
+    }
   ],
-  "readme": "### What it does\n\nShopify gives your AI agent full operational control over a Shopify store through the Admin GraphQL API. Products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, and analytics \u2014 all manageable in conversation.\n\nYour agent can list recent orders, check inventory levels, create a product variant, apply a discount code, fulfill an order, and pull sales analytics without touching the Shopify admin dashboard.\n\n### GraphQL efficiency\n\nAll operations use Shopify\u2019s Admin GraphQL API rather than REST. GraphQL lets each tool request exactly the fields needed, avoiding the over-fetching that plagues REST endpoints. A typical order lookup returns only the fields your agent needs \u2014 no wasted tokens on unused metadata.\n\nPagination is cursor-based and handled automatically. Bulk operations use GraphQL mutations with optimistic concurrency where appropriate.\n\n### Safety model\n\nThe plugin follows Shopify\u2019s scoped access model:\n\n- **Reads** work with read-only scopes \u2014 list products, search orders, check inventory\n- **Writes** require the corresponding write scopes on your custom app \u2014 create products, fulfill orders, adjust inventory\n- **Destructive operations** use confirmation patterns to prevent accidental deletions\n\nScope your custom app\u2019s API access to only what you need. The plugin respects whatever permissions the token carries.\n\n### Domain coverage\n\n| Domain | Capabilities |\n|--------|--------------|\n| Products | CRUD, variants, images, metafields, collections |\n| Orders | List, search, fulfill, cancel, refund, edit |\n| Customers | Search, create, update, order history |\n| Inventory | Stock levels, adjustments, multi-location |\n| Discounts | Codes, automatic discounts, price rules |\n| Webhooks | Subscribe, list, manage event topics |\n| Analytics | Sales, orders, product performance |",
+  "readme": "### What it does\n\nShopify gives your AI agent full operational control over a Shopify store through the Admin GraphQL API. Products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, and analytics — all manageable in conversation.\n\nYour agent can list recent orders, check inventory levels, create a product variant, apply a discount code, fulfill an order, and pull sales analytics without touching the Shopify admin dashboard.\n\n### GraphQL efficiency\n\nAll operations use Shopify’s Admin GraphQL API rather than REST. GraphQL lets each tool request exactly the fields needed, avoiding the over-fetching that plagues REST endpoints. A typical order lookup returns only the fields your agent needs — no wasted tokens on unused metadata.\n\nPagination is cursor-based and handled automatically. Bulk operations use GraphQL mutations with optimistic concurrency where appropriate.\n\n### Safety model\n\nThe plugin follows Shopify’s scoped access model:\n\n- **Reads** work with read-only scopes — list products, search orders, check inventory\n- **Writes** require the corresponding write scopes on your custom app — create products, fulfill orders, adjust inventory\n- **Destructive operations** use confirmation patterns to prevent accidental deletions\n\nScope your custom app’s API access to only what you need. The plugin respects whatever permissions the token carries.\n\n### Domain coverage\n\n| Domain | Capabilities |\n|--------|--------------|\n| Products | CRUD, variants, images, metafields, collections |\n| Orders | List, search, fulfill, cancel, refund, edit |\n| Customers | Search, create, update, order history |\n| Inventory | Stock levels, adjustments, multi-location |\n| Discounts | Codes, automatic discounts, price rules |\n| Webhooks | Subscribe, list, manage event topics |\n| Analytics | Sales, orders, product performance |",
   "scenarios": [
     {
       "type": "workflow",

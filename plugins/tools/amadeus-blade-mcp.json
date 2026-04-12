@@ -8,24 +8,59 @@
   "licence": "MIT",
   "icon": "/icons/amadeus-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "homepage": "https://github.com/Groupthink-dev/amadeus-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/amadeus-blade-mcp",
   "contract": "travel-v1",
   "multi_instance": false,
   "highlights": [
-    { "icon": "✈️", "text": "Flights — search, price, seat maps, cheapest dates, and destination discovery" },
-    { "icon": "🏨", "text": "Hotels — search by city or coordinates, pricing, sentiment scores" },
-    { "icon": "⏱️", "text": "Status — real-time flight status, delay probability, airport on-time ratings" },
-    { "icon": "📊", "text": "Analytics — historical price metrics, air traffic trends, busiest travel periods" },
-    { "icon": "🌍", "text": "Coverage — 500+ airlines, 10,000+ airports, 150,000+ hotels worldwide" },
-    { "icon": "🔑", "text": "Self-service — register at developers.amadeus.com, get credentials in minutes" }
+    {
+      "icon": "✈️",
+      "text": "Flights — search, price, seat maps, cheapest dates, and destination discovery"
+    },
+    {
+      "icon": "🏨",
+      "text": "Hotels — search by city or coordinates, pricing, sentiment scores"
+    },
+    {
+      "icon": "⏱️",
+      "text": "Status — real-time flight status, delay probability, airport on-time ratings"
+    },
+    {
+      "icon": "📊",
+      "text": "Analytics — historical price metrics, air traffic trends, busiest travel periods"
+    },
+    {
+      "icon": "🌍",
+      "text": "Coverage — 500+ airlines, 10,000+ airports, 150,000+ hotels worldwide"
+    },
+    {
+      "icon": "🔑",
+      "text": "Self-service — register at developers.amadeus.com, get credentials in minutes"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/amadeus-blade-mcp" },
-    { "label": "Amadeus Developer Portal", "url": "https://developers.amadeus.com" },
-    { "label": "Amadeus Python SDK", "url": "https://github.com/amadeus4dev/amadeus-python" },
-    { "label": "API Reference", "url": "https://developers.amadeus.com/self-service/apis-docs" },
-    { "label": "Test Data Collection", "url": "https://developers.amadeus.com/self-service/collection" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/amadeus-blade-mcp"
+    },
+    {
+      "label": "Amadeus Developer Portal",
+      "url": "https://developers.amadeus.com"
+    },
+    {
+      "label": "Amadeus Python SDK",
+      "url": "https://github.com/amadeus4dev/amadeus-python"
+    },
+    {
+      "label": "API Reference",
+      "url": "https://developers.amadeus.com/self-service/apis-docs"
+    },
+    {
+      "label": "Test Data Collection",
+      "url": "https://developers.amadeus.com/self-service/collection"
+    }
   ],
   "readme": "### What it does\n\nAmadeus Travel gives your AI agent access to the Amadeus Global Distribution System — one of the world's largest travel data platforms. Search flights across 500+ airlines, find hotel offers at 150,000+ properties, check real-time flight status, predict delays, discover cheapest travel dates, and look up airport and airline reference data.\n\nBuilt on the [Amadeus Self-Service APIs](https://developers.amadeus.com) and the official [Python SDK](https://pypi.org/project/amadeus/) (v12.0.0). No travel agency agreement required for search and pricing — only booking (not included in v1) needs a consolidator.\n\n### How it differs from other travel MCPs\n\n| | This plugin | Duffel MCP | Google Flights | Skyscanner |\n|---|---|---|---|---|\n| Data source | Amadeus GDS (direct) | Duffel aggregator | Discontinued (2018) | Partner-only |\n| Airlines | 500+ | 300+ | N/A | N/A |\n| Hotels | 150,000+ | No | No | Partner-only |\n| Auth | Self-service API key | Self-service API key | N/A | Business partnership |\n| Free tier | ~2,000 calls/month | Search free, book paid | N/A | N/A |\n| Booking | Search + price only (v1) | Full booking | N/A | N/A |\n| ML predictions | Delay, trip purpose, choice | No | No | No |\n| Seat maps | Yes | Yes | N/A | No |\n\nAmadeus provides the broadest coverage and unique ML prediction endpoints. The trade-off: responses are verbose (the summary-first formatting in this plugin is essential for token efficiency).\n\n### Token efficiency\n\nAmadeus API responses are extremely verbose — a flight search returning 250 offers can exceed 500KB of raw JSON, with nested segments, fare breakdowns, baggage rules, and dictionaries.\n\nThis plugin maps every response to compact, summary-first output:\n- Flight search: one line per offer (route, stops, duration, price) — typically 5–15 lines for a paginated result\n- Flight status: single-line status with departure/arrival times and delays\n- Hotel offers: one line per property (name, rating, price, distance)\n- Reference data: pipe-delimited lookups\n\nA typical `flights_search` response is 15–25 lines vs 500KB+ raw. Pagination defaults to 10 results; use `limit` to control.\n\n### Test vs production\n\nAmadeus provides two environments:\n\n| | Test | Production |\n|---|---|---|\n| Base URL | test.api.amadeus.com | api.amadeus.com |\n| Data | Subset (limited routes/dates) | Full GDS |\n| Free quota | ~2,000 calls/month | Same free quota, pay overage |\n| Rate limit | 10 req/sec | 40 req/sec |\n| Registration | Instant, no payment | Requires billing + ToS signing |\n\nThe plugin defaults to the test environment. Set `AMADEUS_PRODUCTION=true` to use production. Test data is realistic but limited to specific routes — if a search returns no results, try major city pairs (LHR-JFK, SYD-LAX, CDG-NRT).\n\n### Safety model\n\nAll tools are read-only. This plugin does not create bookings, charge payments, or modify any external state. No write gates needed.\n\nAPI credentials are scoped to your Amadeus developer account. The plugin never stores or logs credentials beyond the initial environment variable read.\n\n### Tool reference\n\n| Tool | Category | What it does |\n|------|----------|--------------|\n| flights_search | flights | Search flight offers by route, dates, passengers, cabin class |\n| flights_cheapest_dates | flights | Find cheapest travel dates for a route |\n| flights_cheapest_destinations | flights | Discover cheapest destinations from an origin |\n| flights_seatmap | flights | Seat map with availability for a flight |\n| flights_status | flights | Real-time flight status by carrier, number, and date |\n| flights_delay_prediction | flights | ML probability of delay for a specific flight |\n| hotels_search | hotels | Search hotels by city code or coordinates |\n| hotels_offers | hotels | Pricing and availability for specific hotels |\n| hotels_sentiment | hotels | Guest ratings and sentiment scores |\n| airport_info | reference | Airport details, direct destinations, on-time rating |\n| location_search | reference | Search airports and cities by keyword |\n| airline_info | reference | Airline name and destinations by IATA code |\n| price_metrics | analytics | Historical price analysis for a route |",
   "install": {
@@ -110,7 +145,9 @@
       "type": "workflow",
       "target": "amadeus-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Find cheapest flights for a trip",
       "body": "Use flights_cheapest_dates to find the cheapest travel window for the route. Then call flights_search with the best dates for detailed offers. Optionally call flights_price to confirm the top offer's price and availability."
     },
@@ -118,7 +155,9 @@
       "type": "workflow",
       "target": "amadeus-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Pre-trip flight status check",
       "body": "Call flights_status with the carrier code, flight number, and date. Report current status, delays, terminal and gate info. If delays are likely, call flights_delay_prediction for the probability breakdown."
     },
@@ -126,7 +165,9 @@
       "type": "workflow",
       "target": "amadeus-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Hotel research for a destination",
       "body": "Call hotels_search with the city code to find available properties. Then call hotels_offers for the top-rated options to get pricing. Check hotels_sentiment for guest ratings and sentiment scores to compare."
     },
@@ -134,7 +175,9 @@
       "type": "workflow",
       "target": "amadeus-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Discover where to travel on a budget",
       "body": "Call flights_cheapest_destinations from the user's home airport. Present the top 10 cheapest destinations with prices. For interesting options, call flights_search for specific dates and hotels_search for accommodation."
     },
@@ -142,7 +185,9 @@
       "type": "workflow",
       "target": "amadeus-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Seat selection research",
       "body": "After finding a flight with flights_search, call flights_seatmap to see seat availability, legroom, and pricing. Recommend seats based on user preferences (window, aisle, extra legroom, proximity to exit)."
     }

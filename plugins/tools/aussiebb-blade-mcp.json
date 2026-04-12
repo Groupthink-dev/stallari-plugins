@@ -8,24 +8,56 @@
   "licence": "MIT",
   "icon": "/icons/aussiebb-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "isp-v1",
   "repository": "https://github.com/groupthink-dev/aussiebb-blade-mcp",
   "multi_instance": true,
   "highlights": [
-    { "icon": "\ud83d\udcca", "text": "Usage \u2014 download, upload, remaining, billing period, % used" },
-    { "icon": "\u26a0\ufe0f", "text": "Outages \u2014 network events, ABB outages, NBN current + scheduled" },
-    { "icon": "\ud83d\udcb3", "text": "Billing \u2014 transactions grouped by month, payment plans" },
-    { "icon": "\ud83d\udd27", "text": "Diagnostics \u2014 loopback, line state, port reset, connection check (dual-gated)" },
-    { "icon": "\ud83c\udfe0", "text": "Multi-account \u2014 home and business accounts in a single instance" },
-    { "icon": "\ud83d\udee1\ufe0f", "text": "SecOps \u2014 credential scrubbing, bearer auth, rate limit handling" }
+    {
+      "icon": "📊",
+      "text": "Usage — download, upload, remaining, billing period, % used"
+    },
+    {
+      "icon": "⚠️",
+      "text": "Outages — network events, ABB outages, NBN current + scheduled"
+    },
+    {
+      "icon": "💳",
+      "text": "Billing — transactions grouped by month, payment plans"
+    },
+    {
+      "icon": "🔧",
+      "text": "Diagnostics — loopback, line state, port reset, connection check (dual-gated)"
+    },
+    {
+      "icon": "🏠",
+      "text": "Multi-account — home and business accounts in a single instance"
+    },
+    {
+      "icon": "🛡️",
+      "text": "SecOps — credential scrubbing, bearer auth, rate limit handling"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/aussiebb-blade-mcp" },
-    { "label": "pyaussiebb (upstream library)", "url": "https://github.com/yaleman/pyaussiebb" },
-    { "label": "MyAussie Portal", "url": "https://my.aussiebroadband.com.au" },
-    { "label": "ABB NBN Plans", "url": "https://www.aussiebroadband.com.au/nbn-plans/" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/aussiebb-blade-mcp"
+    },
+    {
+      "label": "pyaussiebb (upstream library)",
+      "url": "https://github.com/yaleman/pyaussiebb"
+    },
+    {
+      "label": "MyAussie Portal",
+      "url": "https://my.aussiebroadband.com.au"
+    },
+    {
+      "label": "ABB NBN Plans",
+      "url": "https://www.aussiebroadband.com.au/nbn-plans/"
+    }
   ],
-  "readme": "### What it does\n\nAussie Broadband gives your AI agent structured access to your ABB account via the undocumented MyAussie portal API. Monitor broadband usage, track outages, review billing, check support tickets, and run NBN line diagnostics \u2014 all without opening the web portal.\n\nBuilt on [pyaussiebb](https://github.com/yaleman/pyaussiebb) (MIT, 6 years, powers the Home Assistant integration), the only well-maintained wrapper for the ABB API.\n\n### How it differs from other ISP tools\n\n| | This plugin | Home Assistant integration | Raw pyaussiebb |\n|---|---|---|---|\n| Interface | MCP tools (any LLM agent) | HA entities + automations | Python library |\n| Output | Token-optimised text | Sensor values | Raw dicts |\n| Multi-account | Native (env var config) | One integration per account | Manual |\n| Diagnostic safety | Double-gated (env + confirm) | Exposed as buttons | No gate |\n| Auth transport | Bearer token + stdio | HA auth | None |\n| Credential handling | Scrubbed from all output | HA secrets | Caller's responsibility |\n\nThis is the only MCP server for Aussie Broadband. There is no official ABB developer API or API key system \u2014 the MyAussie portal API is the only interface.\n\n### Multi-instance support\n\nDesigned for multi-instance deployment. Each instance authenticates independently with its own credentials. Use cases:\n\n- **Household + business** \u2014 separate ABB accounts for home and office\n- **Property portfolio** \u2014 different services at different addresses\n- **MSP / family** \u2014 manage accounts for multiple people\n\nWithin a single instance, the `ABB_ACCOUNTS` env var supports multiple accounts with independent login sessions.\n\n### Token efficiency\n\nThe MyAussie API returns verbose JSON with nested objects. This plugin reformats everything into compact, pipe-delimited output:\n\n- Service listing: ~50 tokens per service (vs ~500 raw)\n- Usage summary: ~80 tokens including % used, billing period, human-readable units\n- Outages: capped at 10 per section, descriptions truncated to 200 chars\n\n### Safety model\n\nRead tools work immediately \u2014 usage, outages, billing, tickets, orders, services.\n\nDiagnostic tools (connection check, loopback, port reset, line state) require **dual gating**:\n1. `ABB_DIAGNOSTICS_ENABLED=true` environment variable (persistent, set in plugin config)\n2. `confirm=true` parameter on each call (per-invocation, prevents accidental execution)\n\nSome diagnostic tests (port reset, kick connection) briefly interrupt your internet connection.\n\n### Authentication\n\nUses MyAussie portal credentials (email + password). The API returns a session cookie with TTL; pyaussiebb handles automatic re-login on expiry. MFA may be required for sensitive operations (plan changes) \u2014 this plugin documents MFA but does not bypass it.\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| abb_info | read | Health check \u2014 connection status, customer details, service count |\n| abb_services | read | List all services with plan, tech type, speed tier |\n| abb_service | read | Full detail for one service \u2014 address, POI, technology |\n| abb_usage | read | Broadband usage: download, upload, remaining, % used |\n| abb_telephony | read | Telephony usage: national, mobile, international, SMS |\n| abb_outages | read | Network events, ABB outages, NBN outages (current + scheduled) |\n| abb_billing | read | Transactions by month with configurable depth |\n| abb_tickets | read | Support tickets: ref, status, subject, date |\n| abb_orders | read | Pending orders: ID, status, type |\n| abb_boltons | read | Service add-ons (data blocks, extras) |\n| abb_tests | read | Available diagnostic tests + optional history |\n| abb_run_test | gated | Execute a diagnostic test (loopback, linestate, port reset) |",
+  "readme": "### What it does\n\nAussie Broadband gives your AI agent structured access to your ABB account via the undocumented MyAussie portal API. Monitor broadband usage, track outages, review billing, check support tickets, and run NBN line diagnostics — all without opening the web portal.\n\nBuilt on [pyaussiebb](https://github.com/yaleman/pyaussiebb) (MIT, 6 years, powers the Home Assistant integration), the only well-maintained wrapper for the ABB API.\n\n### How it differs from other ISP tools\n\n| | This plugin | Home Assistant integration | Raw pyaussiebb |\n|---|---|---|---|\n| Interface | MCP tools (any LLM agent) | HA entities + automations | Python library |\n| Output | Token-optimised text | Sensor values | Raw dicts |\n| Multi-account | Native (env var config) | One integration per account | Manual |\n| Diagnostic safety | Double-gated (env + confirm) | Exposed as buttons | No gate |\n| Auth transport | Bearer token + stdio | HA auth | None |\n| Credential handling | Scrubbed from all output | HA secrets | Caller's responsibility |\n\nThis is the only MCP server for Aussie Broadband. There is no official ABB developer API or API key system — the MyAussie portal API is the only interface.\n\n### Multi-instance support\n\nDesigned for multi-instance deployment. Each instance authenticates independently with its own credentials. Use cases:\n\n- **Household + business** — separate ABB accounts for home and office\n- **Property portfolio** — different services at different addresses\n- **MSP / family** — manage accounts for multiple people\n\nWithin a single instance, the `ABB_ACCOUNTS` env var supports multiple accounts with independent login sessions.\n\n### Token efficiency\n\nThe MyAussie API returns verbose JSON with nested objects. This plugin reformats everything into compact, pipe-delimited output:\n\n- Service listing: ~50 tokens per service (vs ~500 raw)\n- Usage summary: ~80 tokens including % used, billing period, human-readable units\n- Outages: capped at 10 per section, descriptions truncated to 200 chars\n\n### Safety model\n\nRead tools work immediately — usage, outages, billing, tickets, orders, services.\n\nDiagnostic tools (connection check, loopback, port reset, line state) require **dual gating**:\n1. `ABB_DIAGNOSTICS_ENABLED=true` environment variable (persistent, set in plugin config)\n2. `confirm=true` parameter on each call (per-invocation, prevents accidental execution)\n\nSome diagnostic tests (port reset, kick connection) briefly interrupt your internet connection.\n\n### Authentication\n\nUses MyAussie portal credentials (email + password). The API returns a session cookie with TTL; pyaussiebb handles automatic re-login on expiry. MFA may be required for sensitive operations (plan changes) — this plugin documents MFA but does not bypass it.\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| abb_info | read | Health check — connection status, customer details, service count |\n| abb_services | read | List all services with plan, tech type, speed tier |\n| abb_service | read | Full detail for one service — address, POI, technology |\n| abb_usage | read | Broadband usage: download, upload, remaining, % used |\n| abb_telephony | read | Telephony usage: national, mobile, international, SMS |\n| abb_outages | read | Network events, ABB outages, NBN outages (current + scheduled) |\n| abb_billing | read | Transactions by month with configurable depth |\n| abb_tickets | read | Support tickets: ref, status, subject, date |\n| abb_orders | read | Pending orders: ID, status, type |\n| abb_boltons | read | Service add-ons (data blocks, extras) |\n| abb_tests | read | Available diagnostic tests + optional history |\n| abb_run_test | gated | Execute a diagnostic test (loopback, linestate, port reset) |",
   "install": {
     "runtime": "uv",
     "package": "aussiebb-blade-mcp"
@@ -56,7 +88,7 @@
     "complexity": "trivial",
     "icon": "antenna.radiowaves.left.and.right",
     "product": "Aussie Broadband",
-    "blurb": "Monitor your Aussie Broadband services \u2014 usage, outages, billing, support tickets, and NBN line diagnostics. Multi-account support for household and business.",
+    "blurb": "Monitor your Aussie Broadband services — usage, outages, billing, support tickets, and NBN line diagnostics. Multi-account support for household and business.",
     "help_text": "Enter your MyAussie portal credentials. These are the same email and password you use to log in at my.aussiebroadband.com.au. MFA may be prompted on first connection.",
     "help_links": [
       {
@@ -106,7 +138,9 @@
       "type": "workflow",
       "target": "aussiebb-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["isp"],
+      "shared_services": [
+        "isp"
+      ],
       "label": "Check usage and billing status",
       "body": "Call abb_services to list all services, then abb_usage on the primary broadband service to see download/upload/remaining. If usage is high relative to billing period, check abb_billing for recent charges."
     },
@@ -114,7 +148,9 @@
       "type": "workflow",
       "target": "aussiebb-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["isp"],
+      "shared_services": [
+        "isp"
+      ],
       "label": "Diagnose connectivity issues",
       "body": "Check abb_outages for any active network events or NBN outages. If no outages, check abb_tests for available diagnostics. Run abb_run_test with 'loopback' or 'linestate' to test line quality (requires diagnostics enabled)."
     },
@@ -122,7 +158,9 @@
       "type": "workflow",
       "target": "aussiebb-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["isp"],
+      "shared_services": [
+        "isp"
+      ],
       "label": "Morning broadband health check",
       "body": "Run abb_info to verify connectivity, then abb_outages to check for scheduled maintenance. Review abb_usage for billing period progress. Flag if usage exceeds 80% with more than 10 days remaining."
     }

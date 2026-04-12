@@ -8,6 +8,8 @@
   "licence": "MIT",
   "icon": "/icons/psn-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "gaming-v1",
   "homepage": "https://github.com/groupthink-dev/psn-blade-mcp",
   "repository": "https://github.com/groupthink-dev/psn-blade-mcp",
@@ -70,7 +72,10 @@
     "test": {
       "endpoint": "https://ca.account.sony.com/api/v1/ssocookie",
       "auth_style": "none",
-      "expected_status": [200, 401]
+      "expected_status": [
+        200,
+        401
+      ]
     },
     "prerequisites": [
       "A PlayStation Network account (dedicated API account recommended)",
@@ -79,19 +84,46 @@
     ]
   },
   "highlights": [
-    { "icon": "\ud83c\udfc6", "text": "Trophies \u2014 earned, summary, groups, compare with friends" },
-    { "icon": "\ud83c\udfae", "text": "Game library \u2014 owned titles, recent play, entitlements" },
-    { "icon": "\ud83d\udc65", "text": "Friends \u2014 list, online status, presence, search users" },
-    { "icon": "\ud83d\udcac", "text": "Messaging \u2014 send messages (write-gated)" },
-    { "icon": "\ud83d\udd0d", "text": "Discovery \u2014 search games and players across PSN" }
+    {
+      "icon": "🏆",
+      "text": "Trophies — earned, summary, groups, compare with friends"
+    },
+    {
+      "icon": "🎮",
+      "text": "Game library — owned titles, recent play, entitlements"
+    },
+    {
+      "icon": "👥",
+      "text": "Friends — list, online status, presence, search users"
+    },
+    {
+      "icon": "💬",
+      "text": "Messaging — send messages (write-gated)"
+    },
+    {
+      "icon": "🔍",
+      "text": "Discovery — search games and players across PSN"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/psn-blade-mcp" },
-    { "label": "NPSSO Token Guide", "url": "https://github.com/isFakeAccount/psnawp?tab=readme-ov-file#authentication" },
-    { "label": "PSN Trophy API Docs", "url": "https://andshrew.github.io/PlayStation-Trophies/" },
-    { "label": "PSNAWP Library", "url": "https://psnawp.readthedocs.io/" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/psn-blade-mcp"
+    },
+    {
+      "label": "NPSSO Token Guide",
+      "url": "https://github.com/isFakeAccount/psnawp?tab=readme-ov-file#authentication"
+    },
+    {
+      "label": "PSN Trophy API Docs",
+      "url": "https://andshrew.github.io/PlayStation-Trophies/"
+    },
+    {
+      "label": "PSNAWP Library",
+      "url": "https://psnawp.readthedocs.io/"
+    }
   ],
-  "readme": "### What it does\n\nPlayStation Network gives your AI agent access to PSN player data \u2014 trophies, game library, friends list, online presence, and messaging. Built on the unofficial PSNAWP library, it covers the same data the PlayStation app shows you, minus the UI.\n\nYour agent can check trophy progress, compare achievements with friends, browse your game library, see who\u2019s online, and search for players or games across PSN.\n\n### Authentication\n\nPSN uses an NPSSO session token rather than a standard API key. You extract it from your browser after logging into your Sony account. The token is short-lived \u2014 the library handles refresh automatically, but you may need to re-extract after extended inactivity.\n\nA dedicated PSN account is recommended. Excessive API use on your primary account may trigger Sony\u2019s rate limiting or account restrictions.\n\n### Safety model\n\nRead operations work immediately \u2014 trophies, games, friends, presence, search.\n\nWrite operations (messaging, friend accept/remove) require `PSN_WRITE_ENABLED=true`. This is disabled by default, so your agent can explore freely without accidentally sending messages or modifying your friends list.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Profile | 1 | View player profile and avatar |\n| Trophies | 4 | Earned trophies, summaries, groups, compare |\n| Games | 5 | Library, recent play, details, search, entitlements |\n| Social | 5 | Friends, presence, search, messaging, friend management |\n| Devices | 1 | Registered console information |",
+  "readme": "### What it does\n\nPlayStation Network gives your AI agent access to PSN player data — trophies, game library, friends list, online presence, and messaging. Built on the unofficial PSNAWP library, it covers the same data the PlayStation app shows you, minus the UI.\n\nYour agent can check trophy progress, compare achievements with friends, browse your game library, see who’s online, and search for players or games across PSN.\n\n### Authentication\n\nPSN uses an NPSSO session token rather than a standard API key. You extract it from your browser after logging into your Sony account. The token is short-lived — the library handles refresh automatically, but you may need to re-extract after extended inactivity.\n\nA dedicated PSN account is recommended. Excessive API use on your primary account may trigger Sony’s rate limiting or account restrictions.\n\n### Safety model\n\nRead operations work immediately — trophies, games, friends, presence, search.\n\nWrite operations (messaging, friend accept/remove) require `PSN_WRITE_ENABLED=true`. This is disabled by default, so your agent can explore freely without accidentally sending messages or modifying your friends list.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Profile | 1 | View player profile and avatar |\n| Trophies | 4 | Earned trophies, summaries, groups, compare |\n| Games | 5 | Library, recent play, details, search, entitlements |\n| Social | 5 | Friends, presence, search, messaging, friend management |\n| Devices | 1 | Registered console information |",
   "services": {
     "gaming": {
       "profile": "psn_profile",
@@ -116,7 +148,9 @@
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",
-    "platform_tested": ["darwin-arm64"],
+    "platform_tested": [
+      "darwin-arm64"
+    ],
     "security_notes": "Uses unofficial PSN API (psnawp). NPSSO token auth. Write gates on messaging and friend management."
   },
   "scenarios": [
@@ -124,7 +158,9 @@
       "type": "workflow",
       "target": "psn-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Review trophy progress across recent games",
       "body": "List recently played games, check trophy summary for each, then compare completion rates with a friend to see where you're ahead or behind."
     },
@@ -132,7 +168,9 @@
       "type": "workflow",
       "target": "psn-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Check who's online and what they're playing",
       "body": "Fetch your friends list with online presence, see which games friends are currently in, and optionally send a message to coordinate a session."
     },
@@ -140,7 +178,9 @@
       "type": "workflow",
       "target": "psn-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Explore your game library and entitlements",
       "body": "List all owned games with play time stats, search for a specific title's details, and check your digital entitlements to verify purchases."
     }

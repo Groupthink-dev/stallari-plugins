@@ -8,22 +8,54 @@
   "licence": "MIT",
   "icon": "/icons/ubiquiti-unifi-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "network-v1",
   "repository": "https://github.com/groupthink-dev/ubiquiti-unifi-blade-mcp",
   "multi_instance": true,
   "highlights": [
-    { "icon": "📡", "text": "Devices — APs, switches, gateways with state, clients, uptime, firmware" },
-    { "icon": "💻", "text": "Clients — connected devices with signal, experience score, blocked status" },
-    { "icon": "🔥", "text": "Firewall — policies, traffic routes, traffic rules, port forwards, DPI" },
-    { "icon": "🔒", "text": "Write-gated — client blocking, WLAN toggle, device restart (dual-gated)" },
-    { "icon": "🏠", "text": "Multi-controller — home and office networks in a single instance" },
-    { "icon": "🛡️", "text": "SecOps — credential scrubbing, bearer auth, 2FA support, session isolation" }
+    {
+      "icon": "📡",
+      "text": "Devices — APs, switches, gateways with state, clients, uptime, firmware"
+    },
+    {
+      "icon": "💻",
+      "text": "Clients — connected devices with signal, experience score, blocked status"
+    },
+    {
+      "icon": "🔥",
+      "text": "Firewall — policies, traffic routes, traffic rules, port forwards, DPI"
+    },
+    {
+      "icon": "🔒",
+      "text": "Write-gated — client blocking, WLAN toggle, device restart (dual-gated)"
+    },
+    {
+      "icon": "🏠",
+      "text": "Multi-controller — home and office networks in a single instance"
+    },
+    {
+      "icon": "🛡️",
+      "text": "SecOps — credential scrubbing, bearer auth, 2FA support, session isolation"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/ubiquiti-unifi-blade-mcp" },
-    { "label": "aiounifi (upstream library)", "url": "https://github.com/Kane610/aiounifi" },
-    { "label": "UniFi OS Console", "url": "https://unifi.ui.com" },
-    { "label": "sirkirby/unifi-mcp (community — full management)", "url": "https://github.com/sirkirby/unifi-mcp" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/ubiquiti-unifi-blade-mcp"
+    },
+    {
+      "label": "aiounifi (upstream library)",
+      "url": "https://github.com/Kane610/aiounifi"
+    },
+    {
+      "label": "UniFi OS Console",
+      "url": "https://unifi.ui.com"
+    },
+    {
+      "label": "sirkirby/unifi-mcp (community — full management)",
+      "url": "https://github.com/sirkirby/unifi-mcp"
+    }
   ],
   "readme": "### What it does\n\nGives your AI agent structured access to Ubiquiti UniFi network controllers. Monitor device health, track connected clients, inspect firewall policies, review traffic routes, and manage WLANs — all through 18 focused MCP tools with token-efficient output.\n\nBuilt on [aiounifi](https://github.com/Kane610/aiounifi) (MIT, powers the Home Assistant integration), which handles UniFi OS vs classic controller detection, cookie-based auth with CSRF tokens, and TOTP 2FA.\n\n### How it differs from other UniFi MCPs\n\n| | This plugin | sirkirby/unifi-mcp | enuno/unifi-mcp-server |\n|---|---|---|---|\n| Focus | Monitoring + security (18 tools) | Full management (161 tools) | Full management (74 tools) |\n| Design for | LLM agents (token-efficient) | Claude Code (lazy loading) | General MCP clients |\n| Multi-controller | Native (env var config) | Single controller | Multi-mode (local/cloud) |\n| Write safety | Dual-gated (env + confirm) | Preview-then-confirm | Permission model |\n| 2FA support | TOTP via aiounifi | TOTP support | API key option |\n| Output | Pipe-delimited, compact | Full JSON | Full JSON |\n\nUse this plugin for agent-driven monitoring and security visibility. Use sirkirby/unifi-mcp (available as community listing) when you need full network configuration management.\n\n### Multi-instance support\n\nDesigned for multi-instance deployment. Each instance authenticates independently with its own controller credentials. Use cases:\n\n- **Home + office** — separate UniFi controllers at different sites\n- **Property portfolio** — different networks at different addresses\n- **MSP** — manage multiple customer networks\n\nWithin a single instance, `UNIFI_CONTROLLERS=home,office` supports multiple controllers with independent sessions.\n\n### Token efficiency\n\nThe UniFi API returns verbose JSON with deeply nested objects. This plugin reformats everything into compact, pipe-delimited output:\n\n- Device listing: ~50 tokens per device (vs ~800 raw)\n- Client listing: ~40 tokens per client with signal, experience, blocked status\n- Firewall policies: ~30 tokens per policy\n\n### Safety model\n\nRead tools work immediately — devices, clients, firewall, traffic routes, DPI, port forwards.\n\nWrite operations require `UNIFI_WRITE_ENABLED=true` (environment variable, set in plugin config). Destructive operations additionally require `confirm=true` per-call:\n\n| Operation | Gate |\n|-----------|------|\n| Block client | write + confirm |\n| Unblock client | write |\n| Reconnect client | write |\n| Toggle WLAN | write |\n| Toggle traffic route | write |\n| Restart device | write + confirm |\n\n### Authentication\n\nUses UniFi controller local admin credentials (username + password). Supports both UniFi OS (port 443) and classic controllers (port 8443). TOTP 2FA supported via base32-encoded secret. SSL verification configurable (disabled by default for self-signed certificates common on UDM hardware).\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| unifi_info | read | Health check — controller version, hostname, device/client counts, write gate |\n| unifi_sites | read | List sites on the controller |\n| unifi_devices | read | APs, switches, gateways — model, state, clients, uptime, firmware |\n| unifi_device | read | Full detail — port table with PoE, firmware, upgrade status |\n| unifi_clients | read | Connected clients — name, IP, SSID, signal, experience, blocked |\n| unifi_client | read | Full detail — TX/RX, vendor (OUI), AP association |\n| unifi_wlans | read | WLANs — name, enabled/disabled, security, guest flag |\n| unifi_firewall | read | Firewall policies — name, action, enabled/disabled |\n| unifi_traffic_routes | read | Traffic routes — description, enabled/disabled, target |\n| unifi_traffic_rules | read | Traffic rules — description, action, enabled/disabled |\n| unifi_port_forwards | read | Port forwards — name, protocol, external → internal |\n| unifi_dpi | read | DPI restriction groups and apps |\n| unifi_block_client | gated | Block a client from the network (write + confirm) |\n| unifi_unblock_client | gated | Unblock a previously blocked client |\n| unifi_reconnect_client | gated | Force a wireless client to reconnect |\n| unifi_toggle_wlan | gated | Enable or disable an SSID |\n| unifi_toggle_traffic_route | gated | Enable or disable a traffic route |\n| unifi_restart_device | gated | Restart an AP, switch, or gateway (write + confirm) |",
   "install": {
@@ -140,7 +172,9 @@
       "type": "workflow",
       "target": "ubiquiti-unifi-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["network"],
+      "shared_services": [
+        "network"
+      ],
       "label": "Network security audit",
       "body": "Run unifi_info for controller health, then unifi_devices to check all devices are connected and firmware is current. List unifi_clients and flag any unknown or blocked devices. Review unifi_firewall for policy gaps and unifi_port_forwards for exposed services."
     },
@@ -148,7 +182,9 @@
       "type": "workflow",
       "target": "ubiquiti-unifi-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["network"],
+      "shared_services": [
+        "network"
+      ],
       "label": "Client investigation",
       "body": "Call unifi_clients to list all connected clients. For suspicious entries, use unifi_client with the MAC address for full detail (vendor, signal, TX/RX, AP). If rogue, use unifi_block_client with confirm=true to isolate the device."
     },
@@ -156,7 +192,9 @@
       "type": "workflow",
       "target": "ubiquiti-unifi-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["network"],
+      "shared_services": [
+        "network"
+      ],
       "label": "Morning network health check",
       "body": "Run unifi_info to verify all controllers are connected. Check unifi_devices for any disconnected APs or switches and firmware upgrades available. Review unifi_clients for unexpected device count changes. Check unifi_traffic_routes and unifi_dpi for any disabled restrictions."
     }

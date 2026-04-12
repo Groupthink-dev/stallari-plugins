@@ -8,6 +8,8 @@
   "licence": "MIT",
   "icon": "/icons/steam-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "gaming-v1",
   "homepage": "https://github.com/Groupthink-dev/steam-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/steam-blade-mcp",
@@ -91,26 +93,58 @@
     }
   },
   "highlights": [
-    { "icon": "\ud83c\udfae", "text": "Library \u2014 owned games, play time, recent sessions" },
-    { "icon": "\ud83c\udfc6", "text": "Achievements \u2014 per-game progress and global unlock rates" },
-    { "icon": "\ud83d\udc65", "text": "Friends \u2014 list, online status, profile summaries" },
-    { "icon": "\ud83d\udecd\ufe0f", "text": "Store \u2014 search catalog, game details, news feeds" },
-    { "icon": "\ud83d\udcb0", "text": "Market \u2014 real-time item prices and inventory" },
-    { "icon": "\ud83d\udcca", "text": "Stats \u2014 player counts, global achievement stats" }
+    {
+      "icon": "🎮",
+      "text": "Library — owned games, play time, recent sessions"
+    },
+    {
+      "icon": "🏆",
+      "text": "Achievements — per-game progress and global unlock rates"
+    },
+    {
+      "icon": "👥",
+      "text": "Friends — list, online status, profile summaries"
+    },
+    {
+      "icon": "🛍️",
+      "text": "Store — search catalog, game details, news feeds"
+    },
+    {
+      "icon": "💰",
+      "text": "Market — real-time item prices and inventory"
+    },
+    {
+      "icon": "📊",
+      "text": "Stats — player counts, global achievement stats"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/steam-blade-mcp" },
-    { "label": "Get Steam API Key", "url": "https://steamcommunity.com/dev/apikey" },
-    { "label": "Steam Web API Docs", "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API" },
-    { "label": "Find Your Steam ID", "url": "https://steamid.io" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/steam-blade-mcp"
+    },
+    {
+      "label": "Get Steam API Key",
+      "url": "https://steamcommunity.com/dev/apikey"
+    },
+    {
+      "label": "Steam Web API Docs",
+      "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API"
+    },
+    {
+      "label": "Find Your Steam ID",
+      "url": "https://steamid.io"
+    }
   ],
-  "readme": "### What it does\n\nSteam Games gives your AI agent read-only access to the Steam platform \u2014 your game library, achievements, friends, store catalog, market prices, and player statistics.\n\nYour agent can check your play time across games, compare achievement progress, see which friends are online, look up game details in the store, check current market prices for items, and monitor player counts.\n\n### Token efficiency\n\nSteam\u2019s API returns verbose JSON with deeply nested structures. Each tool includes a concise formatter that extracts only the fields that matter. A library listing returns game name, play time, and last played \u2014 not the full API payload with redundant image URLs and internal metadata.\n\n### Safety model\n\nAll 12 tools are **read-only**. Steam deprecated its chat messaging API, so there are no write operations. Your agent can explore your entire Steam presence without any risk of side effects.\n\nAPI key auth is trivial to set up \u2014 register at `steamcommunity.com/dev/apikey` with any Steam account that has purchase history.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Profile | 1 | Player summary, avatar, status |\n| Library | 3 | Owned games, recent games, game details |\n| Achievements | 1 | Per-game achievement progress |\n| Social | 1 | Friends list with status |\n| Store | 3 | Search catalog, game news, global stats |\n| Market | 2 | Item prices, inventory |\n| Live | 1 | Current player counts |",
+  "readme": "### What it does\n\nSteam Games gives your AI agent read-only access to the Steam platform — your game library, achievements, friends, store catalog, market prices, and player statistics.\n\nYour agent can check your play time across games, compare achievement progress, see which friends are online, look up game details in the store, check current market prices for items, and monitor player counts.\n\n### Token efficiency\n\nSteam’s API returns verbose JSON with deeply nested structures. Each tool includes a concise formatter that extracts only the fields that matter. A library listing returns game name, play time, and last played — not the full API payload with redundant image URLs and internal metadata.\n\n### Safety model\n\nAll 12 tools are **read-only**. Steam deprecated its chat messaging API, so there are no write operations. Your agent can explore your entire Steam presence without any risk of side effects.\n\nAPI key auth is trivial to set up — register at `steamcommunity.com/dev/apikey` with any Steam account that has purchase history.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Profile | 1 | Player summary, avatar, status |\n| Library | 3 | Owned games, recent games, game details |\n| Achievements | 1 | Per-game achievement progress |\n| Social | 1 | Friends list with status |\n| Store | 3 | Search catalog, game news, global stats |\n| Market | 2 | Item prices, inventory |\n| Live | 1 | Current player counts |",
   "scenarios": [
     {
       "type": "workflow",
       "target": "steam-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Review your gaming stats and achievements",
       "body": "List your game library sorted by play time, check achievement completion for your most-played games, and compare global unlock rates to see which achievements are rare."
     },
@@ -118,7 +152,9 @@
       "type": "workflow",
       "target": "steam-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Research a game before buying",
       "body": "Search the Steam catalog for a game, check its details and recent news, then look at current player counts to gauge how active the community is."
     },
@@ -126,7 +162,9 @@
       "type": "workflow",
       "target": "steam-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Check market prices for inventory items",
       "body": "Browse your Steam inventory, look up current market prices for tradeable items, and identify valuable items worth listing."
     }

@@ -8,6 +8,8 @@
   "licence": "proprietary",
   "icon": "/icons/slack-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": "messages-v1",
   "homepage": "https://api.slack.com/docs/mcp",
   "install": {
@@ -28,7 +30,13 @@
     "help_url": "https://api.slack.com/docs/mcp",
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["channels:read", "channels:history", "search:read", "users:read", "chat:write"],
+      "scopes": [
+        "channels:read",
+        "channels:history",
+        "search:read",
+        "users:read",
+        "chat:write"
+      ],
       "setup_url": "https://api.slack.com/docs/mcp"
     },
     "help": [
@@ -62,25 +70,54 @@
     }
   },
   "highlights": [
-    { "icon": "\ud83d\udcac", "text": "Channels \u2014 browse, read history, list members and pins" },
-    { "icon": "\ud83d\udd0d", "text": "Search \u2014 find messages across the entire workspace" },
-    { "icon": "\ud83e\uddf5", "text": "Threads \u2014 read and reply to threaded conversations" },
-    { "icon": "\ud83d\udc64", "text": "Users \u2014 directory, presence, profile information" },
-    { "icon": "\ud83d\ude00", "text": "Reactions \u2014 view and add emoji reactions" },
-    { "icon": "\u2601\ufe0f", "text": "Remote MCP \u2014 vendor-hosted, no local process needed" }
+    {
+      "icon": "💬",
+      "text": "Channels — browse, read history, list members and pins"
+    },
+    {
+      "icon": "🔍",
+      "text": "Search — find messages across the entire workspace"
+    },
+    {
+      "icon": "🧵",
+      "text": "Threads — read and reply to threaded conversations"
+    },
+    {
+      "icon": "👤",
+      "text": "Users — directory, presence, profile information"
+    },
+    {
+      "icon": "😀",
+      "text": "Reactions — view and add emoji reactions"
+    },
+    {
+      "icon": "☁️",
+      "text": "Remote MCP — vendor-hosted, no local process needed"
+    }
   ],
   "links": [
-    { "label": "Slack MCP Documentation", "url": "https://api.slack.com/docs/mcp" },
-    { "label": "Slack OAuth Scopes", "url": "https://api.slack.com/scopes" },
-    { "label": "Slack API Reference", "url": "https://api.slack.com/methods" }
+    {
+      "label": "Slack MCP Documentation",
+      "url": "https://api.slack.com/docs/mcp"
+    },
+    {
+      "label": "Slack OAuth Scopes",
+      "url": "https://api.slack.com/scopes"
+    },
+    {
+      "label": "Slack API Reference",
+      "url": "https://api.slack.com/methods"
+    }
   ],
-  "readme": "### What it does\n\nSlack gives your AI agent access to your Slack workspace \u2014 channels, messages, threads, users, and reactions. This is the official vendor-hosted remote MCP from Slack, so there\u2019s no local process to manage and no API keys to create.\n\nYour agent can browse channels, search messages across the workspace, read thread context, check who\u2019s online, and post messages or replies.\n\n### Remote MCP\n\nUnlike most plugins that run a local process, Slack\u2019s MCP is hosted at `mcp.slack.com`. Authentication uses OAuth2 \u2014 on first connection you authorise Sidereal to access your workspace via the browser. No app creation, no API tokens, no local configuration beyond the initial OAuth flow.\n\n### Safety model\n\nRead operations (channels, messages, search, users) work immediately after OAuth authorization.\n\nWrite operations (post message, reply to thread, add reaction) require the corresponding OAuth scopes. The OAuth consent screen shows exactly what permissions are being granted before you approve.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Channels | 4 | List all channels, get info, history, members |\n| Messages | 3 | Search, read history, get pins |\n| Threads | 1 | Read full thread context |\n| Users | 2 | Directory listing, presence status |\n| Write | 3 | Post messages, reply to threads, add reactions |",
+  "readme": "### What it does\n\nSlack gives your AI agent access to your Slack workspace — channels, messages, threads, users, and reactions. This is the official vendor-hosted remote MCP from Slack, so there’s no local process to manage and no API keys to create.\n\nYour agent can browse channels, search messages across the workspace, read thread context, check who’s online, and post messages or replies.\n\n### Remote MCP\n\nUnlike most plugins that run a local process, Slack’s MCP is hosted at `mcp.slack.com`. Authentication uses OAuth2 — on first connection you authorise Sidereal to access your workspace via the browser. No app creation, no API tokens, no local configuration beyond the initial OAuth flow.\n\n### Safety model\n\nRead operations (channels, messages, search, users) work immediately after OAuth authorization.\n\nWrite operations (post message, reply to thread, add reaction) require the corresponding OAuth scopes. The OAuth consent screen shows exactly what permissions are being granted before you approve.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Channels | 4 | List all channels, get info, history, members |\n| Messages | 3 | Search, read history, get pins |\n| Threads | 1 | Read full thread context |\n| Users | 2 | Directory listing, presence status |\n| Write | 3 | Post messages, reply to threads, add reactions |",
   "scenarios": [
     {
       "type": "workflow",
       "target": "slack-mcp",
       "target_type": "plugin",
-      "shared_services": ["messages"],
+      "shared_services": [
+        "messages"
+      ],
       "label": "Catch up on a channel you missed",
       "body": "Read recent channel history, identify important threads, then read full thread context for any discussions that need your attention."
     },
@@ -88,7 +125,9 @@
       "type": "workflow",
       "target": "slack-mcp",
       "target_type": "plugin",
-      "shared_services": ["messages"],
+      "shared_services": [
+        "messages"
+      ],
       "label": "Search for a past decision or discussion",
       "body": "Search messages across the workspace for a topic, review matching results with context, then follow threads to find the full conversation and resolution."
     },
@@ -96,9 +135,11 @@
       "type": "workflow",
       "target": "slack-mcp",
       "target_type": "plugin",
-      "shared_services": ["messages"],
+      "shared_services": [
+        "messages"
+      ],
       "label": "Post a status update to a project channel",
-      "body": "Check the channel\u2019s recent messages for context, then compose and post a status update. Reply to any follow-up threads with additional details."
+      "body": "Check the channel’s recent messages for context, then compose and post a status update. Reply to any follow-up threads with additional details."
     }
   ],
   "conformance": {

@@ -129,7 +129,18 @@
       "type": "string",
       "enum": ["certified", "verified", "community"],
       "default": "community",
-      "description": "Trust tier. Certified = first-party or audited. Verified = reviewed. Community = unreviewed."
+      "deprecated": true,
+      "description": "DEPRECATED — use author_type + readiness. Legacy trust tier. Certified = first-party or audited. Verified = reviewed. Community = unreviewed. Either tier or both author_type + readiness should be present."
+    },
+    "author_type": {
+      "type": "string",
+      "enum": ["first-party", "community"],
+      "description": "Author provenance. first-party = published and maintained by Sidereal."
+    },
+    "readiness": {
+      "type": "string",
+      "enum": ["production", "beta", "experimental", "stub"],
+      "description": "Testing completeness. production = all certification checklist items pass. beta = partially tested. experimental = untested. stub = scaffolded but not functional."
     },
     "pricing": {
       "oneOf": [

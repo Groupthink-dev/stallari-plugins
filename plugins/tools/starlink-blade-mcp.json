@@ -8,25 +8,57 @@
   "licence": "MIT",
   "icon": "/icons/starlink-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "homepage": "https://github.com/Groupthink-dev/starlink-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/starlink-blade-mcp",
   "contract": "leo-modem-v1",
   "multi_instance": false,
   "highlights": [
-    { "icon": "\ud83d\udce1", "text": "Status \u2014 real-time connectivity, throughput, SNR, and antenna orientation" },
-    { "icon": "\u26a0\ufe0f", "text": "Alerts \u2014 22 hardware and environment flags with human-readable descriptions" },
-    { "icon": "\ud83e\udded", "text": "Obstruction \u2014 12-wedge directional map showing where signal is blocked" },
-    { "icon": "\ud83d\udcca", "text": "History \u2014 throughput, latency, and power as token-efficient statistical summaries" },
-    { "icon": "\ud83d\udccd", "text": "GPS \u2014 dish coordinates for multi-site tracking (opt-in via Starlink app)" },
-    { "icon": "\ud83d\udd27", "text": "Control \u2014 reboot, stow, and unstow with dual-gated safety" }
+    {
+      "icon": "📡",
+      "text": "Status — real-time connectivity, throughput, SNR, and antenna orientation"
+    },
+    {
+      "icon": "⚠️",
+      "text": "Alerts — 22 hardware and environment flags with human-readable descriptions"
+    },
+    {
+      "icon": "🧭",
+      "text": "Obstruction — 12-wedge directional map showing where signal is blocked"
+    },
+    {
+      "icon": "📊",
+      "text": "History — throughput, latency, and power as token-efficient statistical summaries"
+    },
+    {
+      "icon": "📍",
+      "text": "GPS — dish coordinates for multi-site tracking (opt-in via Starlink app)"
+    },
+    {
+      "icon": "🔧",
+      "text": "Control — reboot, stow, and unstow with dual-gated safety"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/starlink-blade-mcp" },
-    { "label": "starlink-grpc-core (upstream)", "url": "https://pypi.org/project/starlink-grpc-core/" },
-    { "label": "Starlink Network Setup", "url": "https://support.starlink.com/topic?category=6" },
-    { "label": "Bypass Mode / Third-Party Router", "url": "https://support.starlink.com/topic?category=19" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/starlink-blade-mcp"
+    },
+    {
+      "label": "starlink-grpc-core (upstream)",
+      "url": "https://pypi.org/project/starlink-grpc-core/"
+    },
+    {
+      "label": "Starlink Network Setup",
+      "url": "https://support.starlink.com/topic?category=6"
+    },
+    {
+      "label": "Bypass Mode / Third-Party Router",
+      "url": "https://support.starlink.com/topic?category=19"
+    }
   ],
-  "readme": "### What it does\n\nStarlink Dish gives your AI agent direct hardware access to your Starlink terminal over the local gRPC interface at `192.168.100.1:9200`. No cloud API, no enterprise credentials, no internet dependency.\n\nYour agent can check real-time connectivity, diagnose obstruction issues, review alert flags, analyse throughput trends, and \u2014 when enabled \u2014 reboot or stow the dish. All data comes directly from the hardware over your LAN.\n\nBuilt on [starlink-grpc-core](https://pypi.org/project/starlink-grpc-core/), the same library that powers the Home Assistant Starlink integration.\n\n### How it differs from other Starlink MCPs\n\n| | This plugin | Enterprise MCP | SpaceX MCP |\n|---|---|---|---|\n| Interface | Local gRPC (dish hardware) | Enterprise cloud API | Public SpaceX API |\n| Auth required | None | OAuth2 enterprise credentials | None |\n| Works offline | Yes | No | No |\n| Residential dish | Yes | Enterprise fleet only | N/A |\n| Dish control | Reboot, stow, unstow | Read-only | None |\n| Obstruction detail | 12-wedge directional | Aggregate only | None |\n\nThis is the only MCP that talks directly to the dish hardware. The Enterprise MCP (available separately in the marketplace) targets fleet operators managing hundreds of terminals via the cloud API.\n\n### Token efficiency\n\nThe Starlink dish generates dense per-second telemetry. Dumping raw history wastes context on thousands of near-identical samples.\n\n`starlink_history` returns statistical summaries (min/avg/max per metric) over the requested window. A 900-second window produces ~8 lines vs ~5,400 lines of raw data \u2014 a 99.8% reduction in tokens with no information loss for typical analysis.\n\n### Safety model\n\nRead tools work immediately \u2014 status, alerts, obstruction, history, location, diagnostics.\n\nWrite tools (reboot, stow, unstow) require **dual gating**:\n1. `STARLINK_WRITE_ENABLED=true` environment variable (persistent, set in plugin config)\n2. `confirm=true` parameter on each call (per-invocation, prevents accidental execution)\n\nBoth gates must pass. Your agent can inspect the dish freely but must be explicit about hardware control.\n\n### Network requirements\n\nThe dish exposes an unauthenticated gRPC endpoint on the LAN. If you use the Starlink router directly, it works out of the box.\n\n**Third-party router in bypass mode** (UniFi UCG/UDM, pfSense, etc.): the dish management subnet `192.168.100.0/24` is separate from your WAN IP. You need a static route \u2014 Destination `192.168.100.0/24`, Next Hop = WAN interface facing the Starlink. Some router firmware also needs a secondary IP on the WAN interface in the `192.168.100.0/24` range (e.g. `192.168.100.2/24`) for the traffic to egress correctly.\n\n**Remote/headless sites**: run the MCP server on any host that can reach `192.168.100.1` \u2014 a local machine, a NAS container, or any device on the Starlink-connected network.\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| starlink_status | read | Identity, state, connectivity, throughput, SNR, orientation |\n| starlink_alerts | read | 22 alert flags (thermal, motor, ethernet, roaming, water) |\n| starlink_obstruction | read | Fraction obstructed, 12-wedge map, timing stats |\n| starlink_history | read | Throughput/latency/power as min/avg/max summary |\n| starlink_location | read | GPS lat/lon/alt (requires Starlink app opt-in) |\n| starlink_diagnostics | read | Hardware version, firmware, GPS sats, alert count |\n| starlink_reboot | gated | Restart the dish (2\u20135 min downtime) |\n| starlink_stow | gated | Stow dish face-down for storage/transport |\n| starlink_unstow | gated | Resume normal satellite tracking |",
+  "readme": "### What it does\n\nStarlink Dish gives your AI agent direct hardware access to your Starlink terminal over the local gRPC interface at `192.168.100.1:9200`. No cloud API, no enterprise credentials, no internet dependency.\n\nYour agent can check real-time connectivity, diagnose obstruction issues, review alert flags, analyse throughput trends, and — when enabled — reboot or stow the dish. All data comes directly from the hardware over your LAN.\n\nBuilt on [starlink-grpc-core](https://pypi.org/project/starlink-grpc-core/), the same library that powers the Home Assistant Starlink integration.\n\n### How it differs from other Starlink MCPs\n\n| | This plugin | Enterprise MCP | SpaceX MCP |\n|---|---|---|---|\n| Interface | Local gRPC (dish hardware) | Enterprise cloud API | Public SpaceX API |\n| Auth required | None | OAuth2 enterprise credentials | None |\n| Works offline | Yes | No | No |\n| Residential dish | Yes | Enterprise fleet only | N/A |\n| Dish control | Reboot, stow, unstow | Read-only | None |\n| Obstruction detail | 12-wedge directional | Aggregate only | None |\n\nThis is the only MCP that talks directly to the dish hardware. The Enterprise MCP (available separately in the marketplace) targets fleet operators managing hundreds of terminals via the cloud API.\n\n### Token efficiency\n\nThe Starlink dish generates dense per-second telemetry. Dumping raw history wastes context on thousands of near-identical samples.\n\n`starlink_history` returns statistical summaries (min/avg/max per metric) over the requested window. A 900-second window produces ~8 lines vs ~5,400 lines of raw data — a 99.8% reduction in tokens with no information loss for typical analysis.\n\n### Safety model\n\nRead tools work immediately — status, alerts, obstruction, history, location, diagnostics.\n\nWrite tools (reboot, stow, unstow) require **dual gating**:\n1. `STARLINK_WRITE_ENABLED=true` environment variable (persistent, set in plugin config)\n2. `confirm=true` parameter on each call (per-invocation, prevents accidental execution)\n\nBoth gates must pass. Your agent can inspect the dish freely but must be explicit about hardware control.\n\n### Network requirements\n\nThe dish exposes an unauthenticated gRPC endpoint on the LAN. If you use the Starlink router directly, it works out of the box.\n\n**Third-party router in bypass mode** (UniFi UCG/UDM, pfSense, etc.): the dish management subnet `192.168.100.0/24` is separate from your WAN IP. You need a static route — Destination `192.168.100.0/24`, Next Hop = WAN interface facing the Starlink. Some router firmware also needs a secondary IP on the WAN interface in the `192.168.100.0/24` range (e.g. `192.168.100.2/24`) for the traffic to egress correctly.\n\n**Remote/headless sites**: run the MCP server on any host that can reach `192.168.100.1` — a local machine, a NAS container, or any device on the Starlink-connected network.\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| starlink_status | read | Identity, state, connectivity, throughput, SNR, orientation |\n| starlink_alerts | read | 22 alert flags (thermal, motor, ethernet, roaming, water) |\n| starlink_obstruction | read | Fraction obstructed, 12-wedge map, timing stats |\n| starlink_history | read | Throughput/latency/power as min/avg/max summary |\n| starlink_location | read | GPS lat/lon/alt (requires Starlink app opt-in) |\n| starlink_diagnostics | read | Hardware version, firmware, GPS sats, alert count |\n| starlink_reboot | gated | Restart the dish (2–5 min downtime) |\n| starlink_stow | gated | Stow dish face-down for storage/transport |\n| starlink_unstow | gated | Resume normal satellite tracking |",
   "install": {
     "runtime": "uv",
     "package": "starlink-blade-mcp"
@@ -100,7 +132,9 @@
       "type": "workflow",
       "target": "starlink-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["starlink"],
+      "shared_services": [
+        "starlink"
+      ],
       "label": "Diagnose intermittent connectivity drops",
       "body": "Check starlink_status for current state, review starlink_alerts for active hardware or environment flags, pull starlink_history for the last 900 seconds to identify ping drop patterns, then check starlink_obstruction to see if any wedges correlate with the drops."
     },
@@ -108,7 +142,9 @@
       "type": "workflow",
       "target": "starlink-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["starlink"],
+      "shared_services": [
+        "starlink"
+      ],
       "label": "Pre-storm dish safety check",
       "body": "Check starlink_alerts for thermal or water warnings, review starlink_diagnostics for firmware version and hardware state, then stow the dish if severe weather is imminent."
     },
@@ -116,7 +152,9 @@
       "type": "workflow",
       "target": "starlink-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["starlink"],
+      "shared_services": [
+        "starlink"
+      ],
       "label": "Multi-site Starlink fleet overview",
       "body": "For each dish, call starlink_status and starlink_location to build a site-by-site connectivity and position report. Flag any sites with active alerts or degraded throughput."
     }

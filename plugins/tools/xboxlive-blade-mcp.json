@@ -7,45 +7,83 @@
   "licence": "MIT",
   "icon": "/icons/xboxlive-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "gaming-v1",
-  "tagline": "Full Xbox Live control \u2014 profiles to SmartGlass",
+  "tagline": "Full Xbox Live control — profiles to SmartGlass",
   "highlights": [
-    { "icon": "\ud83c\udfae", "text": "Profiles \u2014 gamertag, gamerscore, avatar, presence, friends" },
-    { "icon": "\ud83c\udfc6", "text": "Achievements \u2014 history, summaries, head-to-head compare" },
-    { "icon": "\ud83d\udcfa", "text": "SmartGlass \u2014 power on/off, launch games, console control" },
-    { "icon": "\ud83d\udcac", "text": "Messaging \u2014 send Xbox messages to friends" },
-    { "icon": "\ud83d\uded2", "text": "Store \u2014 game catalog search and detail lookup" },
-    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 messaging, friends, SmartGlass behind explicit flag" }
+    {
+      "icon": "🎮",
+      "text": "Profiles — gamertag, gamerscore, avatar, presence, friends"
+    },
+    {
+      "icon": "🏆",
+      "text": "Achievements — history, summaries, head-to-head compare"
+    },
+    {
+      "icon": "📺",
+      "text": "SmartGlass — power on/off, launch games, console control"
+    },
+    {
+      "icon": "💬",
+      "text": "Messaging — send Xbox messages to friends"
+    },
+    {
+      "icon": "🛒",
+      "text": "Store — game catalog search and detail lookup"
+    },
+    {
+      "icon": "🔒",
+      "text": "Write-gated — messaging, friends, SmartGlass behind explicit flag"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp" },
-    { "label": "Azure App Registration", "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps" },
-    { "label": "Xbox Live API Guide", "url": "https://github.com/OpenXbox/xbox-webapi-python#authentication" },
-    { "label": "Setup Instructions", "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp#quick-start" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp"
+    },
+    {
+      "label": "Azure App Registration",
+      "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps"
+    },
+    {
+      "label": "Xbox Live API Guide",
+      "url": "https://github.com/OpenXbox/xbox-webapi-python#authentication"
+    },
+    {
+      "label": "Setup Instructions",
+      "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp#quick-start"
+    }
   ],
-  "readme": "### What it does\n\nXbox Live (Blade) gives your AI agent full access to the Xbox Live ecosystem \u2014 22 tools across profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, and messaging.\n\nYour agent can check who\u2019s online, compare achievement progress with a friend, browse the Xbox Store, send a message, or power on your console \u2014 all from a single conversation.\n\n### Token efficiency\n\nXbox Live API responses are deeply nested JSON with extensive metadata. Each tool includes a concise formatter that strips pagination wrappers and internal IDs, returning only the fields your agent needs. A typical friends list returns ~150 tokens instead of ~600.\n\n### Safety model\n\n22 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately \u2014 profiles, achievements, friends, presence, game library, Store\n- **Writes** require `XBOX_WRITE_ENABLED=true` \u2014 send messages, add/remove friends\n- **SmartGlass** power commands are confirm-gated \u2014 power on/off requires explicit confirmation\n\n### Contract coverage\n\nFull 17/17 gaming-v1 contract compliance. The only Xbox MCP with SmartGlass, messaging, game clips, and Store catalog support.",
+  "readme": "### What it does\n\nXbox Live (Blade) gives your AI agent full access to the Xbox Live ecosystem — 22 tools across profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, and messaging.\n\nYour agent can check who’s online, compare achievement progress with a friend, browse the Xbox Store, send a message, or power on your console — all from a single conversation.\n\n### Token efficiency\n\nXbox Live API responses are deeply nested JSON with extensive metadata. Each tool includes a concise formatter that strips pagination wrappers and internal IDs, returning only the fields your agent needs. A typical friends list returns ~150 tokens instead of ~600.\n\n### Safety model\n\n22 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately — profiles, achievements, friends, presence, game library, Store\n- **Writes** require `XBOX_WRITE_ENABLED=true` — send messages, add/remove friends\n- **SmartGlass** power commands are confirm-gated — power on/off requires explicit confirmation\n\n### Contract coverage\n\nFull 17/17 gaming-v1 contract compliance. The only Xbox MCP with SmartGlass, messaging, game clips, and Store catalog support.",
   "scenarios": [
     {
       "type": "workflow",
       "target": "xboxlive-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Game night coordination",
-      "body": "Check friends\u2019 online presence, see what games they\u2019re playing, send a message to coordinate, then power on your console via SmartGlass."
+      "body": "Check friends’ online presence, see what games they’re playing, send a message to coordinate, then power on your console via SmartGlass."
     },
     {
       "type": "workflow",
       "target": "xboxlive-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Achievement hunting session",
-      "body": "Compare achievement progress with a friend, identify games where you\u2019re behind, look up game details in the Store, and check recent play history."
+      "body": "Compare achievement progress with a friend, identify games where you’re behind, look up game details in the Store, and check recent play history."
     },
     {
       "type": "workflow",
       "target": "xboxlive-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["gaming"],
+      "shared_services": [
+        "gaming"
+      ],
       "label": "Browse and discover new games",
       "body": "Search the Xbox Store catalog, check game details and ratings, see which friends own or have played a title, and review achievement lists before purchasing."
     }

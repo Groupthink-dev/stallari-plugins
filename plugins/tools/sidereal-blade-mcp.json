@@ -7,6 +7,8 @@
   "licence": "MIT",
   "icon": "/icons/sidereal-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "vault-v1",
   "repository": "https://github.com/groupthink-dev/sidereal-vault",
   "install": {

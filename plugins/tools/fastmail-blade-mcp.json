@@ -8,23 +8,55 @@
   "licence": "MIT",
   "icon": "/icons/fastmail-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "email-v1",
   "repository": "https://github.com/groupthink-dev/fastmail-blade-mcp",
   "highlights": [
-    { "icon": "\ud83d\udd0d", "text": "Search & read \u2014 full-text search, thread views, snippet previews" },
-    { "icon": "\u2709\ufe0f", "text": "Send & reply \u2014 compose, reply, forward with identity selection" },
-    { "icon": "\ud83c\udfad", "text": "Masked email \u2014 create, list, and manage disposable aliases" },
-    { "icon": "\ud83d\udce6", "text": "Bulk operations \u2014 move, flag, or delete batches of messages" },
-    { "icon": "\ud83d\udd14", "text": "Push notifications \u2014 real-time EventSource for new mail" },
-    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 reads always work, sends require explicit opt-in" }
+    {
+      "icon": "🔍",
+      "text": "Search & read — full-text search, thread views, snippet previews"
+    },
+    {
+      "icon": "✉️",
+      "text": "Send & reply — compose, reply, forward with identity selection"
+    },
+    {
+      "icon": "🎭",
+      "text": "Masked email — create, list, and manage disposable aliases"
+    },
+    {
+      "icon": "📦",
+      "text": "Bulk operations — move, flag, or delete batches of messages"
+    },
+    {
+      "icon": "🔔",
+      "text": "Push notifications — real-time EventSource for new mail"
+    },
+    {
+      "icon": "🔒",
+      "text": "Write-gated — reads always work, sends require explicit opt-in"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/fastmail-blade-mcp" },
-    { "label": "Fastmail API Tokens", "url": "https://app.fastmail.com/settings/security/tokens" },
-    { "label": "JMAP Specification", "url": "https://jmap.io/spec.html" },
-    { "label": "Fastmail Help \u2014 API Access", "url": "https://www.fastmail.help/hc/en-us/articles/5254602856079-API-tokens" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/fastmail-blade-mcp"
+    },
+    {
+      "label": "Fastmail API Tokens",
+      "url": "https://app.fastmail.com/settings/security/tokens"
+    },
+    {
+      "label": "JMAP Specification",
+      "url": "https://jmap.io/spec.html"
+    },
+    {
+      "label": "Fastmail Help — API Access",
+      "url": "https://www.fastmail.help/hc/en-us/articles/5254602856079-API-tokens"
+    }
   ],
-  "readme": "### What it does\n\nFastmail Blade gives your AI agent complete email management through Fastmail's native JMAP protocol. 20 tools cover the full email lifecycle: searching messages, reading threads, composing and sending, managing mailboxes, creating masked email aliases, and subscribing to real-time push notifications for new mail.\n\nYour agent can triage an inbox, draft replies with the correct identity, generate disposable email addresses for signups, and monitor for important messages \u2014 all without opening a browser.\n\n### Token efficiency\n\nJMAP is already more efficient than IMAP, but raw responses still include headers, MIME structure, and metadata your agent doesn't need. Each tool includes a concise formatter that extracts only the relevant fields. The `mail_snippets` tool returns preview-length summaries for search results, and `mail_threads` groups related messages to avoid redundant context.\n\n### Safety model\n\nAll 20 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately \u2014 search, read, list mailboxes, check identities\n- **Writes** require `FASTMAIL_WRITE_ENABLED=true` \u2014 send, reply, move, delete, flag\n- **Masked email** creation also requires the write gate\n\nPush subscriptions are read-only and always available. Your agent can watch for new mail without any write permissions.\n\n### Masked email\n\nFastmail's masked email feature lets your agent create unique, disposable addresses on the fly \u2014 useful for signups, vendor communications, or any context where you want to compartmentalise email. The `masked_create` tool generates a new alias, and `masked_list` / `masked_update` manage existing ones.",
+  "readme": "### What it does\n\nFastmail Blade gives your AI agent complete email management through Fastmail's native JMAP protocol. 20 tools cover the full email lifecycle: searching messages, reading threads, composing and sending, managing mailboxes, creating masked email aliases, and subscribing to real-time push notifications for new mail.\n\nYour agent can triage an inbox, draft replies with the correct identity, generate disposable email addresses for signups, and monitor for important messages — all without opening a browser.\n\n### Token efficiency\n\nJMAP is already more efficient than IMAP, but raw responses still include headers, MIME structure, and metadata your agent doesn't need. Each tool includes a concise formatter that extracts only the relevant fields. The `mail_snippets` tool returns preview-length summaries for search results, and `mail_threads` groups related messages to avoid redundant context.\n\n### Safety model\n\nAll 20 tools follow a read-free, write-gated pattern:\n\n- **Reads** work immediately — search, read, list mailboxes, check identities\n- **Writes** require `FASTMAIL_WRITE_ENABLED=true` — send, reply, move, delete, flag\n- **Masked email** creation also requires the write gate\n\nPush subscriptions are read-only and always available. Your agent can watch for new mail without any write permissions.\n\n### Masked email\n\nFastmail's masked email feature lets your agent create unique, disposable addresses on the fly — useful for signups, vendor communications, or any context where you want to compartmentalise email. The `masked_create` tool generates a new alias, and `masked_list` / `masked_update` manage existing ones.",
   "install": {
     "runtime": "uv",
     "package": "fastmail-blade-mcp"
@@ -61,7 +93,9 @@
       "type": "workflow",
       "target": "fastmail-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["email"],
+      "shared_services": [
+        "email"
+      ],
       "label": "Triage the morning inbox",
       "body": "Search for unread messages, read the important ones, flag items that need follow-up, and archive newsletters and notifications in bulk."
     },
@@ -69,7 +103,9 @@
       "type": "workflow",
       "target": "fastmail-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["email"],
+      "shared_services": [
+        "email"
+      ],
       "label": "Create a masked email for a new signup",
       "body": "Generate a disposable masked email alias for a service registration, then monitor incoming messages to that alias for a verification code."
     },
@@ -77,7 +113,9 @@
       "type": "workflow",
       "target": "fastmail-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["email"],
+      "shared_services": [
+        "email"
+      ],
       "label": "Draft and send a reply with correct identity",
       "body": "Read the original thread, check available sending identities, compose a context-aware reply using the matching identity, and send it."
     }

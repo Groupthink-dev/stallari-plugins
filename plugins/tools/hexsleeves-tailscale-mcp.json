@@ -9,18 +9,38 @@
   "licence": "MIT",
   "icon": "/icons/hexsleeves-tailscale-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": "overlay-network-v1",
   "repository": "https://github.com/HexSleeves/tailscale-mcp",
   "multi_instance": false,
   "highlights": [
-    { "icon": "⚙️", "text": "~15 tools — device management, ACL editing, DNS config" },
-    { "icon": "🔄", "text": "CLI + API hybrid — some tools use the Tailscale binary" },
-    { "icon": "📋", "text": "npm + Docker — multiple install methods" },
-    { "icon": "🔐", "text": "OAuth + API key — both auth methods supported" }
+    {
+      "icon": "⚙️",
+      "text": "~15 tools — device management, ACL editing, DNS config"
+    },
+    {
+      "icon": "🔄",
+      "text": "CLI + API hybrid — some tools use the Tailscale binary"
+    },
+    {
+      "icon": "📋",
+      "text": "npm + Docker — multiple install methods"
+    },
+    {
+      "icon": "🔐",
+      "text": "OAuth + API key — both auth methods supported"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/HexSleeves/tailscale-mcp" },
-    { "label": "npm Package", "url": "https://www.npmjs.com/package/@hexsleeves/tailscale-mcp" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/HexSleeves/tailscale-mcp"
+    },
+    {
+      "label": "npm Package",
+      "url": "https://www.npmjs.com/package/@hexsleeves/tailscale-mcp"
+    }
   ],
   "install": {
     "runtime": "npx",

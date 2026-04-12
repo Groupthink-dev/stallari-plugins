@@ -9,6 +9,8 @@
   "icon": "/icons/resend-blade-mcp.svg",
   "contract": "transactional-email-v1",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "repository": "https://github.com/groupthink-dev/resend-blade-mcp",
   "install": {
     "runtime": "uv",
@@ -58,20 +60,50 @@
     ]
   },
   "highlights": [
-    { "icon": "\ud83d\udce7", "text": "Send \u2014 transactional and broadcast email with HTML or text" },
-    { "icon": "\ud83d\udcda", "text": "Contacts \u2014 manage audiences and contact lists" },
-    { "icon": "\ud83c\udfaf", "text": "Broadcasts \u2014 send to audiences with scheduling" },
-    { "icon": "\ud83c\udfa8", "text": "Templates \u2014 reusable email templates via API" },
-    { "icon": "\ud83c\udf10", "text": "Domains \u2014 verify and manage sending domains" },
-    { "icon": "\ud83d\udd12", "text": "Security-first \u2014 no filesystem access, credential scrubbing on errors" }
+    {
+      "icon": "📧",
+      "text": "Send — transactional and broadcast email with HTML or text"
+    },
+    {
+      "icon": "📚",
+      "text": "Contacts — manage audiences and contact lists"
+    },
+    {
+      "icon": "🎯",
+      "text": "Broadcasts — send to audiences with scheduling"
+    },
+    {
+      "icon": "🎨",
+      "text": "Templates — reusable email templates via API"
+    },
+    {
+      "icon": "🌐",
+      "text": "Domains — verify and manage sending domains"
+    },
+    {
+      "icon": "🔒",
+      "text": "Security-first — no filesystem access, credential scrubbing on errors"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/resend-blade-mcp" },
-    { "label": "Resend API Reference", "url": "https://resend.com/docs/api-reference/introduction" },
-    { "label": "Create API Key", "url": "https://resend.com/api-keys" },
-    { "label": "Resend Dashboard", "url": "https://resend.com/overview" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/resend-blade-mcp"
+    },
+    {
+      "label": "Resend API Reference",
+      "url": "https://resend.com/docs/api-reference/introduction"
+    },
+    {
+      "label": "Create API Key",
+      "url": "https://resend.com/api-keys"
+    },
+    {
+      "label": "Resend Dashboard",
+      "url": "https://resend.com/overview"
+    }
   ],
-  "readme": "### What it does\n\nResend gives your AI agent the ability to send transactional email, manage contacts and audiences, create broadcasts, and administer sending domains \u2014 all through Resend\u2019s developer-friendly API.\n\nYour agent can send a welcome email, add contacts to an audience, schedule a broadcast, check domain verification status, and manage webhooks in a single conversation.\n\n### Security model\n\nThis plugin was designed security-first:\n\n- **No filesystem access** \u2014 the server never reads or writes files on disk\n- **No API key CRUD** \u2014 cannot create, rotate, or delete API keys through tools\n- **Credential scrubbing** \u2014 all error paths strip API keys and tokens before returning\n- **Write gating** \u2014 send, create, update, and delete operations require `RESEND_WRITE_ENABLED=true`\n\nReads (list domains, get contacts, check email status) work immediately. Writes require the explicit opt-in.\n\n### Token efficiency\n\nAPI responses are trimmed to essential fields. Email send confirmations return just the ID and status. Contact lists return name and count without full member payloads.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Email | 2 | Send single email, batch send |\n| Contacts | 4 | List, create, update, remove contacts |\n| Audiences | 3 | List, create, delete audiences |\n| Broadcasts | 3 | Create, send, list broadcasts |\n| Domains | 3 | List, verify, check domain status |\n| Webhooks | 3 | List, create, delete webhooks |",
+  "readme": "### What it does\n\nResend gives your AI agent the ability to send transactional email, manage contacts and audiences, create broadcasts, and administer sending domains — all through Resend’s developer-friendly API.\n\nYour agent can send a welcome email, add contacts to an audience, schedule a broadcast, check domain verification status, and manage webhooks in a single conversation.\n\n### Security model\n\nThis plugin was designed security-first:\n\n- **No filesystem access** — the server never reads or writes files on disk\n- **No API key CRUD** — cannot create, rotate, or delete API keys through tools\n- **Credential scrubbing** — all error paths strip API keys and tokens before returning\n- **Write gating** — send, create, update, and delete operations require `RESEND_WRITE_ENABLED=true`\n\nReads (list domains, get contacts, check email status) work immediately. Writes require the explicit opt-in.\n\n### Token efficiency\n\nAPI responses are trimmed to essential fields. Email send confirmations return just the ID and status. Contact lists return name and count without full member payloads.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Email | 2 | Send single email, batch send |\n| Contacts | 4 | List, create, update, remove contacts |\n| Audiences | 3 | List, create, delete audiences |\n| Broadcasts | 3 | Create, send, list broadcasts |\n| Domains | 3 | List, verify, check domain status |\n| Webhooks | 3 | List, create, delete webhooks |",
   "scenarios": [
     {
       "type": "workflow",

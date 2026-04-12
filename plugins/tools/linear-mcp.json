@@ -8,6 +8,8 @@
   "licence": "proprietary",
   "icon": "/icons/linear-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": "tasks-v1",
   "homepage": "https://linear.app/docs/mcp",
   "install": {
@@ -28,7 +30,11 @@
     "help_url": "https://linear.app/docs/mcp",
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["read", "write", "issues:create"],
+      "scopes": [
+        "read",
+        "write",
+        "issues:create"
+      ],
       "setup_url": "https://linear.app/docs/mcp"
     },
     "help": [
@@ -57,16 +63,40 @@
     }
   },
   "highlights": [
-    { "icon": "\ud83d\udccb", "text": "Issues — create, update, search, and complete across projects" },
-    { "icon": "\ud83d\ude80", "text": "Projects & cycles — track sprints and project milestones" },
-    { "icon": "\ud83c\udff7\ufe0f", "text": "Labels & teams — organise work with team-scoped taxonomy" },
-    { "icon": "\ud83d\udce5", "text": "Inbox & my issues — personal queue and notification triage" },
-    { "icon": "\ud83d\udd17", "text": "OAuth2 — zero-config auth via Linear's hosted flow" }
+    {
+      "icon": "📋",
+      "text": "Issues — create, update, search, and complete across projects"
+    },
+    {
+      "icon": "🚀",
+      "text": "Projects & cycles — track sprints and project milestones"
+    },
+    {
+      "icon": "🏷️",
+      "text": "Labels & teams — organise work with team-scoped taxonomy"
+    },
+    {
+      "icon": "📥",
+      "text": "Inbox & my issues — personal queue and notification triage"
+    },
+    {
+      "icon": "🔗",
+      "text": "OAuth2 — zero-config auth via Linear's hosted flow"
+    }
   ],
   "links": [
-    { "label": "Linear MCP Docs", "url": "https://linear.app/docs/mcp" },
-    { "label": "Linear API Reference", "url": "https://developers.linear.app/docs" },
-    { "label": "Linear Changelog", "url": "https://linear.app/changelog" }
+    {
+      "label": "Linear MCP Docs",
+      "url": "https://linear.app/docs/mcp"
+    },
+    {
+      "label": "Linear API Reference",
+      "url": "https://developers.linear.app/docs"
+    },
+    {
+      "label": "Linear Changelog",
+      "url": "https://linear.app/changelog"
+    }
   ],
   "readme": "### What it does\n\nLinear MCP is an official vendor-hosted remote server that connects your AI agent to Linear's project management platform. Your agent can search and triage issues, create and update tasks, browse projects and cycles, and manage labels — all through Linear's native API.\n\nBecause it runs on Linear's infrastructure, there is no local process to install or maintain. The connection is established via OAuth2 on first use.\n\n### Remote MCP architecture\n\nUnlike most Blade MCPs, Linear runs as a remote server at `mcp.linear.app/mcp`. Sidereal connects directly — no local runtime, no package install, no Python or Node dependency. OAuth2 authentication is handled by Linear's hosted auth flow; you authorise once in the browser and the token is managed automatically.\n\n### Safety model\n\nLinear's MCP supports both read and write operations. Issue creation, updates, and completion are available when the OAuth scopes include `write` and `issues:create`. Read operations (search, list, inbox, team overview) require only the `read` scope.\n\n### Coverage\n\nThe service mapping covers the `tasks-v1` contract surface: issues as tasks, projects, labels, inbox, and CRUD operations. Linear's richer concepts — cycles, views, roadmaps, and team structures — are available through the full tool set but extend beyond the contract.",
   "scenarios": [
@@ -74,7 +104,9 @@
       "type": "workflow",
       "target": "linear-mcp",
       "target_type": "plugin",
-      "shared_services": ["tasks"],
+      "shared_services": [
+        "tasks"
+      ],
       "label": "Triage my Linear inbox",
       "body": "Pull the personal inbox and current issue assignments, review priority and status, then batch-update issues that are stale or ready to close."
     },
@@ -82,7 +114,9 @@
       "type": "workflow",
       "target": "linear-mcp",
       "target_type": "plugin",
-      "shared_services": ["tasks"],
+      "shared_services": [
+        "tasks"
+      ],
       "label": "Create issues from a spec",
       "body": "Break down a feature specification into discrete Linear issues with labels and project assignment, then verify the team overview reflects the new workload."
     },
@@ -90,7 +124,9 @@
       "type": "workflow",
       "target": "linear-mcp",
       "target_type": "plugin",
-      "shared_services": ["tasks"],
+      "shared_services": [
+        "tasks"
+      ],
       "label": "Sprint review summary",
       "body": "List all issues completed in the current cycle, search for any blocked items, and generate a team overview showing progress against project milestones."
     }

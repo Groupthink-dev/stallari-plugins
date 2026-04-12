@@ -8,24 +8,59 @@
   "licence": "MIT",
   "icon": "/icons/wican-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "homepage": "https://github.com/Groupthink-dev/wican-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/wican-blade-mcp",
   "contract": "vehicle-v1",
   "multi_instance": true,
   "highlights": [
-    { "icon": "🚗", "text": "Universal — works with any OBD-II vehicle (1996+ US, 2001+ EU, 2005+ AU)" },
-    { "icon": "📡", "text": "MQTT — real-time vehicle data over WiFi, no Bluetooth pairing or serial ports" },
-    { "icon": "🔋", "text": "State — speed, RPM, fuel level, coolant temp, battery voltage, odometer" },
-    { "icon": "⚠️", "text": "Diagnostics — read and clear DTCs, freeze frame data, MIL status" },
-    { "icon": "🔧", "text": "Raw CAN — manufacturer-specific data via opendbc DBC file decoding" },
-    { "icon": "🛡️", "text": "Safety — DTC clearing and CAN write operations require explicit confirmation" }
+    {
+      "icon": "🚗",
+      "text": "Universal — works with any OBD-II vehicle (1996+ US, 2001+ EU, 2005+ AU)"
+    },
+    {
+      "icon": "📡",
+      "text": "MQTT — real-time vehicle data over WiFi, no Bluetooth pairing or serial ports"
+    },
+    {
+      "icon": "🔋",
+      "text": "State — speed, RPM, fuel level, coolant temp, battery voltage, odometer"
+    },
+    {
+      "icon": "⚠️",
+      "text": "Diagnostics — read and clear DTCs, freeze frame data, MIL status"
+    },
+    {
+      "icon": "🔧",
+      "text": "Raw CAN — manufacturer-specific data via opendbc DBC file decoding"
+    },
+    {
+      "icon": "🛡️",
+      "text": "Safety — DTC clearing and CAN write operations require explicit confirmation"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/wican-blade-mcp" },
-    { "label": "WiCAN Pro Firmware", "url": "https://github.com/meatpiHQ/wican-fw" },
-    { "label": "WiCAN Documentation", "url": "https://meatpihq.github.io/wican-fw/" },
-    { "label": "opendbc (CAN databases)", "url": "https://github.com/commaai/opendbc" },
-    { "label": "meatPi Electronics", "url": "https://www.meatpi.com" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/wican-blade-mcp"
+    },
+    {
+      "label": "WiCAN Pro Firmware",
+      "url": "https://github.com/meatpiHQ/wican-fw"
+    },
+    {
+      "label": "WiCAN Documentation",
+      "url": "https://meatpihq.github.io/wican-fw/"
+    },
+    {
+      "label": "opendbc (CAN databases)",
+      "url": "https://github.com/commaai/opendbc"
+    },
+    {
+      "label": "meatPi Electronics",
+      "url": "https://www.meatpi.com"
+    }
   ],
   "readme": "### What it does\n\nWiCAN Vehicle gives your AI agent access to real-time vehicle data from any OBD-II compliant car, truck, or motorcycle through a meatPi WiCAN Pro adapter. The WiCAN plugs into the vehicle's OBD-II port and bridges CAN bus frames over WiFi to an MQTT broker — the MCP server subscribes to those topics.\n\nYour agent can read standard OBD-II data (speed, RPM, fuel, coolant temperature, battery voltage), check and clear diagnostic trouble codes, and — with optional DBC file configuration — decode manufacturer-specific CAN data (door states, tyre pressures, EV battery SoC, steering angle).\n\nBuilt on [paho-mqtt](https://pypi.org/project/paho-mqtt/) for broker communication and [cantools](https://pypi.org/project/cantools/) for DBC file parsing. Compatible with the [opendbc](https://github.com/commaai/opendbc) community CAN database covering hundreds of vehicle models.\n\n### How it differs from cloud vehicle MCPs\n\n| | This plugin | Tesla / Tessie MCP | BMW CarData MCP |\n|---|---|---|---|\n| Vehicle support | Any OBD-II (1996+ US, 2001+ EU, 2005+ AU) | Tesla only | BMW/MINI only |\n| Interface | Local hardware (OBD-II → WiFi → MQTT) | Cloud API | Cloud API |\n| Auth required | MQTT broker credentials (local) | API key or OAuth | OAuth |\n| Works offline | Yes (local network only) | No | No |\n| Subscription cost | None (one-time hardware ~$40-50) | Tessie ~$5/mo | Free (EU only) |\n| Remote commands | DTC clear, raw CAN send | Lock, climate, charge | Lock, climate, charge |\n| Raw data access | Full CAN bus | Summary only | Summary only |\n| Open source | Hardware + firmware + MCP | MCP only | MCP only |\n\nThis is the only vehicle MCP that talks directly to hardware. Cloud MCPs give you manufacturer-curated data through proprietary APIs; WiCAN gives you raw bus access to whatever the vehicle broadcasts.\n\n### How it works\n\nThe WiCAN Pro is an ESP32-S3-based WiFi/BLE OBD-II adapter with native MQTT support. It connects to your WiFi network and publishes vehicle data to configurable MQTT topics. This MCP server subscribes to those topics via a local or remote MQTT broker.\n\nNo Bluetooth pairing. No serial ports. No USB drivers. Just MQTT.\n\n```\nVehicle OBD-II port\n    │\n    ▼\nWiCAN Pro (ESP32-S3, WiFi + BLE)\n    │\n    ▼ MQTT publish\nMQTT Broker (Mosquitto / HA built-in)\n    │\n    ▼ MQTT subscribe\nwican-blade-mcp\n```\n\n### What data is available\n\n**Standard OBD-II PIDs (universal, any compliant vehicle):**\n- Engine RPM, vehicle speed, throttle position\n- Coolant temperature, intake air temperature\n- Fuel level, fuel system status, calculated engine load\n- Battery voltage, oxygen sensor readings\n- Diagnostic trouble codes (DTCs) and MIL status\n- VIN (Vehicle Identification Number)\n- Odometer (where supported by the vehicle)\n\n**Raw CAN bus (manufacturer-specific, requires DBC files):**\n- Door and window states, lock status\n- Tyre pressures (TPMS)\n- EV battery SoC, charging state, range estimate\n- Steering angle, individual wheel speeds\n- Gear position, ambient temperature\n- Any data the vehicle puts on the CAN bus\n\nManufacturer-specific decoding uses DBC files from the [opendbc](https://github.com/commaai/opendbc) project (comma.ai). Coverage varies by make/model — well-decoded for Honda, Toyota, Hyundai, GM, and many others.\n\n### Token efficiency\n\nOBD-II responses are compact by nature — a PID response is a single value with a unit. The server formats state as pipe-delimited one-liners (`SPEED | 60 km/h`) with null-field omission, so only active data appears in the response.\n\nRaw CAN frames are denser. The `wican_can_read` tool returns a bounded buffer (default 50 frames, max 200) with optional frame ID filtering. For continuous monitoring, configure the WiCAN firmware to poll only the PIDs you need rather than broadcasting the full bus — this reduces both MQTT traffic and token usage.\n\nA typical `wican_state` response is 8–10 lines. A `wican_diagnostics` response with no active DTCs is 2 lines.\n\n### Network requirements\n\nThe WiCAN Pro needs to be on the same WiFi network as your MQTT broker, or configured to reach a cloud-hosted broker.\n\n**Home use** (car in garage or driveway with WiFi coverage): works out of the box. The WiCAN connects to your home WiFi and publishes to your local Mosquitto or Home Assistant broker.\n\n**Third-party router setups** (UniFi, pfSense, OPNsense): the WiCAN connects as a standard WiFi client — no special routing needed. Just ensure the MQTT broker is reachable from the WiFi VLAN the WiCAN joins.\n\n**Remote access** (car parked away from home WiFi): requires a mobile hotspot, cellular-to-MQTT bridge, or a cloud MQTT broker (e.g. HiveMQ Cloud, EMQX Cloud). This is outside the scope of the plugin but documented in the WiCAN firmware docs.\n\n**Multi-vehicle setups:** each WiCAN device gets a unique device ID. Set `WICAN_DEVICE_ID` to target a specific vehicle, or use `multi_instance: true` to run one MCP instance per vehicle with different MQTT topic filters.\n\nThe WiCAN Pro has sleep mode — it draws minimal power when the vehicle is off and reconnects automatically when the ignition is on.\n\n### Safety model\n\nRead tools work immediately — vehicle state, diagnostics, trip data.\n\nWrite operations are dual-gated:\n1. `WICAN_WRITE_ENABLED=true` environment variable (persistent, set in plugin config)\n2. `confirm=true` parameter on each call (per-invocation, prevents accidental execution)\n\nBoth gates must pass. Your agent can inspect the vehicle freely but must be explicit about write operations.\n\nGated operations: clearing diagnostic trouble codes, sending raw CAN frames. Standard OBD-II reads and passive CAN monitoring are always safe.\n\n**CAN bus safety note:** `wican_can_send` transmits arbitrary frames on the vehicle bus. Incorrect frames can cause ECU faults, warning lights, or unsafe behaviour. Use with extreme caution and only with known-good frame definitions. This tool is intended for diagnostics and research, not routine automation.\n\n### Hardware required\n\nA **meatPi WiCAN Pro** (~$40-50 USD). Open-source hardware and firmware ([meatpiHQ/wican-fw](https://github.com/meatpiHQ/wican-fw), 1.5k+ stars). Available from meatPi's website, Crowd Supply, and Tindie.\n\n| Variant | WiFi | BLE | Sleep Mode | Price |\n|---------|------|-----|------------|-------|\n| WiCAN Pro | Yes | Yes | Yes | ~$45 |\n| WiCAN (original) | Yes | No | No | ~$35 |\n\nBoth variants work with this plugin. The Pro is recommended for always-plugged-in use (sleep mode prevents battery drain).\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| wican_vehicles | read | List connected WiCAN devices with vehicle identity and connection status |\n| wican_state | read | Speed, RPM, fuel, coolant, battery voltage, throttle, engine load |\n| wican_diagnostics | read | DTC codes, MIL status, freeze frame, monitor readiness |\n| wican_battery | read | Battery voltage, alternator state, EV SoC (if CAN-decoded) |\n| wican_trip | read | Speed, RPM, run time, odometer, fuel level |\n| wican_can_read | read | Raw CAN frames from buffer, optional frame ID filtering |\n| wican_dtc_clear | gated | Clear diagnostic trouble codes and reset MIL |\n| wican_can_send | gated | Send a raw CAN frame to the vehicle bus |",
   "install": {
@@ -168,7 +203,9 @@
       "type": "workflow",
       "target": "wican-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vehicle"],
+      "shared_services": [
+        "vehicle"
+      ],
       "label": "Morning vehicle health check",
       "body": "Call wican_vehicles to confirm the device is online, then wican_state with refresh=true for fresh readings. Report battery voltage, coolant temp baseline, and any anomalies. Check wican_diagnostics for active DTCs or pending trouble codes."
     },
@@ -176,7 +213,9 @@
       "type": "workflow",
       "target": "wican-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vehicle"],
+      "shared_services": [
+        "vehicle"
+      ],
       "label": "Diagnose check engine light",
       "body": "Call wican_diagnostics with refresh=true to read all active and pending DTCs with freeze frame data. Look up each code and provide a plain-language explanation, severity, and recommended action. Offer to clear codes if the issue has been resolved."
     },
@@ -184,7 +223,9 @@
       "type": "workflow",
       "target": "wican-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vehicle"],
+      "shared_services": [
+        "vehicle"
+      ],
       "label": "Weekly trip and fuel summary",
       "body": "Call wican_trip for accumulated distance and fuel consumption. Call wican_state for current fuel level. Calculate average fuel economy and estimated range remaining."
     },
@@ -192,7 +233,9 @@
       "type": "workflow",
       "target": "wican-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vehicle"],
+      "shared_services": [
+        "vehicle"
+      ],
       "label": "Monitor battery health over time",
       "body": "Call wican_battery with refresh=true to get the current voltage reading. Compare against the 12.4-12.7V resting range (engine off) or 13.7-14.7V charging range (engine running). Flag if the voltage suggests alternator or battery degradation."
     },
@@ -200,7 +243,9 @@
       "type": "workflow",
       "target": "wican-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["vehicle"],
+      "shared_services": [
+        "vehicle"
+      ],
       "label": "Raw CAN bus exploration",
       "body": "Call wican_can_read with no filter to see what frames the vehicle is broadcasting. Identify high-frequency frame IDs and cross-reference with opendbc DBC files for the vehicle's make/model. Report which manufacturer-specific signals are decodable."
     }

@@ -7,6 +7,8 @@
   "author": "groupthink-dev",
   "licence": "MIT",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "tasks-v1",
   "repository": "https://github.com/groupthink-dev/reminders-blade-mcp",
   "multi_instance": false,
@@ -55,19 +57,46 @@
     ]
   },
   "highlights": [
-    { "icon": "\u2705", "text": "Lists \u2014 browse all reminder lists with item counts" },
-    { "icon": "\ud83d\udd0d", "text": "Search \u2014 find reminders by keyword across all lists" },
-    { "icon": "\ud83d\udcc5", "text": "Due dates \u2014 view overdue and upcoming reminders" },
-    { "icon": "\u2795", "text": "Create \u2014 add reminders with due dates, priorities, notes" },
-    { "icon": "\ud83d\udcca", "text": "Stats \u2014 summary counts across lists and completion rates" },
-    { "icon": "\ud83d\udd12", "text": "Write-gated \u2014 create, complete, update, delete require opt-in" }
+    {
+      "icon": "✅",
+      "text": "Lists — browse all reminder lists with item counts"
+    },
+    {
+      "icon": "🔍",
+      "text": "Search — find reminders by keyword across all lists"
+    },
+    {
+      "icon": "📅",
+      "text": "Due dates — view overdue and upcoming reminders"
+    },
+    {
+      "icon": "➕",
+      "text": "Create — add reminders with due dates, priorities, notes"
+    },
+    {
+      "icon": "📊",
+      "text": "Stats — summary counts across lists and completion rates"
+    },
+    {
+      "icon": "🔒",
+      "text": "Write-gated — create, complete, update, delete require opt-in"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/reminders-blade-mcp" },
-    { "label": "macOS Privacy Settings", "url": "https://support.apple.com/guide/mac-help/change-privacy-security-settings-on-mac-mchl211c911f/mac" },
-    { "label": "Apple Reminders User Guide", "url": "https://support.apple.com/guide/reminders/welcome/mac" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/reminders-blade-mcp"
+    },
+    {
+      "label": "macOS Privacy Settings",
+      "url": "https://support.apple.com/guide/mac-help/change-privacy-security-settings-on-mac-mchl211c911f/mac"
+    },
+    {
+      "label": "Apple Reminders User Guide",
+      "url": "https://support.apple.com/guide/reminders/welcome/mac"
+    }
   ],
-  "readme": "### What it does\n\nApple Reminders gives your AI agent native access to the Reminders app on macOS. Browse lists, search for reminders, check due dates, and manage tasks \u2014 all through the system Reminders database via AppleScript.\n\nYour agent can see what\u2019s overdue, find reminders by keyword, get list-level stats, and create or complete reminders without switching to the app.\n\n### macOS integration\n\nThis plugin talks directly to Apple Reminders through AppleScript \u2014 no API keys, no cloud setup. Just grant Reminders access when macOS prompts (System Settings > Privacy & Security > Reminders). Changes sync automatically via iCloud to all your Apple devices.\n\n### Safety model\n\nRead operations work immediately \u2014 lists, search, due dates, stats, individual reminder details.\n\nWrite operations (create, complete, update, delete) require `REMINDERS_WRITE_ENABLED=true` **and** `confirm: true` on each call. Double-gated by design, so your agent can browse freely but must be explicit about changes.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Read | 6 | Lists, items, search, due dates, stats, detail |\n| Write | 4 | Create, complete, update, delete (all gated) |",
+  "readme": "### What it does\n\nApple Reminders gives your AI agent native access to the Reminders app on macOS. Browse lists, search for reminders, check due dates, and manage tasks — all through the system Reminders database via AppleScript.\n\nYour agent can see what’s overdue, find reminders by keyword, get list-level stats, and create or complete reminders without switching to the app.\n\n### macOS integration\n\nThis plugin talks directly to Apple Reminders through AppleScript — no API keys, no cloud setup. Just grant Reminders access when macOS prompts (System Settings > Privacy & Security > Reminders). Changes sync automatically via iCloud to all your Apple devices.\n\n### Safety model\n\nRead operations work immediately — lists, search, due dates, stats, individual reminder details.\n\nWrite operations (create, complete, update, delete) require `REMINDERS_WRITE_ENABLED=true` **and** `confirm: true` on each call. Double-gated by design, so your agent can browse freely but must be explicit about changes.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Read | 6 | Lists, items, search, due dates, stats, detail |\n| Write | 4 | Create, complete, update, delete (all gated) |",
   "scenarios": [
     {
       "type": "workflow",

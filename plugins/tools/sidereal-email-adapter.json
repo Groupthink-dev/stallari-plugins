@@ -7,6 +7,8 @@
   "licence": "MIT",
   "icon": "/icons/sidereal-email-adapter.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "email-v1",
   "repository": "https://github.com/groupthink-dev/sidereal-email-adapter",
   "install": {

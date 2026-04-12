@@ -8,20 +8,49 @@
   "licence": "MIT",
   "icon": "/icons/google-workspace-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "contract": "email-v1",
   "repository": "https://github.com/anthropics/google-workspace-mcp",
   "highlights": [
-    { "icon": "\ud83d\udd0d", "text": "Search \u2014 Gmail query syntax for precise message filtering" },
-    { "icon": "\ud83d\udce8", "text": "Read & threads \u2014 full message content with thread grouping" },
-    { "icon": "\u2709\ufe0f", "text": "Send \u2014 compose and send email through your Workspace account" },
-    { "icon": "\ud83c\udff7\ufe0f", "text": "Labels \u2014 organise messages with Gmail labels" },
-    { "icon": "\ud83d\udd10", "text": "OAuth 2.0 \u2014 standard Google consent flow for Workspace accounts" }
+    {
+      "icon": "🔍",
+      "text": "Search — Gmail query syntax for precise message filtering"
+    },
+    {
+      "icon": "📨",
+      "text": "Read & threads — full message content with thread grouping"
+    },
+    {
+      "icon": "✉️",
+      "text": "Send — compose and send email through your Workspace account"
+    },
+    {
+      "icon": "🏷️",
+      "text": "Labels — organise messages with Gmail labels"
+    },
+    {
+      "icon": "🔐",
+      "text": "OAuth 2.0 — standard Google consent flow for Workspace accounts"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/anthropics/google-workspace-mcp" },
-    { "label": "Gmail API Reference", "url": "https://developers.google.com/gmail/api/reference/rest" },
-    { "label": "Google Cloud Console", "url": "https://console.cloud.google.com/apis/credentials" },
-    { "label": "Enable Gmail API", "url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/anthropics/google-workspace-mcp"
+    },
+    {
+      "label": "Gmail API Reference",
+      "url": "https://developers.google.com/gmail/api/reference/rest"
+    },
+    {
+      "label": "Google Cloud Console",
+      "url": "https://console.cloud.google.com/apis/credentials"
+    },
+    {
+      "label": "Enable Gmail API",
+      "url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com"
+    }
   ],
   "readme": "### What it does\n\nGoogle Workspace MCP connects your AI agent to Gmail through the official Google API. It provides tools for searching messages with Gmail query syntax, reading full message content, viewing threaded conversations, sending email, and managing labels.\n\nThis community plugin is maintained by Anthropic and targets Google Workspace (business) accounts, though it works with any Gmail account.\n\n### Community plugin\n\nThis is a curated community plugin implementing the `email-v1` service contract. It provides a simpler, Google-native alternative to the Gmail Blade for users who want basic email operations without the Gemini AI classification features.\n\n### Setup\n\nSetup requires a Google Cloud project with the Gmail API enabled and OAuth 2.0 credentials. On first run, the plugin opens a browser for the standard Google consent flow. The `gmail.modify` scope allows read, send, and label operations.\n\n### Comparison with Gmail Blade\n\n| Feature | Google Workspace MCP | Gmail Blade |\n|---------|---------------------|-------------|\n| Maintainer | Anthropic (community) | Sidereal (certified) |\n| AI features | None | Gemini classification + summarisation |\n| Setup | OAuth only | OAuth + optional Gemini key |\n| Write gating | Not gated | Explicit write gate |",
   "install": {
@@ -37,7 +66,9 @@
     "help_url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com",
     "oauth2": {
       "grant_type": "authorization_code",
-      "scopes": ["https://www.googleapis.com/auth/gmail.modify"],
+      "scopes": [
+        "https://www.googleapis.com/auth/gmail.modify"
+      ],
       "setup_url": "https://console.cloud.google.com/apis/credentials"
     },
     "prerequisites": [
@@ -50,7 +81,9 @@
       "type": "workflow",
       "target": "google-workspace-mcp",
       "target_type": "plugin",
-      "shared_services": ["email"],
+      "shared_services": [
+        "email"
+      ],
       "label": "Search and summarise recent threads",
       "body": "Search for messages from the past week matching a keyword, read the full threads, and provide a summary of key action items and decisions."
     },
@@ -58,7 +91,9 @@
       "type": "workflow",
       "target": "google-workspace-mcp",
       "target_type": "plugin",
-      "shared_services": ["email"],
+      "shared_services": [
+        "email"
+      ],
       "label": "Organise inbox with labels",
       "body": "Scan unread messages, categorise them by project or urgency, apply the appropriate Gmail labels, and report which messages need immediate attention."
     }

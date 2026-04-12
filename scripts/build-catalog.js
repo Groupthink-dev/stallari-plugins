@@ -55,6 +55,23 @@ function extractPackServices(pack) {
   return [...services].sort();
 }
 
+/** Map legacy tier to two-axis author_type + readiness (deterministic fallback) */
+function resolveCertification(source) {
+  if (source.author_type && source.readiness) {
+    return { author_type: source.author_type, readiness: source.readiness };
+  }
+  switch (source.tier) {
+    case "certified":
+      return { author_type: "first-party", readiness: "production" };
+    case "verified":
+      return { author_type: "community", readiness: "production" };
+    case "community":
+      return { author_type: "community", readiness: "beta" };
+    default:
+      return { author_type: "community", readiness: "experimental" };
+  }
+}
+
 /** Convert a raw plugin JSON to a CatalogEntry */
 function pluginToCatalogEntry(raw) {
   const contracts = raw.contract
@@ -66,6 +83,8 @@ function pluginToCatalogEntry(raw) {
   const setup = raw.setup;
   const envCount = Array.isArray(raw.env) ? raw.env.length : 0;
   const fieldCount = setup?.fields?.length || envCount;
+
+  const { author_type, readiness } = resolveCertification(raw);
 
   return {
     name: raw.name,
@@ -84,6 +103,8 @@ function pluginToCatalogEntry(raw) {
     updated: null,
     visibility: "open",
     tier: raw.tier,
+    author_type,
+    readiness,
     contract: raw.contract || null,
     runtime: raw.install?.runtime || raw.runtime || null,
     licence: raw.licence || null,
@@ -137,6 +158,9 @@ function packToCatalogEntry(pack) {
     (s) => s.trigger?.webhook || s.webhook_name,
   ).length;
 
+  const packTier = pack.tier || "community";
+  const { author_type, readiness } = resolveCertification({ ...pack, tier: packTier });
+
   return {
     name: pack.name,
     title: pack.title || null,
@@ -155,7 +179,9 @@ function packToCatalogEntry(pack) {
     created: null,
     updated: null,
     visibility: pack.visibility || "open",
-    tier: pack.tier || "community",
+    tier: packTier,
+    author_type,
+    readiness,
     licence: pack.licence || null,
     pack_spec: pack.pack || null,
     // Pack-specific metadata
@@ -536,6 +562,7 @@ export {
   slugify,
   contractToService,
   extractPackServices,
+  resolveCertification,
   pluginToCatalogEntry,
   packToCatalogEntry,
   buildServices,

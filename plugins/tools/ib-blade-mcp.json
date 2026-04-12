@@ -8,6 +8,8 @@
   "licence": "MIT",
   "icon": "/icons/ib-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "brokerage-v1",
   "homepage": "https://github.com/Groupthink-dev/ib-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/ib-blade-mcp",
@@ -137,18 +139,48 @@
     }
   },
   "highlights": [
-    { "icon": "\ud83d\udcca", "text": "Portfolio — positions, P&L, cash balances, account summary" },
-    { "icon": "\ud83d\udcc8", "text": "Market data — real-time quotes, historical bars, contract search" },
-    { "icon": "\ud83d\udd0d", "text": "Scanners — market scanner with 50+ IB parameter types" },
-    { "icon": "\ud83d\udee1\ufe0f", "text": "Triple safety — env gate, confirm gate, and order preview" },
-    { "icon": "\ud83d\udcb1", "text": "Orders — place, modify, cancel with what-if preview" },
-    { "icon": "\ud83d\udd10", "text": "Gateway isolation — IB credentials never touch the MCP" }
+    {
+      "icon": "📊",
+      "text": "Portfolio — positions, P&L, cash balances, account summary"
+    },
+    {
+      "icon": "📈",
+      "text": "Market data — real-time quotes, historical bars, contract search"
+    },
+    {
+      "icon": "🔍",
+      "text": "Scanners — market scanner with 50+ IB parameter types"
+    },
+    {
+      "icon": "🛡️",
+      "text": "Triple safety — env gate, confirm gate, and order preview"
+    },
+    {
+      "icon": "💱",
+      "text": "Orders — place, modify, cancel with what-if preview"
+    },
+    {
+      "icon": "🔐",
+      "text": "Gateway isolation — IB credentials never touch the MCP"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/Groupthink-dev/ib-blade-mcp" },
-    { "label": "Client Portal Gateway", "url": "https://www.interactivebrokers.com/en/trading/ib-api.php" },
-    { "label": "CP Gateway API Docs", "url": "https://www.interactivebrokers.com/campus/ibkr-api-page/cpapi-v1/" },
-    { "label": "IB API Reference", "url": "https://interactivebrokers.github.io/cpwebapi/" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/ib-blade-mcp"
+    },
+    {
+      "label": "Client Portal Gateway",
+      "url": "https://www.interactivebrokers.com/en/trading/ib-api.php"
+    },
+    {
+      "label": "CP Gateway API Docs",
+      "url": "https://www.interactivebrokers.com/campus/ibkr-api-page/cpapi-v1/"
+    },
+    {
+      "label": "IB API Reference",
+      "url": "https://interactivebrokers.github.io/cpwebapi/"
+    }
   ],
   "readme": "### What it does\n\nInteractive Brokers MCP connects your AI agent to the IB Client Portal Gateway, giving access to portfolio data, real-time market quotes, historical bars, contract search, market scanners, and full order management across 21 tools.\n\nYour agent can check positions, scan for trading opportunities, preview an order's margin impact, and execute trades — all without leaving the conversation.\n\n### Gateway architecture\n\nThis MCP never sees your IB credentials. You authenticate to the Client Portal Gateway via a browser, and the MCP communicates with the already-authenticated gateway over its local REST API. The gateway handles session management, re-authentication, and credential storage independently.\n\n### Token efficiency\n\nIB API responses are deeply nested with hundreds of fields per position or contract. Each tool includes a concise formatter that extracts only actionable fields — ticker, quantity, P&L, market value — dropping internal IDs and raw exchange metadata. A portfolio summary returns ~300 tokens instead of ~2,000.\n\n### Safety model\n\nOrder operations use triple-gated safety:\n\n- **Environment gate** — `IB_WRITE_ENABLED` must be `true` to unlock any order tool\n- **Confirm gate** — each order tool requires `confirm: true` per call\n- **Order preview** — `ib_order_preview` shows margin impact, commission, and warnings before execution\n\nRead operations (portfolio, quotes, scanners) work immediately with no gates.",
   "scenarios": [
@@ -156,7 +188,9 @@
       "type": "workflow",
       "target": "ib-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["brokerage"],
+      "shared_services": [
+        "brokerage"
+      ],
       "label": "Morning portfolio review",
       "body": "Check authentication status, pull portfolio summary and P&L, review cash balances across accounts, and flag any positions with significant overnight moves."
     },
@@ -164,7 +198,9 @@
       "type": "workflow",
       "target": "ib-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["brokerage"],
+      "shared_services": [
+        "brokerage"
+      ],
       "label": "Research and preview a trade",
       "body": "Search for a contract by symbol, fetch real-time quotes and historical bars, run a market scanner for related instruments, then preview the order's margin impact before deciding whether to execute."
     },
@@ -172,7 +208,9 @@
       "type": "workflow",
       "target": "ib-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["brokerage"],
+      "shared_services": [
+        "brokerage"
+      ],
       "label": "Monitor and manage open orders",
       "body": "List all open orders with their fill status, check recent trades for execution prices, and modify or cancel pending orders that have drifted from the intended entry."
     }
@@ -180,7 +218,10 @@
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",
-    "platform_tested": ["darwin-arm64", "linux-x86_64"],
+    "platform_tested": [
+      "darwin-arm64",
+      "linux-x86_64"
+    ],
     "security_notes": "Gateway isolation — IB credentials managed by gateway, never exposed to MCP process. Triple order safety: env gate (IB_WRITE_ENABLED), confirm gate (per-tool parameter), and order preview (what-if). Bearer auth for HTTP transport. Credential scrubbing on all error paths."
   },
   "conformance": {

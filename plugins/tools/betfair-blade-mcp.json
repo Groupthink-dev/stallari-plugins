@@ -8,38 +8,74 @@
   "licence": "MIT",
   "icon": "/icons/betfair-blade-mcp.svg",
   "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "production",
   "contract": "betting-exchange-v1",
   "homepage": "https://github.com/groupthink-dev/betfair-blade-mcp",
   "repository": "https://github.com/groupthink-dev/betfair-blade-mcp",
   "highlights": [
-    { "icon": "\ud83c\udfc7", "text": "Discovery \u2014 browse sports, competitions, events, venues, and navigation tree" },
-    { "icon": "\ud83d\udcca", "text": "Live pricing \u2014 market books, runner books, real-time volumes" },
-    { "icon": "\ud83d\udcb0", "text": "Trading \u2014 place, cancel, update, and replace orders (write-gated)" },
-    { "icon": "\ud83d\udd10", "text": "Certificate auth \u2014 non-interactive bot login, no browser needed" },
-    { "icon": "\u2696\ufe0f", "text": "Weight-aware rate limiting \u2014 per-endpoint cost tracking" },
-    { "icon": "\ud83d\udee1\ufe0f", "text": "Double-gated writes \u2014 BETFAIR_WRITE_ENABLED + confirm: true for real money" }
+    {
+      "icon": "🏇",
+      "text": "Discovery — browse sports, competitions, events, venues, and navigation tree"
+    },
+    {
+      "icon": "📊",
+      "text": "Live pricing — market books, runner books, real-time volumes"
+    },
+    {
+      "icon": "💰",
+      "text": "Trading — place, cancel, update, and replace orders (write-gated)"
+    },
+    {
+      "icon": "🔐",
+      "text": "Certificate auth — non-interactive bot login, no browser needed"
+    },
+    {
+      "icon": "⚖️",
+      "text": "Weight-aware rate limiting — per-endpoint cost tracking"
+    },
+    {
+      "icon": "🛡️",
+      "text": "Double-gated writes — BETFAIR_WRITE_ENABLED + confirm: true for real money"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/groupthink-dev/betfair-blade-mcp" },
-    { "label": "Betfair API Getting Started", "url": "https://developer.betfair.com/en/get-started/" },
-    { "label": "Certificate Login Guide", "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+(bot)+login" },
-    { "label": "Betting API Reference", "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Betting+API" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/betfair-blade-mcp"
+    },
+    {
+      "label": "Betfair API Getting Started",
+      "url": "https://developer.betfair.com/en/get-started/"
+    },
+    {
+      "label": "Certificate Login Guide",
+      "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+(bot)+login"
+    },
+    {
+      "label": "Betting API Reference",
+      "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Betting+API"
+    }
   ],
-  "readme": "### What it does\n\nBetfair Exchange gives your AI agent full access to the world\u2019s largest betting exchange. Browse sports and competitions, fetch live market prices, manage your account, and \u2014 when explicitly enabled \u2014 place and manage real-money orders.\n\n22 tools cover the complete lifecycle: from discovering events across 30+ sports, through real-time market data and order book analysis, to execution and settlement tracking.\n\n### Tool groups\n\n| Group | Tools | Coverage |\n|-------|-------|---------|\n| Discovery | 8 | Sports, competitions, events, venues, market catalogue, navigation |\n| Pricing | 3 | Market books (all runners), runner books (single), live volumes |\n| Account | 4 | Funds, details, transaction history, currency rates |\n| Orders | 3 | Current (active), cleared (settled), market P&L per selection |\n| Trading | 4 | Place, cancel, update persistence, atomic replace |\n| System | 2 | Login status, keepalive (session refresh) |\n\n### Safety model\n\nTrading with real money demands defence in depth:\n\n- **Read-only by default** \u2014 all 17 read tools work immediately\n- **Environment gate** \u2014 `BETFAIR_WRITE_ENABLED=true` unlocks the 5 write tools\n- **Confirm gate** \u2014 `place_orders` and `replace_orders` additionally require `confirm: true`\n- **Heartbeat** \u2014 dead-man switch auto-cancels unmatched LIMIT bets if your agent disconnects\n\n### Authentication\n\nUses Betfair\u2019s certificate-based non-interactive login \u2014 no browser, no CAPTCHA, no session cookies. Generate a self-signed certificate, link it to your Betfair account, and the server handles login and session refresh automatically.\n\n### Rate limiting\n\nBetfair assigns different API weights to different endpoints (a `market_book` call costs more than `event_types`). The rate limiter tracks per-endpoint weight consumption and throttles automatically, so your agent stays within Betfair\u2019s limits without manual pacing.",
+  "readme": "### What it does\n\nBetfair Exchange gives your AI agent full access to the world’s largest betting exchange. Browse sports and competitions, fetch live market prices, manage your account, and — when explicitly enabled — place and manage real-money orders.\n\n22 tools cover the complete lifecycle: from discovering events across 30+ sports, through real-time market data and order book analysis, to execution and settlement tracking.\n\n### Tool groups\n\n| Group | Tools | Coverage |\n|-------|-------|---------|\n| Discovery | 8 | Sports, competitions, events, venues, market catalogue, navigation |\n| Pricing | 3 | Market books (all runners), runner books (single), live volumes |\n| Account | 4 | Funds, details, transaction history, currency rates |\n| Orders | 3 | Current (active), cleared (settled), market P&L per selection |\n| Trading | 4 | Place, cancel, update persistence, atomic replace |\n| System | 2 | Login status, keepalive (session refresh) |\n\n### Safety model\n\nTrading with real money demands defence in depth:\n\n- **Read-only by default** — all 17 read tools work immediately\n- **Environment gate** — `BETFAIR_WRITE_ENABLED=true` unlocks the 5 write tools\n- **Confirm gate** — `place_orders` and `replace_orders` additionally require `confirm: true`\n- **Heartbeat** — dead-man switch auto-cancels unmatched LIMIT bets if your agent disconnects\n\n### Authentication\n\nUses Betfair’s certificate-based non-interactive login — no browser, no CAPTCHA, no session cookies. Generate a self-signed certificate, link it to your Betfair account, and the server handles login and session refresh automatically.\n\n### Rate limiting\n\nBetfair assigns different API weights to different endpoints (a `market_book` call costs more than `event_types`). The rate limiter tracks per-endpoint weight consumption and throttles automatically, so your agent stays within Betfair’s limits without manual pacing.",
   "scenarios": [
     {
       "type": "workflow",
       "target": "betfair-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["betting-exchange"],
+      "shared_services": [
+        "betting-exchange"
+      ],
       "label": "Pre-race market analysis",
-      "body": "List today\u2019s horse racing events, fetch market catalogues for a specific venue, get live runner prices, and check current account exposure before making a decision."
+      "body": "List today’s horse racing events, fetch market catalogues for a specific venue, get live runner prices, and check current account exposure before making a decision."
     },
     {
       "type": "workflow",
       "target": "betfair-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["betting-exchange"],
+      "shared_services": [
+        "betting-exchange"
+      ],
       "label": "Monitor and manage open positions",
       "body": "Check current orders across all markets, review P&L per selection, decide whether to cancel unmatched bets or let them stand in-play, and verify account funds."
     },
@@ -47,9 +83,11 @@
       "type": "workflow",
       "target": "betfair-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["betting-exchange"],
+      "shared_services": [
+        "betting-exchange"
+      ],
       "label": "End-of-day settlement review",
-      "body": "Pull cleared orders for today, review account statement for settlements and commission, check currency rates, and summarise the day\u2019s trading performance."
+      "body": "Pull cleared orders for today, review account statement for settlements and commission, check currency rates, and summarise the day’s trading performance."
     }
   ],
   "install": {
@@ -207,7 +245,10 @@
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",
-    "platform_tested": ["darwin-arm64", "linux-x86_64"],
+    "platform_tested": [
+      "darwin-arm64",
+      "linux-x86_64"
+    ],
     "security_notes": "Certificate auth (no interactive login). Write gates on all order operations. Confirm gates on place_orders. Weight-aware rate limiting (per-endpoint). Real money at stake when write-enabled."
   },
   "conformance": {

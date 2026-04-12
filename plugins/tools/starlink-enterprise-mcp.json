@@ -8,20 +8,40 @@
   "licence": "MIT",
   "icon": "/icons/starlink-enterprise-mcp.svg",
   "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
   "homepage": "https://github.com/ry-ops/starlink-enterprise-mcp-server",
   "repository": "https://github.com/ry-ops/starlink-enterprise-mcp-server",
   "multi_instance": false,
   "highlights": [
-    { "icon": "\ud83d\udce1", "text": "Terminals \u2014 list, inspect, and monitor user terminals across your fleet" },
-    { "icon": "\ud83d\udcf6", "text": "Telemetry \u2014 real-time and historical terminal metrics from the cloud API" },
-    { "icon": "\ud83d\udccb", "text": "Service lines \u2014 manage service plans, addresses, and subscriptions" },
-    { "icon": "\ud83d\udcca", "text": "Data usage \u2014 track consumption across terminals and service lines" }
+    {
+      "icon": "📡",
+      "text": "Terminals — list, inspect, and monitor user terminals across your fleet"
+    },
+    {
+      "icon": "📶",
+      "text": "Telemetry — real-time and historical terminal metrics from the cloud API"
+    },
+    {
+      "icon": "📋",
+      "text": "Service lines — manage service plans, addresses, and subscriptions"
+    },
+    {
+      "icon": "📊",
+      "text": "Data usage — track consumption across terminals and service lines"
+    }
   ],
   "links": [
-    { "label": "Source Code", "url": "https://github.com/ry-ops/starlink-enterprise-mcp-server" },
-    { "label": "Starlink Enterprise Portal", "url": "https://www.starlink.com/business" }
+    {
+      "label": "Source Code",
+      "url": "https://github.com/ry-ops/starlink-enterprise-mcp-server"
+    },
+    {
+      "label": "Starlink Enterprise Portal",
+      "url": "https://www.starlink.com/business"
+    }
   ],
-  "readme": "### What it does\n\nStarlink Enterprise wraps the Starlink Enterprise cloud API (`web-api.starlink.com/enterprise/v1`) as MCP tools. It targets fleet operators managing multiple Starlink terminals across sites, ships, or vehicles.\n\n11 tools cover terminal inventory, telemetry, service lines, data usage, addresses, and service availability checks.\n\n### Who this is for\n\nThis plugin requires a **Starlink Enterprise account** with OAuth2 API credentials. It does not work with residential or consumer Starlink plans.\n\nIf you have a residential dish, use [Starlink Dish](https://sidereal.cc/marketplace/starlink-blade-mcp) instead \u2014 it talks directly to your dish hardware over the local network without any cloud credentials.\n\n### Community plugin\n\nThis is a community-contributed plugin wrapping [ry-ops/starlink-enterprise-mcp-server](https://github.com/ry-ops/starlink-enterprise-mcp-server). It is not maintained by Sidereal or SpaceX.",
+  "readme": "### What it does\n\nStarlink Enterprise wraps the Starlink Enterprise cloud API (`web-api.starlink.com/enterprise/v1`) as MCP tools. It targets fleet operators managing multiple Starlink terminals across sites, ships, or vehicles.\n\n11 tools cover terminal inventory, telemetry, service lines, data usage, addresses, and service availability checks.\n\n### Who this is for\n\nThis plugin requires a **Starlink Enterprise account** with OAuth2 API credentials. It does not work with residential or consumer Starlink plans.\n\nIf you have a residential dish, use [Starlink Dish](https://sidereal.cc/marketplace/starlink-blade-mcp) instead — it talks directly to your dish hardware over the local network without any cloud credentials.\n\n### Community plugin\n\nThis is a community-contributed plugin wrapping [ry-ops/starlink-enterprise-mcp-server](https://github.com/ry-ops/starlink-enterprise-mcp-server). It is not maintained by Sidereal or SpaceX.",
   "install": {
     "runtime": "uv",
     "package": "starlink-enterprise-mcp-server"
