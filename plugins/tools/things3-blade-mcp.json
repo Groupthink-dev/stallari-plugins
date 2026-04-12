@@ -1,20 +1,20 @@
 {
-  "name": "things-3-mcp",
+  "name": "things3-blade-mcp",
   "title": "Things 3",
   "description": "Things 3 task management via AppleScript and URL scheme — macOS only",
   "tagline": "GTD task management through Things 3 on macOS",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
-  "icon": "/icons/things-3-mcp.svg",
+  "icon": "/icons/things3-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
   "contract": "tasks-v1",
-  "repository": "https://github.com/groupthink-dev/things-3-mcp",
+  "repository": "https://github.com/groupthink-dev/things3-blade-mcp",
   "install": {
     "runtime": "uv",
-    "package": "things-3-mcp"
+    "package": "things3-blade-mcp"
   },
   "setup": {
     "auth_model": "none",
@@ -67,7 +67,7 @@
   "links": [
     {
       "label": "Source Code",
-      "url": "https://github.com/groupthink-dev/things-3-mcp"
+      "url": "https://github.com/groupthink-dev/things3-blade-mcp"
     },
     {
       "label": "Things 3 Website",
@@ -86,7 +86,7 @@
   "scenarios": [
     {
       "type": "workflow",
-      "target": "things-3-mcp",
+      "target": "things3-blade-mcp",
       "target_type": "plugin",
       "shared_services": [],
       "label": "Morning task triage",
@@ -94,7 +94,7 @@
     },
     {
       "type": "workflow",
-      "target": "things-3-mcp",
+      "target": "things3-blade-mcp",
       "target_type": "plugin",
       "shared_services": [],
       "label": "Create a structured project from requirements",
@@ -102,7 +102,7 @@
     },
     {
       "type": "workflow",
-      "target": "things-3-mcp",
+      "target": "things3-blade-mcp",
       "target_type": "plugin",
       "shared_services": [],
       "label": "Weekly review of someday items",

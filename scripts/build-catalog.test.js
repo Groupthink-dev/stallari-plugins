@@ -284,12 +284,12 @@ describe("pluginToCatalogEntry", () => {
 
   it("extracts auth_model none from minimal setup block (DD106)", () => {
     const raw = {
-      name: "things-3-mcp",
+      name: "things3-blade-mcp",
       version: "0.1.0",
       description: "Things 3",
       author: "test",
       tier: "certified",
-      install: { runtime: "uv", package: "things-3-mcp" },
+      install: { runtime: "uv", package: "things3-blade-mcp" },
       licence: "MIT",
       contract: "tasks-v1",
       setup: { auth_model: "none" },

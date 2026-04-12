@@ -31,7 +31,7 @@ Plugins implement versioned **service contracts** — abstract interfaces that l
 |----------|------------|-----------------|
 | `email-v1` | 13 | fastmail-blade-mcp, gmail-blade-mcp |
 | `calendar-v1` | 8 | caldav-blade-mcp, google-calendar-mcp |
-| `tasks-v1` | 11 | things-3-mcp, todoist-blade-mcp |
+| `tasks-v1` | 11 | things3-blade-mcp, todoist-blade-mcp |
 | `vault-v1` | 25 | sidereal-blade-mcp |
 | `billing-v1` | 28 | paddle-billing-blade-mcp |
 | `accounting-v1` | 39 | xero-blade-mcp |

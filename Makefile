@@ -32,7 +32,7 @@ validate-all: validate validate-packs
 # Validate manifests in sibling repos (sidereal-plugin.yaml files).
 validate-manifests:
 	@echo "Validating repo manifests..."
-	@for repo in ../fastmail-blade-mcp ../things-3-mcp ../caldav-blade-mcp; do \
+	@for repo in ../fastmail-blade-mcp ../things3-blade-mcp ../caldav-blade-mcp; do \
 		manifest="$$repo/sidereal-plugin.yaml"; \
 		if [ -f "$$manifest" ]; then \
 			echo "  $$manifest"; \
