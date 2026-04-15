@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/sidereal-plugin.schema.json",
+  "$id": "https://stallari.app/schemas/sidereal-plugin.schema.json",
   "title": "Sidereal Plugin Manifest",
   "description": "Schema for sidereal-plugin.yaml — the manifest format for Sidereal platform plugins.",
   "type": "object",

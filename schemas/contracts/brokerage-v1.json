@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/brokerage-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/brokerage-v1.json",
   "title": "brokerage-v1",
   "description": "Brokerage service contract v1 — 21 operations across portfolio, market data, orders, scanners, and system management. Designed for securities brokerages (stocks, options, futures, forex). Gateway-authenticated with triple order safety (env gate + confirm gate + order preview).",
   "type": "object",

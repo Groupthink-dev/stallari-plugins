@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/messages-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/messages-v1.json",
   "title": "messages-v1",
   "description": "Messaging platform contract v1 — 18 operations across conversations, messages, contacts, threads, reactions, and delivery.",
   "type": "object",

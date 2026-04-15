@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/drive-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/drive-v1.json",
   "title": "drive-v1",
   "description": "Cloud drive service contract v1 — 8 operations across read, search, and write.",
   "type": "object",

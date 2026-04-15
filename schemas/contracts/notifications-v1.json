@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/notifications-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/notifications-v1.json",
   "title": "notifications-v1",
   "description": "Notifications service contract v1 — 13 operations across list, channel, delivery, and preferences.",
   "type": "object",

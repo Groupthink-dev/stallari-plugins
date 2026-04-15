@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/billing-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/billing-v1.json",
   "title": "billing-v1",
   "description": "Billing service contract v1 — 28 operations across products, subscriptions, transactions, and payments.",
   "type": "object",

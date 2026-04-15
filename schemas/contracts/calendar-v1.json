@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/calendar-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/calendar-v1.json",
   "title": "calendar-v1",
   "description": "Calendar service contract v1 — 11 operations across query, convenience views, and write.",
   "type": "object",

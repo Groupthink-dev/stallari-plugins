@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/transactional-email-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/transactional-email-v1.json",
   "title": "transactional-email-v1",
   "description": "Transactional email service contract v1 — 19 operations across sending, contacts, broadcasts, templates, domains, and webhooks.",
   "type": "object",

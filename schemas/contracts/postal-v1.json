@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/postal-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/postal-v1.json",
   "title": "postal-v1",
   "description": "Postal service contract v1 — 21 operations across postage calculation, shipping, tracking, and locations.",
   "type": "object",

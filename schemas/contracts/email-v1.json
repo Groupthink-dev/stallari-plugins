@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/email-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/email-v1.json",
   "title": "email-v1",
   "description": "Email service contract v1 — 13 operations across search, read, manage, and write.",
   "type": "object",

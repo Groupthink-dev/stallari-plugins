@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/overlay-network-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/overlay-network-v1.json",
   "title": "overlay-network-v1",
   "description": "Overlay network service contract v1 — 14 operations across device inventory, access control, DNS configuration, key management, and audit logging for Tailscale, ZeroTier, Nebula, and similar overlay networks.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/catalog-entry.schema.json",
+  "$id": "https://stallari.app/schemas/catalog-entry.schema.json",
   "title": "Sidereal Catalog Entry",
   "description": "Schema for entries in the registry catalog (plugins/*.json). Supports both plugin and pack types via discriminated union on the 'type' field.",
   "type": "object",

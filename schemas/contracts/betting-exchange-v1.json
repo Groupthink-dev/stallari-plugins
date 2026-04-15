@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/betting-exchange-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/betting-exchange-v1.json",
   "title": "betting-exchange-v1",
   "description": "Betting exchange service contract v1 — 22 operations across discovery, pricing, account, orders, and system management. Designed for two-sided exchange markets (back/lay). Operation names chosen for future alignment with securities-exchange-v1.",
   "type": "object",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/edge-platform-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/edge-platform-v1.json",
   "title": "edge-platform-v1",
   "description": "Edge platform service contract v1 — 31 operations across DNS management, Workers KV storage, D1 databases, and Cloudflare Tunnels.",
   "type": "object",

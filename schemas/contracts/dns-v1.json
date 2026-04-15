@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/dns-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/dns-v1.json",
   "title": "dns-v1",
   "description": "DNS filtering and privacy service contract v1 — 22 operations for profile-based DNS policy management, content filtering, service routing, custom rules, and device endpoint management. Designed for Control-D, NextDNS, AdGuard, and similar DNS filtering services.",
   "type": "object",

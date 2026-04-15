@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/tasks-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/tasks-v1.json",
   "title": "tasks-v1",
   "description": "Tasks service contract v1 — 11 operations across list, search, manage, and write.",
   "type": "object",

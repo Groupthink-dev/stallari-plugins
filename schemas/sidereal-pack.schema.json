@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/sidereal-pack.schema.json",
+  "$id": "https://stallari.app/schemas/sidereal-pack.schema.json",
   "title": "Sidereal Pack Manifest",
   "description": "Schema for pack manifests (sidereal-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6 (DD92, DD99, DD104, DD113, DD119, DD126).",
   "type": "object",

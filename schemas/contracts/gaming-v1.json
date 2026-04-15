@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/gaming-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/gaming-v1.json",
   "title": "gaming-v1",
   "description": "Gaming platform service contract v1 — 17 operations across profile, achievements, games, social, and messaging.",
   "type": "object",

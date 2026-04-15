@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/social-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/social-v1.json",
   "title": "social-v1",
   "description": "Social platform contract v1 — 20 operations across timelines, statuses, accounts, and interactions.",
   "type": "object",

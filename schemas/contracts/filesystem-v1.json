@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/filesystem-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/filesystem-v1.json",
   "title": "filesystem-v1",
   "description": "Filesystem service contract v1 — 7 operations across read, monitor, and write.",
   "type": "object",

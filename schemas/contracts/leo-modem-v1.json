@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/leo-modem-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/leo-modem-v1.json",
   "title": "leo-modem-v1",
   "description": "LEO satellite modem/terminal service contract v1 — 9 operations across telemetry, signal quality, and hardware control for Starlink, OneWeb, Kuiper, and similar LEO terminals.",
   "type": "object",

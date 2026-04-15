@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/isp-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/isp-v1.json",
   "title": "isp-v1",
   "description": "ISP account service contract v1 — 10 operations across broadband monitoring, outage tracking, billing, and line diagnostics for residential and business ISP accounts.",
   "type": "object",

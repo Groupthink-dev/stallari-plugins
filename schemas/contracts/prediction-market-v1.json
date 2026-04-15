@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/prediction-market-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/prediction-market-v1.json",
   "title": "prediction-market-v1",
   "description": "Prediction market service contract v1 — 20 operations across discovery, pricing, portfolio, trading, and system management. Designed for binary-outcome and multi-outcome prediction markets (Polymarket, Kalshi, Metaculus, Manifold).",
   "type": "object",

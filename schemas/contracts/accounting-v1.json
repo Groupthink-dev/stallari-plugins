@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://sidereal.dev/schemas/contracts/accounting-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/accounting-v1.json",
   "title": "accounting-v1",
   "description": "Accounting service contract v1 — 55 operations across contacts, invoices, bills, payments, reports, and payroll.",
   "type": "object",
