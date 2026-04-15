@@ -31,3 +31,11 @@ jobs:
 
       - name: Build catalog (dry run)
         run: node scripts/build-catalog.js
+
+      - name: Trigger registry deploy
+        if: github.ref == 'refs/heads/main'
+        run: |
+          gh api repos/Groupthink-dev/stallari-registry-infra/dispatches \
+            -f event_type=catalog-updated
+        env:
+          GH_TOKEN: ${{ secrets.REGISTRY_DISPATCH_PAT }}
