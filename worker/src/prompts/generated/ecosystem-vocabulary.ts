@@ -18,9 +18,9 @@ These are the built-in operator agents. Packs assign skills to agents. When a us
 
 Reference these when the user's needs overlap. Suggest forking an open pack rather than building from scratch. Mention sealed/paid packs as alternatives when relevant.
 
-**Bundled (included with Sidereal):**
+**Bundled (included with Stallari):**
 - **cloudflare-edge-platform** v2.0.0 [edge-platform, notifications, vault]: Turnkey edge networking and compute for Sidereal — expose services via Cloudflare Tunnels, manage D… (14 skills, 1 agents, free)
-- **sidereal-core** v3.3.0 [calendar, email, tasks, vault]: Core platform operators and infrastructure health — PKM, comms, scheduling, security auditing, flee… (24 skills, 6 agents, free)
+- **stallari-core** v3.3.0 [calendar, email, tasks, vault]: Core platform operators and infrastructure health — PKM, comms, scheduling, security auditing, flee… (24 skills, 6 agents, free)
 
 **Open (forkable):**
 - **daily-productivity** v2.1.0 [calendar, email, tasks, vault]: Daily and weekly productivity automation — morning digest, email triage, inbox processing, flagged … (7 skills, 3 agents, free)
@@ -30,11 +30,11 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 - **network-observatory** v1.0.0 [dns, isp, leo-modem, network, notifications, overlay-network]: Cross-layer network monitoring and diagnosis — ISP accounts, DNS filtering, local infrastructure, o… (5 skills, 1 agents, free)
 - **product-operations-starter** v1.1.0 [billing, transactional-email, vault]: Starter pack for running product operations with Sidereal — release announcements, customer onboard… (4 skills, 2 agents, free)
 - **saas-revenue-ops** v1.0.0 [billing, ecommerce, notifications, transactional-email]: End-to-end SaaS and e-commerce revenue operations — subscription billing, storefront orders, and tr… (5 skills, 1 agents, free)
-- **sidereal-hearth** v1.1.0 [home, vault]: Smart home intelligence for Sidereal — site status monitoring, device inventory tracking, and scene… (3 skills, 1 agents, free)
 - **speculator** v1.0.0 [betting-exchange, brokerage, notifications, prediction-market]: Cross-market speculation and analysis — Betfair exchange odds, Polymarket prediction prices, and In… (5 skills, 1 agents, free)
+- **stallari-hearth** v1.1.0 [home, vault]: Smart home intelligence for Stallari — site status monitoring, device inventory tracking, and scene… (3 skills, 1 agents, free)
 - **vault-gardener** v1.1.0 [vault]: Finds orphaned notes, broken links, and stale content in your vault. (3 skills, 1 agents, free)
 `;
 
 export const AGENT_NAMES = ["digital-assistant", "pkm-operator", "comms-operator", "scheduling-operator", "secops-operator", "fleet-operator", "home-operator", "bizops-operator"] as const;
 
-export const PACK_NAMES = ["cloudflare-edge-platform", "daily-productivity", "gaming-lounge", "home-maintenance", "morning-triage", "network-observatory", "product-operations-starter", "saas-revenue-ops", "sidereal-core", "sidereal-hearth", "speculator", "vault-gardener"] as const;
+export const PACK_NAMES = ["cloudflare-edge-platform", "daily-productivity", "gaming-lounge", "home-maintenance", "morning-triage", "network-observatory", "product-operations-starter", "saas-revenue-ops", "speculator", "stallari-core", "stallari-hearth", "vault-gardener"] as const;

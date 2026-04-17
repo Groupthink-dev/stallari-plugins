@@ -51,7 +51,7 @@ Every plugin is classified into a trust tier:
 
 ## Pack Spec
 
-Packs follow the [Pack Spec](schemas/sidereal-pack.schema.json) (v1.0–v1.4). A pack declares agents, skills, workflows, service dependencies, data access, and user-configurable inputs.
+Packs follow the [Pack Spec](schemas/stallari-pack.schema.json) (v1.0–v1.4). A pack declares agents, skills, workflows, service dependencies, data access, and user-configurable inputs.
 
 ```yaml
 pack: "1.1"
@@ -122,7 +122,7 @@ Packs can be **open** (source visible, forkable) or **sealed** (encrypted payloa
 
 ### Adding a pack
 
-1. Create a YAML manifest in `plugins/packs/` following the [Pack Spec schema](schemas/sidereal-pack.schema.json).
+1. Create a YAML manifest in `plugins/packs/` following the [Pack Spec schema](schemas/stallari-pack.schema.json).
 2. Validate locally: `make validate-packs`
 3. Open a pull request.
 
@@ -150,7 +150,7 @@ All external submissions enter at `tier: "community"`. Promotion path:
 
 ### Sidecar manifest
 
-If you'd like your plugin to participate in service routing (so packs can reference abstract operations like `{{email.search}}` and have them resolve to your tool), add a `sidereal-plugin.yaml` to your repo root with a `services` block:
+If you'd like your plugin to participate in service routing (so packs can reference abstract operations like `{{email.search}}` and have them resolve to your tool), add a `stallari-plugin.yaml` to your repo root with a `services` block:
 
 ```yaml
 services:
@@ -160,7 +160,7 @@ services:
     # maps contract operations → your MCP tool names
 ```
 
-See the [plugin schema](schemas/sidereal-plugin.schema.json) for the full spec.
+See the [plugin schema](schemas/stallari-plugin.schema.json) for the full spec.
 
 ## Private Packs
 

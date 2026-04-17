@@ -316,7 +316,7 @@ function buildEcosystemVocabularyTS(agents, packs) {
     lines.push("Reference these when the user's needs overlap. Suggest forking an open pack rather than building from scratch. Mention sealed/paid packs as alternatives when relevant.\n");
 
     if (bundledPacks.length > 0) {
-      lines.push("**Bundled (included with Sidereal):**");
+      lines.push("**Bundled (included with Stallari):**");
       for (const p of bundledPacks) {
         lines.push(formatPackLine(p));
       }

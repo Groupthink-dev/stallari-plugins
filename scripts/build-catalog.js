@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build catalog — transforms plugins/*.json and packs/*.yaml into the
- * CatalogResponse format expected by the Sidereal app's RegistryClient.
+ * CatalogResponse format expected by the Stallari app's RegistryClient.
  *
  * Reads:  plugins/tools/*.json, plugins/packs/*.yaml
  * Writes: dist/catalog.json, dist/services.json, dist/packs/<slug>/<version>/manifest.json
@@ -94,7 +94,7 @@ function pluginToCatalogEntry(raw) {
     description: raw.description || null,
     author: { name: raw.author },
     services,
-    min_sidereal: null,
+    min_stallari: null,
     installs: null,
     likes: null,
     compatibility: null,
@@ -171,7 +171,7 @@ function packToCatalogEntry(pack) {
     description: pack.description || null,
     author: pack.author || null,
     services,
-    min_sidereal: pack.min_sidereal || null,
+    min_stallari: pack.min_stallari || null,
     installs: null,
     likes: null,
     compatibility: null,

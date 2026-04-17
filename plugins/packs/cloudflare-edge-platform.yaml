@@ -12,7 +12,7 @@ description: >-
 icon: /icons/cloudflare-edge-platform.svg
 author:
   name: Sidereal
-  url: https://sidereal.cc
+  url: https://stallari.ai
 licence: Proprietary
 visibility: open
 tier: certified
@@ -107,7 +107,7 @@ links:
   - label: Pages documentation
     url: https://developers.cloudflare.com/pages/
 
-min_sidereal: "0.57"
+min_stallari: "0.57"
 
 requires:
   services:
@@ -535,7 +535,7 @@ skills:
            e. Get cron schedules via {{edge-platform.workers_get_schedules}} —
               flag scripts with no schedules that are cron-driven by convention.
         3. Cross-reference with vault infrastructure records and known Workers
-           (e.g. sidereal-registry, sidereal-events-infra). Flag undocumented
+           (e.g. stallari-registry, stallari-events-infra). Flag undocumented
            scripts.
 
       Classify each Worker as:
@@ -579,7 +579,7 @@ skills:
            c. List custom domains via {{edge-platform.pages_list_domains}} —
               verify all domains are active and SSL is valid.
         3. Cross-reference with vault records and known Pages sites
-           (e.g. marketplace.sidereal.cc, sidereal.cc). Flag undocumented projects.
+           (e.g. marketplace.stallari.app, stallari.ai). Flag undocumented projects.
 
       Classify each project as:
         - healthy: recent successful deployment, domains active
@@ -615,7 +615,7 @@ skills:
         1. List all buckets via {{edge-platform.r2_list_buckets}}.
         2. For each bucket, get details via {{edge-platform.r2_get_bucket}} —
            note location, storage class, and creation date.
-        3. Cross-reference with known R2 usage (e.g. sidereal-registry bucket
+        3. Cross-reference with known R2 usage (e.g. stallari-registry bucket
            for catalog storage). Flag buckets with no known purpose.
         4. Compare against previous inventory if available.
 
@@ -751,7 +751,7 @@ skills:
       - key: zone
         type: string
         label: DNS zone
-        description: "Domain to purge cache for (e.g. sidereal.cc)"
+        description: "Domain to purge cache for (e.g. stallari.ai)"
         required: true
       - key: purge_type
         type: choice

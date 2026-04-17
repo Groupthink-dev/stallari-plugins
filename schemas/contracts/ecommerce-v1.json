@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://registry.sidereal.cc/schemas/contracts/ecommerce-v1.json",
+  "$id": "https://registry.stallari.app/schemas/contracts/ecommerce-v1.json",
   "title": "E-Commerce Service Contract v1",
   "description": "Defines required, recommended, optional, and gated operations for e-commerce platform integrations (Shopify, WooCommerce, BigCommerce, etc.)",
   "type": "object",

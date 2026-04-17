@@ -31,7 +31,7 @@ function minimalSealedPack(overrides = {}) {
     version: "1.0.0",
     visibility: "sealed",
     tier: "certified",
-    author: { name: "Sidereal", url: "https://sidereal.cc" },
+    author: { name: "Stallari", url: "https://stallari.ai" },
     pricing: { model: "subscription", amount: 9.99, interval: "month" },
     encryption: { method: "aes-256-gcm", key_delivery: "registry-escrow" },
     readme: "# Sealed Pack\nThis is a detailed readme for the sealed pack.",

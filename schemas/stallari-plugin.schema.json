@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://stallari.app/schemas/sidereal-plugin.schema.json",
-  "title": "Sidereal Plugin Manifest",
-  "description": "Schema for sidereal-plugin.yaml — the manifest format for Sidereal platform plugins.",
+  "$id": "https://stallari.app/schemas/stallari-plugin.schema.json",
+  "title": "Stallari Plugin Manifest",
+  "description": "Schema for stallari-plugin.yaml — the manifest format for Stallari platform plugins. The legacy filename sidereal-plugin.yaml is also accepted during the Sidereal→Stallari rebrand transition; both resolve to this schema.",
   "type": "object",
   "required": ["name", "version", "description", "author", "licence", "install"],
   "additionalProperties": false,
@@ -39,7 +39,7 @@
     "author_type": {
       "type": "string",
       "enum": ["first-party", "community"],
-      "description": "Author provenance. first-party = published and maintained by Sidereal."
+      "description": "Author provenance. first-party = published and maintained by Stallari."
     },
     "readiness": {
       "type": "string",
@@ -220,10 +220,10 @@
       "additionalProperties": false,
       "description": "Dependency requirements.",
       "properties": {
-        "sidereal": {
+        "stallari": {
           "type": "string",
           "pattern": "^[><=!~^]+\\d+\\.\\d+\\.\\d+",
-          "description": "Minimum Sidereal version (e.g. >=0.3.0)."
+          "description": "Minimum Stallari version (e.g. >=0.3.0)."
         }
       }
     },

@@ -100,7 +100,7 @@ links:
   - label: Overlay contract (overlay-network-v1)
     url: https://stallari.dev/schemas/contracts/overlay-network-v1
 
-min_sidereal: "0.60"
+min_stallari: "0.60"
 
 # ── Plugin suggestions ──────────────────────────────────────────────
 # Maps abstract services to concrete MCP plugins available in the

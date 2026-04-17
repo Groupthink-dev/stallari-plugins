@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://stallari.app/schemas/sidereal-pack.schema.json",
-  "title": "Sidereal Pack Manifest",
-  "description": "Schema for pack manifests (sidereal-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6 (DD92, DD99, DD104, DD113, DD119, DD126).",
+  "$id": "https://stallari.app/schemas/stallari-pack.schema.json",
+  "title": "Stallari Pack Manifest",
+  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6 (DD92, DD99, DD104, DD113, DD119, DD126).",
   "type": "object",
   "required": ["pack", "name", "description", "data", "skills"],
   "additionalProperties": true,
@@ -28,7 +28,7 @@
     },
     "icon": {
       "type": "string",
-      "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/sidereal-core.svg')."
+      "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/stallari-core.svg')."
     },
     "author": {
       "type": "object",
@@ -50,10 +50,10 @@
       "type": "string",
       "description": "SPDX licence identifier (e.g. MIT, Apache-2.0)."
     },
-    "min_sidereal": {
+    "min_stallari": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+$",
-      "description": "Minimum Sidereal version (e.g. \"0.29\"). Major.minor only."
+      "description": "Minimum Stallari version (e.g. \"0.29\"). Major.minor only."
     },
     "requires": {
       "$ref": "#/$defs/requirements",
@@ -135,7 +135,7 @@
     "author_type": {
       "type": "string",
       "enum": ["first-party", "community"],
-      "description": "Author provenance. first-party = published and maintained by Sidereal."
+      "description": "Author provenance. first-party = published and maintained by Stallari."
     },
     "readiness": {
       "type": "string",

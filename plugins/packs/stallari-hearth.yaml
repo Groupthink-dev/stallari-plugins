@@ -1,17 +1,18 @@
 pack: "1.6"
-name: sidereal-hearth
-title: "Sidereal Hearth"
+name: stallari-hearth
+aliases: [sidereal-hearth]
+title: "Stallari Hearth"
 featured: false
 version: "1.1.0"
 description: >-
-  Smart home intelligence for Sidereal — site status monitoring, device
+  Smart home intelligence for Stallari — site status monitoring, device
   inventory tracking, and scene management across your connected home.
   Supports Home Assistant with Google Home in testing preview.
   The foundation for home automation intelligence.
-icon: /icons/sidereal-hearth.svg
+icon: /icons/stallari-hearth.svg
 author:
-  name: Sidereal
-  url: https://sidereal.cc
+  name: Stallari
+  url: https://stallari.ai
 licence: MIT
 visibility: open
 tier: certified
@@ -21,15 +22,15 @@ tagline: "Smart home intelligence — site health, device inventory, and scene c
 readme:
   format: markdown
   body: |
-    # Sidereal Hearth Pack
+    # Stallari Hearth Pack
 
-    Smart home intelligence for Sidereal — monitor site health, track
+    Smart home intelligence for Stallari — monitor site health, track
     device inventories, and manage scenes across your connected home.
     Built for Home Assistant with Google Home support in testing preview.
 
     ## What it does
 
-    Hearth connects your Home Assistant instances to your Sidereal vault,
+    Hearth connects your Home Assistant instances to your Stallari vault,
     providing three core skills:
 
     ### Site status
@@ -84,12 +85,12 @@ highlights:
 links:
   - label: Home Assistant
     url: https://www.home-assistant.io
-  - label: Sidereal Documentation
-    url: https://sidereal.cc/docs
+  - label: Stallari Documentation
+    url: https://stallari.ai/docs
   - label: Source Code
-    url: https://github.com/groupthink-dev/sidereal-plugins
+    url: https://github.com/groupthink-dev/stallari-plugins
 
-min_sidereal: "0.40"
+min_stallari: "0.40"
 
 requires:
   services:
@@ -114,7 +115,7 @@ agents:
     role: operator
     prompt: |
       You are a home operations operator managing Home Assistant integrations
-      for Sidereal. You monitor site health, track device inventories, and
+      for Stallari. You monitor site health, track device inventories, and
       manage scenes across multiple HA instances. Follow the property domain
       brief for site disambiguation — each site has a slug, HA instance name,
       and vault path. Write structured registry notes to atlas/registers/home/.

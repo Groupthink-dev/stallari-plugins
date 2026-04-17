@@ -2,7 +2,7 @@
 
 # Optional: path to sealed pack YAMLs (private repo).
 # Set PRIVATE_PACKS_DIR to include sealed packs in the build.
-# Example: PRIVATE_PACKS_DIR=../sidereal-packs-private/packs make build-api
+# Example: PRIVATE_PACKS_DIR=../stallari-packs-private/packs make build-api
 PRIVATE_PACKS_DIR ?=
 
 # Validate all plugin manifests against the schema.
@@ -11,7 +11,7 @@ validate:
 	@echo "Validating tool entries..."
 	@for f in plugins/tools/*.json; do \
 		echo "  $$f"; \
-		check-jsonschema --schemafile schemas/sidereal-plugin.schema.json "$$f" 2>/dev/null || true; \
+		check-jsonschema --schemafile schemas/stallari-plugin.schema.json "$$f" 2>/dev/null || true; \
 	done
 	@echo "Done."
 
@@ -29,14 +29,19 @@ validate-packs: generate
 # Validate everything.
 validate-all: validate validate-packs
 
-# Validate manifests in sibling repos (sidereal-plugin.yaml files).
+# Validate manifests in sibling repos.
+# Canonical filename: stallari-plugin.yaml
+# Legacy filename (accepted during Sidereal→Stallari rebrand): sidereal-plugin.yaml
 validate-manifests:
 	@echo "Validating repo manifests..."
-	@for repo in ../fastmail-blade-mcp ../things3-blade-mcp ../caldav-blade-mcp; do \
-		manifest="$$repo/sidereal-plugin.yaml"; \
-		if [ -f "$$manifest" ]; then \
-			echo "  $$manifest"; \
-		fi; \
+	@for repo in ../cloudflare-blade-mcp ../syncthing-blade-mcp ../tailscale-blade-mcp \
+	             ../fastmail-blade-mcp ../things3-blade-mcp ../caldav-blade-mcp; do \
+		for name in stallari-plugin.yaml sidereal-plugin.yaml; do \
+			manifest="$$repo/$$name"; \
+			if [ -f "$$manifest" ]; then \
+				echo "  $$manifest"; \
+			fi; \
+		done; \
 	done
 	@echo "Done. (YAML validation requires yq + check-jsonschema pipeline)"
 

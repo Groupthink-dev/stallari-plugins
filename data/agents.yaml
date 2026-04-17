@@ -1,6 +1,6 @@
 # Forge ecosystem vocabulary — agent/operator roster
-# Source: sidereal-ops/.agents/config.yaml
-# Updated by: sync-forge-vocabulary skill (sidereal-sysadmin pack)
+# Source: stallari-ops/.agents/config.yaml
+# Updated by: sync-forge-vocabulary skill (stallari-sysadmin pack)
 # Last synced: 2026-04-04
 #
 # Keep this compact — it's rendered into LLM system prompts where tokens matter.

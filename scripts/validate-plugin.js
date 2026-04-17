@@ -125,7 +125,7 @@ async function enumerateTools(manifest) {
     params: {
       protocolVersion: "2024-11-05",
       capabilities: {},
-      clientInfo: { name: "sidereal-validator", version: "1.0.0" },
+      clientInfo: { name: "stallari-validator", version: "1.0.0" },
     },
   });
 

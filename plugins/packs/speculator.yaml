@@ -95,7 +95,7 @@ links:
   - label: Brokerage contract
     url: https://stallari.dev/schemas/contracts/brokerage-v1
 
-min_sidereal: "0.60"
+min_stallari: "0.60"
 
 # ── Plugin suggestions ──────────────────────────────────────────────
 

@@ -80,13 +80,13 @@ highlights:
 
 links:
   - label: Source Code
-    url: https://github.com/groupthink-dev/sidereal-plugins
+    url: https://github.com/groupthink-dev/stallari-plugins
   - label: Sidereal Documentation
-    url: https://sidereal.cc/docs
+    url: https://stallari.ai/docs
   - label: Obsidian
     url: https://obsidian.md
 
-min_sidereal: "0.29"
+min_stallari: "0.29"
 
 requires:
   services:

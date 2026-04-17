@@ -1,19 +1,20 @@
 {
-  "name": "sidereal-blade-mcp",
-  "title": "Sidereal Vault",
+  "name": "stallari-blade-mcp",
+  "aliases": ["sidereal-blade-mcp"],
+  "title": "Stallari Vault",
   "description": "Obsidian vault operations via Swift MCP — read, write, search, properties, graph analysis, lens semantic tools",
   "version": "0.5.0",
   "author": "groupthink-dev",
   "licence": "MIT",
-  "icon": "/icons/sidereal-blade-mcp.svg",
+  "icon": "/icons/stallari-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
   "contract": "vault-v1",
-  "repository": "https://github.com/groupthink-dev/sidereal-vault",
+  "repository": "https://github.com/groupthink-dev/stallari-vault",
   "install": {
     "runtime": "native",
-    "binary": "sidereal-blade"
+    "binary": "stallari-blade"
   },
   "env": [],
   "setup": {
@@ -21,7 +22,7 @@
     "complexity": "trivial",
     "icon": "doc.text.magnifyingglass",
     "product": "Obsidian Vault",
-    "help_text": "No credentials required. Sidereal Blade connects directly to your local Obsidian vault via the filesystem. Ensure the vault path is configured in Sidereal settings."
+    "help_text": "No credentials required. Stallari Blade connects directly to your local Obsidian vault via the filesystem. Ensure the vault path is configured in Stallari settings."
   },
   "conformance": {
     "required": "8/8",
@@ -29,6 +30,6 @@
     "optional": "7/7",
     "last_tested": "2026-03-25"
   },
-  "notes": "Vault tools from sidereal-blade (29 tools) + lens tools from sidereal-lens (11 tools). Both map to the vault service via the vault-v1 contract.",
+  "notes": "Vault tools from stallari-blade (29 tools) + lens tools from stallari-lens (11 tools). Both map to the vault service via the vault-v1 contract.",
   "hidden": true
 }

@@ -3,8 +3,8 @@ kind: shim
 project: stallari-plugins
 shim_version: 1.0.0
 deployed_to:
-  - "~/src/stallari-plugins/CLAUDE.md (Claude Code — Nix-deployed via shimDeployments)"
-canonical: "[[atlas/utilities/agent-harness/boot/sidereal-plugins.CLAUDE]]"
+  - "~/src/stallari-plugins/CLAUDE.md (Claude Code)"
+canonical: "[[atlas/utilities/agent-harness/boot/stallari-plugins.CLAUDE]]"
 last_updated: 2026-04-07T12:37:03+10:00
 publish: false
 llm_generated: true

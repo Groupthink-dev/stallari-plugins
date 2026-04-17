@@ -20,7 +20,7 @@ describe("slugify", () => {
   });
 
   it("leaves already-kebab names unchanged", () => {
-    assert.equal(slugify("sidereal-sysadmin"), "sidereal-sysadmin");
+    assert.equal(slugify("stallari-sysadmin"), "stallari-sysadmin");
   });
 
   it("handles multiple spaces and special characters", () => {
@@ -204,7 +204,7 @@ describe("pluginToCatalogEntry", () => {
     assert.equal(entry.repository, "https://github.com/example/fastmail-blade-mcp");
     assert.equal(entry.licence, "MIT");
     assert.equal(entry.visibility, "open");
-    assert.equal(entry.min_sidereal, null);
+    assert.equal(entry.min_stallari, null);
     assert.equal(entry.installs, null);
     assert.equal(entry.conformance, null);
     assert.equal(entry.inference, null);

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stallari.app/schemas/catalog-entry.schema.json",
-  "title": "Sidereal Catalog Entry",
+  "title": "Stallari Catalog Entry",
   "description": "Schema for entries in the registry catalog (plugins/*.json). Supports both plugin and pack types via discriminated union on the 'type' field.",
   "type": "object",
   "required": ["name", "type", "description", "version", "author", "tier"],
@@ -76,9 +76,9 @@
       "items": { "type": "string" },
       "description": "Abstract service names this entry provides or uses."
     },
-    "min_sidereal": {
+    "min_stallari": {
       "type": "string",
-      "description": "Minimum Sidereal version."
+      "description": "Minimum Stallari version."
     },
     "pack_spec": {
       "type": "string",

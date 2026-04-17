@@ -1,19 +1,20 @@
 {
-  "name": "sidereal-email-adapter",
+  "name": "stallari-email-adapter",
+  "aliases": ["sidereal-email-adapter"],
   "title": "Email Adapter",
   "description": "Domain adapter for email — canonical email_* tools with per-provider transforms (Fastmail, Gmail)",
   "version": "0.1.0",
   "author": "groupthink-dev",
   "licence": "MIT",
-  "icon": "/icons/sidereal-email-adapter.svg",
+  "icon": "/icons/stallari-email-adapter.svg",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
   "contract": "email-v1",
-  "repository": "https://github.com/groupthink-dev/sidereal-email-adapter",
+  "repository": "https://github.com/groupthink-dev/stallari-email-adapter",
   "install": {
     "runtime": "uv",
-    "package": "sidereal-email-adapter"
+    "package": "stallari-email-adapter"
   },
   "setup": {
     "auth_model": "none"

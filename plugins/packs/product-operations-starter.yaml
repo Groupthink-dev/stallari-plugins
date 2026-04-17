@@ -88,13 +88,13 @@ highlights:
 
 links:
   - label: Source Code
-    url: https://github.com/groupthink-dev/sidereal-plugins
+    url: https://github.com/groupthink-dev/stallari-plugins
   - label: Sidereal Documentation
-    url: https://sidereal.cc/docs
+    url: https://stallari.ai/docs
   - label: Pack Spec
-    url: https://sidereal.cc/docs/pack-spec
+    url: https://stallari.ai/docs/pack-spec
 
-min_sidereal: "0.47"
+min_stallari: "0.47"
 
 requires:
   services:

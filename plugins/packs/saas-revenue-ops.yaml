@@ -93,7 +93,7 @@ links:
   - label: Transactional email contract (transactional-email-v1)
     url: https://stallari.dev/schemas/contracts/transactional-email-v1
 
-min_sidereal: "0.60"
+min_stallari: "0.60"
 
 # ── Plugin suggestions ──────────────────────────────────────────────
 

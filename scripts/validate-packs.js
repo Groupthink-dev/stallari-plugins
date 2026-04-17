@@ -24,7 +24,7 @@ const VALID_TIERS = ["certified", "verified", "community"];
 const VALID_PRICING_MODELS = ["free", "tip", "one-time", "subscription"];
 const VALID_KEY_DELIVERY = ["paddle", "registry-escrow", "direct"];
 const SEALED_ALLOWED_TIERS = ["certified", "verified"];
-const FIRST_PARTY_AUTHOR_URLS = ["https://sidereal.cc"];
+const FIRST_PARTY_AUTHOR_URLS = ["https://stallari.ai", "https://sidereal.cc"];
 const VALID_SKILL_CATEGORIES = ["ingest", "triage", "digest", "transform", "notify", "review", "sync", "report"];
 
 function validatePack(parsed) {
@@ -60,10 +60,10 @@ function validatePack(parsed) {
     }
   }
 
-  // min_sidereal
-  if (parsed.min_sidereal !== undefined) {
-    if (!/^\d+\.\d+$/.test(String(parsed.min_sidereal))) {
-      errors.push(`Invalid min_sidereal format: "${parsed.min_sidereal}" (expected "X.Y")`);
+  // min_stallari
+  if (parsed.min_stallari !== undefined) {
+    if (!/^\d+\.\d+$/.test(String(parsed.min_stallari))) {
+      errors.push(`Invalid min_stallari format: "${parsed.min_stallari}" (expected "X.Y")`);
     }
   }
 
@@ -348,7 +348,7 @@ async function validateDir(dir) {
  *   {dir}/{slug}/{version}/manifest.json + payload.enc + seal-key.hex
  *
  * Structural validation only — cryptographic verification is done by
- * sidereal-registry-infra/scripts/verify-sealed-packs.mjs.
+ * stallari-registry-infra/scripts/verify-sealed-packs.mjs.
  */
 async function validateSealedDir(dir) {
   let slugs;

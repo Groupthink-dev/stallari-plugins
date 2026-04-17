@@ -1,16 +1,17 @@
 pack: "1.6"
-name: sidereal-core
-title: "Sidereal Core"
+name: stallari-core
+aliases: [sidereal-core]
+title: "Stallari Core"
 featured: false
 version: "3.3.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, and the six
-  operator agents that power every Sidereal installation. Bundled with every install.
-icon: /icons/sidereal-core.svg
+  operator agents that power every Stallari installation. Bundled with every install.
+icon: /icons/stallari-core.svg
 author:
-  name: Sidereal
-  url: https://sidereal.cc
+  name: Stallari
+  url: https://stallari.ai
 licence: Proprietary
 visibility: open
 tier: certified
@@ -21,9 +22,9 @@ tagline: "Six operators, 25 skills — the platform foundation bundled with ever
 readme:
   format: markdown
   body: |
-    # Sidereal Core Pack
+    # Stallari Core Pack
 
-    The foundation pack bundled with every Sidereal installation — six
+    The foundation pack bundled with every Stallari installation — six
     operator agents and 25 skills covering PKM, communications, scheduling,
     security, fleet operations, and notification delivery.
 
@@ -88,21 +89,21 @@ highlights:
   - icon: "\U0001F9E9"
     text: "25 skills spanning vault ops, email triage, calendar, secops, fleet health, and delivery"
   - icon: "\U0001F4E6"
-    text: "Bundled — ships with every Sidereal installation, zero configuration needed"
+    text: "Bundled — ships with every Stallari installation, zero configuration needed"
   - icon: "\U0001F6E1\uFE0F"
     text: "Least-privilege — read-only by default, write-gated where mutations exist"
   - icon: "\U0001F50D"
     text: "Observable — dispatch analytics, delivery audits, and platform health probes"
 
 links:
-  - label: Sidereal Documentation
-    url: https://sidereal.cc/docs
+  - label: Stallari Documentation
+    url: https://stallari.ai/docs
   - label: Pack Spec
-    url: https://sidereal.cc/docs/pack-spec
-  - label: Sidereal Website
-    url: https://sidereal.cc
+    url: https://stallari.ai/docs/pack-spec
+  - label: Stallari Website
+    url: https://stallari.ai
 
-min_sidereal: "0.54"
+min_stallari: "0.54"
 
 requires:
   services:
@@ -156,7 +157,7 @@ agents:
   fleet-operator:
     role: operator
     prompt: |
-      You are a fleet operations operator. You monitor Sidereal daemon health,
+      You are a fleet operations operator. You monitor Stallari daemon health,
       MCP server connectivity, version drift across fleet peers, and platform
       infrastructure status. Report findings — never auto-remediate.
 
@@ -580,7 +581,7 @@ skills:
       on_demand: true
     graph: react
     prompt: |
-      Probe Sidereal platform health on the current host. Check daemon status,
+      Probe Stallari platform health on the current host. Check daemon status,
       MCP server connectivity, Lens index health, and tsidp reachability.
       Write findings to a structured registry note at
       atlas/registers/system/platform-health-{hostname}.md.
@@ -597,7 +598,7 @@ skills:
       on_demand: true
     graph: react
     prompt: |
-      Compare Sidereal daemon and MCP plugin versions between the current host
+      Compare Stallari daemon and MCP plugin versions between the current host
       and configured fleet peers. Flag version drift. Write a drift report to
       atlas/registers/system/version-drift-{date}.md.
 
