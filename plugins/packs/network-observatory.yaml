@@ -184,11 +184,11 @@ requires:
         - outages
     - service: dns
       operations:
-        - dns_info
-        - dns_profiles
-        - dns_filters
-        - dns_rules
-        - dns_devices
+        - info
+        - profiles
+        - filters
+        - rules
+        - devices
 
 recommends:
   services:
@@ -199,10 +199,10 @@ recommends:
         - diagnostics_list
     - service: dns
       operations:
-        - dns_services
-        - dns_service_catalog
-        - dns_network
-        - dns_access
+        - services
+        - service_catalog
+        - network
+        - access
     - service: network
       operations:
         - info
@@ -293,7 +293,7 @@ skills:
       - service: isp
         operations: [info, usage, outages]
       - service: dns
-        operations: [dns_info, dns_profiles, dns_devices]
+        operations: [info, profiles, devices]
       - service: network
         operations: [info, devices, clients]
       - service: overlay-network
@@ -324,9 +324,9 @@ skills:
         - Flag: outages, usage above 80%, connection issues
 
       **DNS Filtering**:
-        - Call {{dns.dns_info}} — service health, account status
-        - Call {{dns.dns_profiles}} — profile count and active policies
-        - Call {{dns.dns_devices}} — endpoint count
+        - Call {{dns.info}} — service health, account status
+        - Call {{dns.profiles}} — profile count and active policies
+        - Call {{dns.devices}} — endpoint count
         - Flag: service degradation, unconfigured endpoints
 
       **Local Network** (if configured):
@@ -362,7 +362,7 @@ skills:
       - service: isp
         operations: [info, services]
       - service: dns
-        operations: [dns_profiles, dns_devices]
+        operations: [profiles, devices]
       - service: network
         operations: [devices, clients, wlans]
       - service: overlay-network
@@ -385,8 +385,8 @@ skills:
         - List every service: plan name, speed tier, technology type, address
 
       **DNS Filtering**:
-        - Call {{dns.dns_profiles}} — list all profiles with rule/device counts
-        - Call {{dns.dns_devices}} — list all endpoints with profile assignments
+        - Call {{dns.profiles}} — list all profiles with rule/device counts
+        - Call {{dns.devices}} — list all endpoints with profile assignments
         - Summarise: N profiles, M endpoints, which profiles are active
 
       **Local Network** (if configured):
@@ -425,7 +425,7 @@ skills:
       - service: isp
         operations: [info, usage, outages, diagnostics_list]
       - service: dns
-        operations: [dns_info, dns_profiles, dns_rules, dns_network]
+        operations: [info, profiles, rules, network]
       - service: network
         operations: [info, devices, clients, firewall, traffic_routes]
       - service: overlay-network
@@ -463,10 +463,10 @@ skills:
         - If ISP reports outage or connection down, report and stop.
 
       **Step 3 — DNS**:
-        - {{dns.dns_info}} — is the DNS service responding?
-        - {{dns.dns_profiles}} — which profile is active?
-        - {{dns.dns_rules}} — is a custom rule blocking the target?
-        - {{dns.dns_network}} if available — PoP latency?
+        - {{dns.info}} — is the DNS service responding?
+        - {{dns.profiles}} — which profile is active?
+        - {{dns.rules}} — is a custom rule blocking the target?
+        - {{dns.network}} if available — PoP latency?
         - If DNS is blocking or down, this explains resolution failures.
 
       **Step 4 — Local Network** (if configured):
@@ -497,7 +497,7 @@ skills:
     graph: react-extract
     services_used:
       - service: dns
-        operations: [dns_profiles, dns_filters, dns_rules, dns_services, dns_devices, dns_access]
+        operations: [profiles, filters, rules, services, devices, access]
       - service: network
         operations: [info, devices, clients, firewall, port_forwards, dpi]
       - service: overlay-network
@@ -512,12 +512,12 @@ skills:
       network security, and overlay network posture.
 
       **DNS Filtering Audit**:
-        - {{dns.dns_profiles}} — list all profiles
-        - For each profile: {{dns.dns_filters}} — check filter coverage
-        - {{dns.dns_rules}} — review custom rules for anomalies
-        - {{dns.dns_services}} if available — check service-level blocks
-        - {{dns.dns_devices}} — verify all endpoints have profiles assigned
-        - {{dns.dns_access}} if available — review IP access lists
+        - {{dns.profiles}} — list all profiles
+        - For each profile: {{dns.filters}} — check filter coverage
+        - {{dns.rules}} — review custom rules for anomalies
+        - {{dns.services}} if available — check service-level blocks
+        - {{dns.devices}} — verify all endpoints have profiles assigned
+        - {{dns.access}} if available — review IP access lists
         - Flag: unfiltered profiles, endpoints without profiles, overly
           permissive rules, stale access entries
 
@@ -555,7 +555,7 @@ skills:
       - service: isp
         operations: [info, usage, outages]
       - service: dns
-        operations: [dns_info]
+        operations: [info]
       - service: network
         operations: [info]
       - service: overlay-network
@@ -575,7 +575,7 @@ skills:
 
       Query each configured layer with a single lightweight call:
         - {{isp.info}} + {{isp.usage}} + {{isp.outages}}
-        - {{dns.dns_info}}
+        - {{dns.info}}
         - {{network.info}} (if configured)
         - {{overlay-network.info}} (if configured)
         - {{leo-modem.status}} (if configured)
