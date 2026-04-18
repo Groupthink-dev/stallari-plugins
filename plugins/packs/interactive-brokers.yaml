@@ -1,0 +1,348 @@
+pack: "1.7"
+name: interactive-brokers
+version: "1.0.0"
+description: >-
+  Portfolio analysis and market scanning for Interactive Brokers — read-only
+  brokerage intelligence with pack-local financial guardrails.
+icon: /icons/interactive-brokers.svg
+author:
+  name: piersdd
+  url: https://github.com/piersdd
+licence: MIT
+visibility: open
+author_type: community
+readiness: beta
+pricing: null
+min_stallari: "0.66"
+
+data:
+  reads: [brokerage]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+# ── Guardrails (DD-145 §G) ────────────────────────────────────────────
+#
+# Pack-local guardrails constrain this pack's agent regardless of trust
+# tier. These are enforced by the harness at dispatch time — appended
+# after platform guardrails (from stallari-core), before the agent prompt.
+#
+# Even though this pack is read-only, financial data handling warrants
+# explicit guardrails: no credential leakage into notes, no financial
+# advice framing, and vault scope confinement.
+
+guardrails:
+  version: "1.0.0"
+  min_harness: "0.66.0.0"
+  reviewed: "2026-04-19"
+  rules:
+    - id: fin-001
+      category: data-handling
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-19"
+      rule: >
+        All output must include a disclaimer that this is automated
+        analysis, not financial advice, and that past performance does
+        not predict future results. Never recommend specific trades —
+        present data and analysis, the user makes their own decisions.
+
+    - id: scope-001
+      category: vault
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-19"
+      rule: >
+        Only create vault notes under the configured vault_prefix path
+        (default: spaces/Systems/Areas/Algo trading/). Never write
+        brokerage data, portfolio snapshots, or market scans outside
+        this path.
+
+    - id: scope-002
+      category: exfiltration
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-19"
+      rule: >
+        Never include account numbers, API keys, gateway URLs, or
+        session tokens in vault notes, notification bodies, or summary
+        fields. Use the account alias from config.account_alias
+        instead of raw account identifiers.
+
+# ── Service requirements ──────────────────────────────────────────────
+
+requires:
+  services:
+    - service: brokerage
+      operations:
+        - status
+        - accounts
+        - positions
+        - portfolio_summary
+        - orders
+        - contract_search
+        - quote
+
+recommends:
+  services:
+    - service: brokerage
+      operations:
+        - cash_balances
+        - pnl
+        - contract_detail
+        - historical
+        - order_status
+        - trades
+        - scanner_params
+        - scanner_run
+    - service: vault
+      operations:
+        - read
+        - search
+        - create
+        - append
+    - service: notifications
+      operations: [send]
+
+# ── Plugin suggestions ────────────────────────────────────────────────
+
+suggested_plugins:
+  - service: brokerage
+    required: true
+    note: "Requires IB Client Portal Gateway running locally."
+    plugins:
+      - name: ib-blade-mcp
+        title: "Interactive Brokers"
+        author_type: first-party
+        note: "21 tools. Gateway isolation — IB credentials never touch the MCP."
+
+# ── User configuration ───────────────────────────────────────────────
+
+config:
+  user_inputs:
+    - key: vault_prefix
+      type: string
+      label: Vault path prefix
+      description: "Vault path for portfolio notes, scan results, and reports."
+      default: "spaces/Systems/Areas/Algo trading/"
+      required: false
+    - key: account_alias
+      type: string
+      label: Account alias
+      description: "Human-readable alias for the IB account (used in notes instead of account number)."
+      default: "IB-Primary"
+      required: false
+    - key: scan_markets
+      type: choice
+      label: Market scope
+      description: "Which markets to scan."
+      choices: [asx-only, us-only, asx-and-us]
+      default: asx-and-us
+      required: false
+
+# ── Agent ─────────────────────────────────────────────────────────────
+#
+# DD-146: At community tier this agent is namespaced to
+# interactive-brokers/ib-analyst at compile time. User sees a consent
+# prompt on first dispatch.
+
+agents:
+  ib-analyst:
+    role: operator
+    model_preference:
+      - claude-sonnet-4-6
+    prompt: |
+      You are a brokerage analyst for the Interactive Brokers pack. You
+      have read-only access to an IB Client Portal Gateway — you observe,
+      analyse, and report. You never place orders or modify positions.
+
+      Market scope: {{config.scan_markets}}
+      Account alias: {{config.account_alias}}
+      Vault prefix: {{config.vault_prefix}}
+
+      Capabilities:
+        - Portfolio analysis: positions, NAV, P&L, cash balances, margin
+        - Market data: quotes, historical bars, contract search
+        - Scanners: top gainers, most active, high IV, and custom scans
+        - Order monitoring: open orders, recent fills, execution quality
+
+      Safety rules:
+        - This pack is STRICTLY read-only. You MUST NOT call any gated
+          operations: place_order, confirm_order, modify_order,
+          cancel_order, or order_preview.
+        - If the user asks to place a trade, explain that this pack is
+          analysis-only and suggest they use the IB plugin directly
+          with write mode enabled.
+        - When showing account data, use {{config.account_alias}}
+          instead of raw account numbers.
+        - All analysis is informational — never frame output as
+          financial advice or trade recommendations.
+
+      Output style:
+        - Currency amounts with currency code (e.g. USD 1,234.56)
+        - Percentages to 2 decimal places
+        - Use tables for portfolio and position summaries
+        - Always note which data is real-time vs delayed
+
+# ── Skills ────────────────────────────────────────────────────────────
+
+skills:
+
+  - name: portfolio-snapshot
+    agent: ib-analyst
+    description: Portfolio overview — NAV, positions, P&L, cash, and margin utilisation
+    category: report
+    graph: react-extract
+    services_used:
+      - service: brokerage
+        operations: [portfolio_summary, positions, cash_balances, pnl]
+    trigger:
+      on_demand: true
+    outputs:
+      - type: report
+        description: "Portfolio snapshot with positions and P&L"
+      - type: vault_note
+        description: "Portfolio snapshot saved to vault"
+    prompt: |
+      Generate a portfolio snapshot for account {{config.account_alias}}.
+
+      1. Call {{brokerage.portfolio_summary}} for NAV, cash, unrealised
+         P&L, buying power, and margin utilisation.
+      2. Call {{brokerage.positions}} for open positions with P&L,
+         market value, cost basis, and daily change.
+      3. Call {{brokerage.cash_balances}} for cash by currency.
+      4. Call {{brokerage.pnl}} for daily and unrealised P&L breakdown.
+
+      Present as:
+
+      **Portfolio — {{config.account_alias}}**
+
+      | Metric | Value |
+      |--------|-------|
+      | NAV | USD X |
+      | Cash | USD X |
+      | Unrealised P&L | +/- USD X |
+      | Margin used | X% |
+      | Buying power | USD X |
+
+      **Positions** (sorted by market value descending):
+
+      | Symbol | Qty | Avg Cost | Last | Mkt Value | P&L | % Change |
+      |--------|-----|----------|------|-----------|-----|----------|
+
+      Group by asset class (equity, options, futures, forex) if mixed.
+
+      If vault service is available, save to
+      {{config.vault_prefix}}snapshots/YYYY-MM-DD.md with frontmatter:
+        kind: report
+        report_type: portfolio-snapshot
+        account: {{config.account_alias}}
+        llm_generated: true
+
+  - name: market-scan
+    agent: ib-analyst
+    description: Run a market scanner — top gainers, most active, high IV, or custom scan
+    category: report
+    graph: react
+    services_used:
+      - service: brokerage
+        operations: [scanner_params, scanner_run, quote, contract_search]
+    inputs:
+      - key: scan_type
+        type: choice
+        label: Scanner type
+        description: "Which market scanner to run"
+        choices: [top-gainers, top-losers, most-active, high-iv, hot-by-volume]
+        default: most-active
+        required: false
+      - key: instrument
+        type: choice
+        label: Instrument type
+        description: "Asset class to scan"
+        choices: [stocks, options, futures]
+        default: stocks
+        required: false
+    trigger:
+      on_demand: true
+    outputs:
+      - type: report
+        description: "Scanner results with quotes"
+    prompt: |
+      Run an IB market scanner and present the results.
+
+      Scanner: {{config.scan_type}}
+      Instrument: {{config.instrument}}
+      Markets: {{config.scan_markets}}
+
+      1. Call {{brokerage.scanner_params}} to verify the requested
+         scanner type is available.
+      2. Call {{brokerage.scanner_run}} with appropriate filters for
+         the market scope (ASX exchange codes for asx-only, US for
+         us-only, both for asx-and-us).
+      3. For the top 10 results, call {{brokerage.quote}} for live
+         pricing detail.
+
+      Present as:
+
+      **{{config.scan_type}} — {{config.instrument}}** ({{config.scan_markets}})
+
+      | # | Symbol | Name | Last | Change | % Chg | Volume |
+      |---|--------|------|------|--------|-------|--------|
+
+      Add brief commentary on notable patterns (sector clustering,
+      unusual volume, news-driven moves if apparent from price action).
+
+  - name: morning-brief
+    agent: ib-analyst
+    description: Daily portfolio brief — overnight changes, open orders, and market movers
+    category: digest
+    graph: react-extract
+    services_used:
+      - service: brokerage
+        operations: [portfolio_summary, positions, pnl, orders, scanner_run]
+    trigger:
+      schedule: "0 7 * * 1-5"
+    outputs:
+      - type: report
+        description: "Daily morning brief"
+      - type: notification
+        description: "Morning brief summary notification"
+    prompt: |
+      Generate a morning portfolio brief for {{config.account_alias}}.
+      Keep it scannable — this runs daily before market open.
+
+      1. {{brokerage.portfolio_summary}} — NAV and overnight change
+      2. {{brokerage.pnl}} — unrealised P&L
+      3. {{brokerage.positions}} — positions with largest overnight
+         moves (top 3 gainers, top 3 losers by % change)
+      4. {{brokerage.orders}} — any open/pending orders
+      5. {{brokerage.scanner_run}} — top 5 pre-market movers
+         (if scanner supports pre-market data)
+
+      Format:
+
+      **Morning Brief — {{config.account_alias}}**
+
+      **Portfolio:** NAV $X (+/- $Y overnight)
+      **Open orders:** N pending
+
+      **Biggest movers in your portfolio:**
+      - AAPL: +2.3% ($X)
+      - ...
+
+      **Market movers (pre-market):**
+      1. TICKER +X% — description
+      2. ...
+
+      Set notification_body to a one-line NAV + biggest mover summary.
+      Set notification_priority to 2.
+      Set notification_category to "digest".
+
+# ── Workflows ─────────────────────────────────────────────────────────
+
+workflows:
+  - name: morning-brief
+    description: Daily pre-market portfolio brief
+    schedule: "0 7 * * 1-5"
+    steps:
+      - skill: morning-brief
