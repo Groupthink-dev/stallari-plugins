@@ -1,9 +1,9 @@
-pack: "1.6"
+pack: "1.7"
 name: stallari-core
 aliases: [sidereal-core]
 title: "Stallari Core"
 featured: false
-version: "3.3.0"
+version: "3.4.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, and the six
@@ -727,6 +727,77 @@ skills:
       Generate daily notification delivery report. Aggregate by channel
       and category. Archive to calendar/notes/{date} — notification
       delivery report.md.
+
+guardrails:
+  version: "1.0.0"
+  reviewed: "2026-04-18"
+  rules:
+    - id: vault-001
+      category: vault
+      severity: critical
+      scope: [community, verified]
+      added: "2026-04-18"
+    - id: vault-002
+      category: vault
+      severity: high
+      scope: [community]
+      added: "2026-04-18"
+    - id: exfil-001
+      category: exfiltration
+      severity: critical
+      scope: [community, verified]
+      added: "2026-04-18"
+    - id: exfil-002
+      category: exfiltration
+      severity: high
+      scope: [community]
+      added: "2026-04-18"
+    - id: identity-001
+      category: identity
+      severity: critical
+      scope: [community, verified]
+      added: "2026-04-18"
+    - id: identity-002
+      category: identity
+      severity: high
+      scope: [community]
+      added: "2026-04-18"
+    - id: data-001
+      category: data-handling
+      severity: critical
+      scope: [community, verified]
+      added: "2026-04-18"
+    - id: data-002
+      category: data-handling
+      severity: high
+      scope: [community]
+      added: "2026-04-18"
+    - id: prompt-001
+      category: prompt-hygiene
+      severity: critical
+      scope: [community, verified]
+      added: "2026-04-18"
+    - id: prompt-002
+      category: prompt-hygiene
+      severity: high
+      scope: [community]
+      added: "2026-04-18"
+
+herald:
+  announcements:
+    - id: herald-guardrails-v1
+      title: Platform Security Guardrails
+      since_harness: "0.66.2.0"
+      summary: >-
+        Community and verified agents now operate under platform guardrails
+        covering vault integrity, data leakage, identity, credential scope,
+        and prompt injection defence.
+    - id: herald-consent-model
+      title: Agent Consent Model
+      since_harness: "0.66.0.0"
+      summary: >-
+        Community pack agents require explicit consent before first dispatch.
+        Manage consents in Settings > Privacy > Agent Access.
 
 workflows:
   - name: morning-automation
