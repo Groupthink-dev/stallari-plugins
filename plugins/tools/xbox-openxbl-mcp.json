@@ -126,11 +126,11 @@
     }
   },
   "conformance": {
-    "required": "untested",
-    "recommended": "untested",
-    "optional": "untested",
-    "gated": "untested",
-    "last_tested": null
+    "required": "3/4",
+    "recommended": "3/4",
+    "optional": "0/6",
+    "gated": "0/3",
+    "last_tested": "2026-04-18"
   },
   "notes": "Community alternative to xboxlive-blade-mcp. Trades feature coverage for setup simplicity — API key auth via xbl.io proxy instead of OAuth2. Limited to read-only operations exposed by the OpenXBL API. No SmartGlass, messaging, clips, or Store catalog. Free tier has rate limits; paid plans ($3/mo) for higher throughput."
 }

@@ -78,13 +78,14 @@
   },
   "services": {
     "gaming": {
-      "player_summary": "steam_profile",
-      "library": "steam_library",
+      "profile": "steam_profile",
+      "achievements": "steam_achievements",
+      "achievement_summary": "steam_achievements",
+      "games_played": "steam_library",
+      "games_recent": "steam_recent",
+      "friends": "steam_friends",
       "game_details": "steam_game",
       "search_games": "steam_search",
-      "recent_games": "steam_recent",
-      "achievements": "steam_achievements",
-      "friends": "steam_friends",
       "game_news": "steam_news",
       "global_stats": "steam_stats",
       "inventory": "steam_inventory",
@@ -179,10 +180,10 @@
   },
   "conformance": {
     "required": "4/4",
-    "recommended": "4/4",
-    "optional": "4/5",
-    "gated": "0/0",
-    "last_tested": "2026-04-07"
+    "recommended": "2/4",
+    "optional": "2/6",
+    "gated": "0/3",
+    "last_tested": "2026-04-18"
   },
   "notes": "Steam Web API MCP with Storefront API for catalog search. API key auth (trivial setup). Covers player summaries, achievements, owned games, friends, presence, store data, market prices. Steam deprecated chat messaging — no gated operations."
 }

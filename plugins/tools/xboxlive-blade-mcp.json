@@ -214,7 +214,7 @@
     "recommended": "4/4",
     "optional": "6/6",
     "gated": "3/3",
-    "last_tested": "2026-04-07"
+    "last_tested": "2026-04-18"
   },
   "notes": "Full-featured Xbox Live MCP built on xbox-webapi-python (200+ stars). 22 tools across 8 domains. The only MCP with SmartGlass console control, Xbox messaging, game clips, and Store catalog. Write gates on mutations, confirm gates on SmartGlass power commands and friend removal. Token-efficient pipe-delimited output."
 }
