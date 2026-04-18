@@ -1,0 +1,6 @@
+[
+  {
+    "rule_id": "SINJ-003",
+    "justification": "Infrastructure pack — skill prompts legitimately reference Cloudflare API URLs and tunnel endpoints"
+  }
+]

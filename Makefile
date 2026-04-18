@@ -1,4 +1,4 @@
-.PHONY: sync-pack-spec validate validate-packs validate-all validate-manifests build-api generate contracts test clean
+.PHONY: sync-pack-spec validate validate-packs scan-packs validate-all validate-manifests build-api generate contracts test clean
 
 # Optional: path to sealed pack YAMLs (private repo).
 # Set PRIVATE_PACKS_DIR to include sealed packs in the build.
@@ -55,8 +55,15 @@ validate-packs: sync-pack-spec generate
 	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/validate-packs.js
 	@echo "Done."
 
+# Security scan all pack YAML files (DD-147).
+# Runs SINJ prompt injection detection and cross-pack clone detection.
+scan-packs:
+	@echo "Security scanning pack manifests..."
+	@node scripts/security-scan.js
+	@echo "Done."
+
 # Validate everything.
-validate-all: validate validate-packs
+validate-all: validate validate-packs scan-packs
 
 # Validate manifests in sibling repos.
 # Canonical filename: stallari-plugin.yaml
