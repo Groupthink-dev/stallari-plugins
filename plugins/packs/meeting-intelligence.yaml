@@ -1,0 +1,303 @@
+pack: "1.6"
+name: meeting-intelligence
+title: "Meeting Intelligence"
+featured: false
+version: "1.0.0"
+author_type: community
+readiness: experimental
+description: >-
+  Privacy-first meeting processing — on-device transcription via mlx-whisper,
+  attendee extraction matched to vault people cards, action item tracking, and
+  weekly commitments digest. Audio never leaves your machine.
+icon: /icons/meeting-intelligence.svg
+author:
+  name: digitalassistants-au
+  url: https://github.com/digitalassistants-au
+licence: MIT
+visibility: open
+tier: community
+pricing: null
+tagline: "On-device transcription, attendee matching, and action tracking — meetings that feed your vault"
+
+readme:
+  format: markdown
+  body: |
+    # Meeting Intelligence Pack
+
+    Privacy-first meeting processing for Stallari. Drop audio files or
+    transcripts into a watched folder and let the pipeline handle the rest —
+    transcription stays on-device via mlx-whisper, so your audio never leaves
+    your machine.
+
+    ## What it does
+
+    A single **meeting-processor** agent runs four skills that form a pipeline
+    from raw audio to structured vault notes and weekly accountability digests.
+
+    ## Skills
+
+    1. **Transcribe meeting** watches `+/ingest/meetings/` for audio files
+       (.mp3, .m4a, .wav, .webm) or plain-text transcripts (.txt, .md). Audio
+       is transcribed on-device using the mlx-whisper MCP — no cloud API, no
+       data egress. The transcript is saved as a vault note and queued for
+       extraction.
+    2. **Extract minutes** takes a transcript note and extracts structured
+       meeting data: attendees, decisions, action items with assignees and
+       due dates, key discussion points, and overall sentiment. Attendees
+       are matched to vault people cards via Lens full-text search.
+    3. **Weekly commitments** runs on a schedule and aggregates all open
+       action items across recent meeting notes, grouped by assignee. Flags
+       overdue items and produces a digest note for review.
+    4. **Process meeting** is an on-demand skill that runs the full pipeline
+       (transcribe + extract) for a single named file, useful for ad-hoc
+       processing outside the watch trigger.
+
+    ## Privacy model
+
+    - Audio transcription is **entirely on-device** via mlx-whisper (MLX
+      backend, Apple Silicon optimised)
+    - No audio data is sent to any cloud API
+    - Transcripts and meeting notes live in your vault — nothing is stored
+      externally
+    - The pack phones home to **zero** external services
+
+    ## Requirements
+
+    - **mlx-whisper MCP** must be installed separately (Python, via `uv`).
+      This is the on-device transcription backend. A future version may
+      support WhisperKit (native Swift) when dependency conflicts resolve.
+    - Vault service with read/write access
+    - Calendar service recommended for correlating meetings with events
+
+    ## Future plans
+
+    - Speaker diarisation via pyannote.audio (on-device)
+    - Board minutes mode with sequential resolution numbering (RES-YYYY-NNN)
+    - ATO-defensible compliance critique-refine loop (quorum checks,
+      financials review, COI disclosure)
+
+highlights:
+  - icon: "\U0001F3A4"
+    text: "On-device transcription — audio never leaves your machine"
+  - icon: "\U0001F4DD"
+    text: "4 skills — transcribe, extract, weekly digest, and ad-hoc processing"
+  - icon: "\U0001F465"
+    text: "Attendee matching — Lens search links speakers to vault people cards"
+  - icon: "\U0001F4CB"
+    text: "Action tracking — decisions and action items with assignees and due dates"
+  - icon: "\U0001F512"
+    text: "Zero data egress — all processing local, nothing phones home"
+
+links:
+  - label: Pack Spec
+    url: https://stallari.ai/docs/pack-spec
+  - label: Source Code
+    url: https://github.com/digitalassistants-au/stallari-plugins
+
+min_stallari: "0.38"
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, create, append, files, lens_fts]
+
+recommends:
+  services:
+    - service: calendar
+      operations: [events, today]
+    - service: notifications
+      operations: [send]
+
+data:
+  reads: [vault, calendar]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+agents:
+  meeting-processor:
+    role: operator
+    prompt: |
+      You are a meeting intelligence operator. You process audio recordings
+      and transcripts into structured vault notes. You extract attendees,
+      decisions, and action items, match participants to vault people cards
+      via Lens search, and track commitments across meetings. You never send
+      audio or transcript data to external services — all processing uses
+      on-device tools.
+
+skills:
+  - name: transcribe-meeting
+    agent: meeting-processor
+    description: Watch for audio/transcript files and transcribe on-device via mlx-whisper
+    tier: standard
+    category: ingest
+    graph: react-extract
+    services_used:
+      - service: vault
+        operations: [read, create, files]
+    trigger:
+      watch:
+        - "+/ingest/meetings/"
+    outputs:
+      - type: vault_note
+        description: Transcript note saved to vault for downstream extraction
+    prompt: |
+      Watch the ingest folder +/ingest/meetings/ for new files. Handle two
+      input types:
+
+      **Audio files** (.mp3, .m4a, .wav, .webm):
+      - Invoke the mlx-whisper MCP to transcribe on-device
+      - Use the large-v3 model for best accuracy
+      - Save the transcript as a vault note at
+        atlas/notes/meetings/YYYY-MM-DD — {filename stem}.md
+      - Include frontmatter: created, kind: transcript, source_file,
+        duration (if available), llm_generated: true
+
+      **Text files** (.txt, .md):
+      - Read the file contents directly as the transcript
+      - Save as a vault note with the same path convention
+      - Include frontmatter: created, kind: transcript, source_file,
+        llm_generated: true
+
+      After saving, move the original file to +/ingest/meetings/processed/
+      to prevent re-processing. Set notification_body with the filename and
+      word count.
+
+  - name: extract-minutes
+    agent: meeting-processor
+    description: Extract attendees, decisions, and action items from a transcript note
+    tier: standard
+    category: transform
+    graph: react-extract
+    services_used:
+      - service: vault
+        operations: [read, search, create, append, lens_fts]
+    trigger:
+      on_demand: true
+    depends_on:
+      - transcribe-meeting
+    inputs:
+      - key: transcript_path
+        type: string
+        label: Path to transcript note
+        description: Vault-relative path to the transcript note to process
+        required: true
+    outputs:
+      - type: vault_note
+        description: Structured meeting minutes with attendees, decisions, and actions
+    prompt: |
+      Process the transcript note at {{input.transcript_path}} and extract
+      structured meeting data.
+
+      **Extraction targets:**
+      1. **Attendees** — names mentioned or implied. For each attendee, run
+         a Lens full-text search (vault_lens_fts) to match against vault
+         people cards in atlas/people/. Include the wikilink if matched.
+      2. **Decisions** — explicit agreements or conclusions reached. Quote
+         the relevant passage.
+      3. **Action items** — commitments with assignee (matched to attendee),
+         description, and due date if mentioned. Format as checklist items.
+      4. **Key discussion points** — major topics covered, summarised in
+         2-3 sentences each.
+      5. **Sentiment** — overall tone (productive/contentious/routine/urgent).
+
+      **Output:** Create or update a meeting note at
+      atlas/notes/meetings/YYYY-MM-DD — {meeting title} — minutes.md with:
+      - Frontmatter: created, kind: meeting-minutes, attendees (array of
+        names), decision_count, action_count, sentiment, transcript (wikilink
+        to source), llm_generated: true
+      - Body sections: ## Attendees, ## Decisions, ## Action Items,
+        ## Discussion, ## Sentiment
+
+      Link the minutes note back to the transcript note via the transcript
+      frontmatter field. Set notification_body with attendee count and
+      action item count.
+
+  - name: weekly-commitments
+    agent: meeting-processor
+    description: Weekly digest of open action items by assignee with overdue flags
+    tier: standard
+    category: digest
+    graph: react-extract
+    services_used:
+      - service: vault
+        operations: [read, search, files, query_properties]
+      - service: notifications
+        operations: [send]
+    trigger:
+      schedule: "0 9 * * 1"
+    outputs:
+      - type: vault_note
+        description: Weekly commitments digest grouped by assignee
+      - type: notification
+        description: Summary notification with overdue count
+    prompt: |
+      Generate a weekly commitments digest from all meeting minutes notes.
+
+      **Process:**
+      1. Search vault for notes with kind: meeting-minutes created in the
+         last 14 days (query_properties where kind = meeting-minutes).
+      2. Read each note and collect all unchecked action items (lines
+         starting with "- [ ]").
+      3. Parse assignee and due date from each action item.
+      4. Group by assignee. Within each group, sort by due date.
+      5. Flag items where due date is in the past as OVERDUE.
+      6. Count: total open, overdue, by assignee.
+
+      **Output:** Create a digest note at
+      calendar/logs/digests/YYYY-MM-DD — weekly commitments.md with:
+      - Frontmatter: created, kind: digest, digest_type: weekly-commitments,
+        total_open, total_overdue, llm_generated: true
+      - Body: ## Summary (counts), then ## {Assignee Name} sections with
+        their action items, overdue items highlighted with a warning marker.
+
+      Set notification_body: "{total_open} open commitments, {total_overdue}
+      overdue" and notification_priority: 3.
+
+  - name: process-meeting
+    agent: meeting-processor
+    description: On-demand full pipeline for a single audio file or transcript
+    tier: standard
+    category: ingest
+    graph: react-extract
+    services_used:
+      - service: vault
+        operations: [read, search, create, append, files, lens_fts]
+    trigger:
+      on_demand: true
+    inputs:
+      - key: file_path
+        type: string
+        label: Path to audio file or transcript
+        description: >-
+          Absolute path or vault-relative path to the audio file (.mp3, .m4a,
+          .wav, .webm) or transcript (.txt, .md) to process.
+        required: true
+    outputs:
+      - type: vault_note
+        description: Transcript and structured meeting minutes
+    prompt: |
+      Process a single meeting file through the full pipeline. This is the
+      ad-hoc equivalent of transcribe-meeting + extract-minutes combined.
+
+      **Steps:**
+      1. Read the file at {{input.file_path}}.
+      2. If audio (.mp3, .m4a, .wav, .webm): invoke mlx-whisper MCP to
+         transcribe on-device. If text (.txt, .md): use contents directly.
+      3. Save transcript as vault note at
+         atlas/notes/meetings/YYYY-MM-DD — {filename stem}.md with
+         frontmatter: created, kind: transcript, source_file,
+         llm_generated: true.
+      4. Extract structured data from the transcript:
+         - Attendees (Lens-matched to vault people cards)
+         - Decisions (quoted passages)
+         - Action items (assignee, description, due date as checklist)
+         - Key discussion points (2-3 sentence summaries)
+         - Sentiment (productive/contentious/routine/urgent)
+      5. Create meeting minutes note at
+         atlas/notes/meetings/YYYY-MM-DD — {meeting title} — minutes.md
+         with full frontmatter and structured body sections.
+      6. Move original file to +/ingest/meetings/processed/.
+
+      Set notification_body with the meeting title, attendee count, and
+      action item count.
