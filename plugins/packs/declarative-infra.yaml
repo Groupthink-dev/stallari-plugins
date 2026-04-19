@@ -1,0 +1,723 @@
+pack: "1.7"
+name: Declarative Infrastructure
+description: >
+  Provision and manage GPU cloud compute instances declaratively. Stands up
+  stallari-gpu-worker nodes (11C distribution — Ubuntu 24.04 + CUDA 12.8.1)
+  on Vultr with Tailscale mesh authentication: embedded one-shot pre-auth key
+  for unattended standup, or QR-code interactive flow when present.
+  Includes fleet health monitoring, post-provision verification, safe teardown,
+  and cloud-init generation with security refinement.
+version: "0.1.0"
+icon: server
+author:
+  name: Groupthink Dev
+  url: https://stallari.ai
+licence: MIT
+min_stallari: "0.68"
+author_type: first-party
+readiness: experimental
+visibility: open
+
+requires:
+  services:
+    - service: virtualmachine
+      contract: virtualmachine-v1
+      operations:
+        - vm_list
+        - vm_get
+        - vm_status
+        - vm_list_plans
+        - vm_list_regions
+        - vm_list_images
+        - vm_ssh_keys
+        - vm_create
+        - vm_delete
+        - vm_start
+        - vm_stop
+        - vm_snapshots
+
+recommends:
+  services:
+    - service: overlay-network
+      contract: overlay-network-v1
+      description: >
+        Tailscale overlay network for pre-auth key provisioning and fleet
+        device verification. Required for unattended pre-auth-key standup
+        mode; QR-code and manual flows work without it.
+    - service: documentation
+      contract: documentation-v1
+      description: >
+        Optional: cloud-init, NVIDIA CUDA, and Tailscale documentation lookup
+        during cloud-init generation and troubleshooting. Read-only.
+
+data:
+  reads:
+    - virtualmachine
+    - overlay-network
+    - documentation
+  writes:
+    - virtualmachine
+  stores: nothing
+  phones_home: false
+
+suggested_plugins:
+  - service: virtualmachine
+    required: true
+    note: "Vultr GPU Cloud is the certified provider. Other virtualmachine-v1 providers will work."
+    plugins:
+      - name: vultr-blade-mcp
+        title: "Vultr GPU Cloud"
+        author_type: first-party
+        note: "Certified provider. GPU plans (vcg-*) required for stallari-gpu-worker."
+  - service: overlay-network
+    required: false
+    note: "Required for unattended pre-auth-key standup mode only."
+    plugins:
+      - name: hexsleeves-tailscale-mcp
+        title: "Tailscale"
+        author_type: community
+        note: "Provides auth key management and device fleet visibility."
+
+# ---------------------------------------------------------------------------
+# Agents — four tightly scoped roles, one model throughout.
+# All agents target Nemotron 3 30B (private inference).
+# ---------------------------------------------------------------------------
+
+agents:
+  provision-operator:
+    role: operator
+    model: nvidia/nemotron-3-30b
+    description: >
+      VM lifecycle writes only. Assembles cloud-init payloads, selects plans and
+      regions, creates GPU instances, starts, stops, snapshots, and deletes.
+      Scoped to write-path operations — never used for read-only audits.
+
+  audit-operator:
+    role: operator
+    model: nvidia/nemotron-3-30b
+    description: >
+      Read-only fleet observer. Lists VMs, retrieves status and metrics,
+      aggregates cost and health data. Strictly no write operations.
+      Designed for periodic scheduled health digests and cost reporting.
+
+  verify-specialist:
+    role: specialist
+    model: nvidia/nemotron-3-30b
+    description: >
+      Post-provision health checker. Polls VM until running, validates tsnet
+      join against the overlay-network device list, and confirms GPU detection.
+      Uses deterministic retry logic with pass/warn/fail outcomes.
+
+  bootstrap-classifier:
+    role: classifier
+    model: nvidia/nemotron-3-30b
+    description: >
+      Tailscale auth mode router. Inspects overlay-network availability and user
+      inputs to classify the deployment mode — pre-auth-key (unattended),
+      QR-code (interactive), or manual. Emits a route decision consumed by
+      gpu-standup.
+
+# ---------------------------------------------------------------------------
+# Skills — six skills, six different graph types.
+# ---------------------------------------------------------------------------
+
+skills:
+
+  # 1. gpu-standup — plan-execute
+  #    Full VM provisioning pipeline. Selects plan/region, assembles 11C
+  #    cloud-init, injects TS auth and bearer token, creates VM.
+  - name: gpu-standup
+    description: >
+      Full GPU worker standup: plan selection, cloud-init assembly for the
+      11C distribution (Ubuntu 24.04 + CUDA 12.8.1 + stallari-gpu-worker),
+      Tailscale auth injection, VM creation. Emits a standup receipt.
+    agent: provision-operator
+    category: transform
+    trigger:
+      on_demand: true
+    graph: plan-execute
+    graph_config:
+      max_replan_attempts: 2
+    inputs:
+      - key: worker_name
+        label: Worker hostname
+        description: >
+          Tailnet hostname for this GPU worker (e.g. "gpu-1"). Must be unique
+          across the tailnet.
+        type: string
+        required: true
+      - key: ts_auth_key
+        label: Tailscale pre-auth key
+        description: >
+          Single-use ephemeral Tailscale pre-auth key for unattended tailnet
+          join. Leave blank to trigger QR-code flow (VM boots with tailscale
+          up; scan QR from console log).
+        type: secret
+        required: false
+      - key: bearer_token
+        label: MCP bearer token
+        description: >
+          Bearer token the stallari-gpu-worker MCP server will require on all
+          inbound tool calls.
+        type: secret
+        required: true
+      - key: image_tag
+        label: Container image tag
+        description: "stallari-gpu-worker image tag (default: latest)"
+        type: string
+        required: false
+        default: latest
+    services_used:
+      - service: virtualmachine
+        operations:
+          - vm_list
+          - vm_list_plans
+          - vm_list_regions
+          - vm_list_images
+          - vm_ssh_keys
+          - vm_create
+    prompt: |
+      You are provisioning a stallari-gpu-worker node. Build a plan, show it
+      to the user, wait for confirmation, then execute step by step.
+
+      PLAN:
+
+      Step 1 — Duplicate check.
+        Call vm_list. If any instance already has the label matching
+        inputs.worker_name, abort with:
+          "Instance '{{inputs.worker_name}}' already exists. Use a different name
+           or run instance-teardown first."
+
+      Step 2 — Plan selection.
+        Call vm_list_plans (GPU type, filter vcg-* plans by default).
+        Select config.default_gpu_plan if set; otherwise pick the cheapest
+        available GPU plan in the preferred region.
+
+      Step 3 — Region selection.
+        Call vm_list_regions. Prefer config.default_region if set; otherwise
+        pick the nearest region with GPU stock.
+
+      Step 4 — OS image selection.
+        Call vm_list_images. Select Ubuntu 24.04 LTS (Noble Numbat).
+
+      Step 5 — SSH key retrieval.
+        Call vm_ssh_keys. Use the first key or the key matching the account default.
+
+      Step 6 — Cloud-init assembly (11C distribution pattern).
+        Substitute these variables into the template below:
+          STALLARI_WORKER_NAME  = inputs.worker_name
+          STALLARI_TS_AUTH_KEY   = inputs.ts_auth_key  (empty string if QR-code mode)
+          STALLARI_BEARER_TOKEN  = inputs.bearer_token
+          STALLARI_IMAGE_TAG     = inputs.image_tag or "latest"
+
+      --- cloud-init template ---
+      #cloud-config
+      package_update: true
+      packages: [docker.io, docker-compose-v2, nvidia-container-toolkit, wget]
+      runcmd:
+        - systemctl enable --now docker
+        - nvidia-ctk runtime configure --runtime=docker
+        - systemctl restart docker
+        - mkdir -p /opt/stallari
+        - |
+          cat > /opt/stallari/docker-compose.yml << 'COMPOSE'
+          services:
+            gpu-worker:
+              image: ghcr.io/groupthink-dev/stallari-gpu-worker:${STALLARI_IMAGE_TAG}
+              container_name: stallari-gpu-worker
+              restart: unless-stopped
+              deploy:
+                resources:
+                  reservations:
+                    devices:
+                      - driver: nvidia
+                        count: all
+                        capabilities: [gpu]
+              env_file: /opt/stallari/.env
+              volumes:
+                - tsnet-state:/var/lib/stallari/tsnet
+          volumes:
+            tsnet-state:
+          COMPOSE
+        - |
+          cat > /opt/stallari/.env << 'ENV'
+          STALLARI_WORKER_NAME=STALLARI_WORKER_NAME
+          STALLARI_TS_AUTH_KEY=STALLARI_TS_AUTH_KEY
+          STALLARI_BEARER_TOKEN=STALLARI_BEARER_TOKEN
+          STALLARI_IMAGE_TAG=STALLARI_IMAGE_TAG
+          ENV
+        - cd /opt/stallari && docker compose up -d
+        - |
+          cat > /etc/systemd/system/stallari-gpu-worker.service << 'UNIT'
+          [Unit]
+          Description=Stallari GPU Worker
+          After=docker.service
+          Requires=docker.service
+          [Service]
+          Type=oneshot
+          RemainAfterExit=yes
+          WorkingDirectory=/opt/stallari
+          ExecStart=/usr/bin/docker compose up -d
+          ExecStop=/usr/bin/docker compose down
+          [Install]
+          WantedBy=multi-user.target
+          UNIT
+        - systemctl enable stallari-gpu-worker
+      --- end template ---
+
+      Step 7 — Pre-flight summary (REQUIRED before vm_create).
+        Show the user a summary table:
+          | Field             | Value                     |
+          |-------------------|---------------------------|
+          | Worker name       | {{inputs.worker_name}}    |
+          | Plan              | <name> — <GPU> <VRAM>     |
+          | Hourly cost       | $N.NN/hr                  |
+          | Region            | <region label>            |
+          | OS                | Ubuntu 24.04 LTS          |
+          | Auth mode         | Pre-auth key / QR-code    |
+          | Image tag         | {{inputs.image_tag}}      |
+        Ask: "Confirm standup? (y/n)"
+
+      Step 8 — Create VM.
+        Call vm_create with confirm:true and the assembled user_data.
+
+      Step 9 — Emit standup receipt.
+        Return:
+          instance_id, main_ip, region, gpu_type, hourly_cost,
+          worker_name, auth_mode, image_tag.
+        If auth_mode is QR-code, add note:
+          "Boot the instance, then run worker-verify and check VM console logs
+           for the Tailscale QR code to scan with the Tailscale mobile app."
+
+      SAFETY RULES:
+      - Never include ts_auth_key or bearer_token in any output, log, or summary.
+      - If step 1 finds a duplicate, abort — do not proceed.
+      - Step 7 confirmation is mandatory. Never skip it.
+
+  # 2. ts-auth-provision — gate
+  #    Classify Tailscale auth mode and route to the appropriate sub-graph.
+  - name: ts-auth-provision
+    description: >
+      Classify Tailscale auth deployment mode and emit the chosen flow.
+      Routes to pre-auth-key (unattended overlay-network inject), QR-code
+      (interactive console scan), or manual SSH fallback.
+    agent: bootstrap-classifier
+    category: triage
+    trigger:
+      on_demand: true
+    graph: gate
+    graph_config:
+      classify_tier: fast
+      routes:
+        preauth: react-extract
+        qrcode: react
+        manual: react
+    services_used:
+      - service: overlay-network
+        operations: [keys, manage_keys]
+    prompt: |
+      Determine which Tailscale auth mode to use for this standup.
+
+      CLASSIFY into one of three routes:
+
+      preauth — route if:
+        - overlay-network service is available and connected
+        - Call overlay-network.keys to check for existing reusable/ephemeral keys
+        - If no valid single-use key exists, call manage_keys to create a new
+          ephemeral key tagged with the worker name
+        - Return: mode=preauth, ts_auth_key=<key>
+
+      qrcode — route if:
+        - overlay-network is unavailable OR not configured
+        - An interactive session is present (on_demand trigger, user present)
+        - No ts_auth_key was provided as input
+        - Return: mode=qrcode, ts_auth_key=""
+        - Instructions: "After VM boots, open VM console/logs and scan the
+          Tailscale QR code with the Tailscale mobile app to complete join."
+
+      manual — route if:
+        - No overlay-network service, no pre-auth key, unattended context
+        - Return: mode=manual, ts_auth_key=""
+        - Instructions: "SSH to the VM after boot and run: sudo tailscale up"
+
+      Output: { mode, ts_auth_key, instructions }
+      Pass mode and ts_auth_key to gpu-standup as inputs.
+
+  # 3. worker-verify — react-verify
+  #    Deterministic post-provision health check: VM running, GPU detected,
+  #    Tailscale joined.
+  - name: worker-verify
+    description: >
+      Post-provision health check with deterministic retry. Polls VM status
+      until running, checks GPU availability, and verifies Tailscale tailnet
+      join via overlay-network device list.
+    agent: verify-specialist
+    category: review
+    trigger:
+      on_demand: true
+    graph: react-verify
+    inputs:
+      - key: instance_id
+        label: Instance ID
+        description: VM instance ID returned by gpu-standup.
+        type: string
+        required: true
+      - key: worker_name
+        label: Worker hostname
+        description: Expected tailnet hostname for device lookup.
+        type: string
+        required: true
+    services_used:
+      - service: virtualmachine
+        operations: [vm_get, vm_status]
+      - service: overlay-network
+        operations: [devices]
+    prompt: |
+      Verify a newly provisioned stallari-gpu-worker VM. Retry up to 5 times
+      with 30-second backoff on non-terminal states.
+
+      CHECK 1 — VM running.
+        Call vm_status(instance_id).
+        Pass: power_status=running AND server_status=ok
+        Retry: any transitional state (pending, booting, installing)
+        Fail: server_status=error after 5 attempts
+
+      CHECK 2 — VM details.
+        Call vm_get(instance_id) to retrieve main_ip, GPU type, region.
+
+      CHECK 3 — GPU detected.
+        Read vm_get response for GPU fields (gpu_count, gpu_type).
+        Pass: gpu_count > 0
+        Warn: gpu_count field absent or 0 (may still be initialising)
+
+      CHECK 4 — Tailscale join.
+        If overlay-network service is available:
+          Call devices, filter by hostname matching inputs.worker_name.
+          Pass: device found with lastseen within last 10 minutes
+          Warn: device not yet visible (tsnet join can lag VM boot by 60–90s)
+        If overlay-network unavailable:
+          Mark as unverifiable — advise user to check tailnet dashboard.
+
+      EMIT structured result:
+        {
+          "vm_running":     "pass" | "fail",
+          "gpu_detected":   "pass" | "warn" | "fail",
+          "tailnet_joined": "pass" | "warn" | "unverifiable",
+          "main_ip":        "<IP>",
+          "worker_name":    "{{inputs.worker_name}}",
+          "summary":        "<one-line human-readable>"
+        }
+
+  # 4. fleet-health — react-extract
+  #    Read-only fleet snapshot: status, GPU, hourly cost, anomaly detection.
+  - name: fleet-health
+    description: >
+      Read-only GPU fleet snapshot. Lists all VM instances, checks power state,
+      aggregates estimated hourly cost, and flags degraded or error instances.
+      Suitable for periodic scheduled health digests.
+    agent: audit-operator
+    category: digest
+    trigger:
+      on_demand: true
+      schedule: "0 * * * *"
+    graph: react-extract
+    services_used:
+      - service: virtualmachine
+        operations: [vm_list, vm_get, vm_status]
+    prompt: |
+      Produce a fleet health snapshot for all GPU worker instances.
+
+      1. Call vm_list. Collect all instances.
+      2. For each instance, call vm_status to get power_status and server_status.
+      3. Aggregate:
+         - total instances
+         - running count (power_status=running)
+         - stopped count (power_status=stopped)
+         - error/degraded count (server_status=error)
+         - estimated total hourly cost (sum of per-instance cost_per_hour)
+      4. Flag any instance with server_status=error or unexpected power_status.
+
+      Return structured JSON:
+      {
+        "snapshot_at": "<ISO timestamp>",
+        "total": N,
+        "running": N,
+        "stopped": N,
+        "degraded": N,
+        "estimated_hourly_cost": "$N.NN",
+        "instances": [
+          {
+            "id": "...",
+            "label": "...",
+            "gpu_type": "...",
+            "status": "...",
+            "region": "...",
+            "cost_per_hour": "$N.NN",
+            "alert": null | "error" | "unexpected-state"
+          }
+        ],
+        "alerts": ["..."]
+      }
+
+  # 5. instance-teardown — plan-execute
+  #    Safe decommission: stop, optional snapshot, then delete with confirmation.
+  - name: instance-teardown
+    description: >
+      Safely decommission a GPU worker: stop, optionally snapshot, then delete.
+      Shows full instance identity before any destructive action. Human
+      confirmation required before vm_delete.
+    agent: provision-operator
+    category: transform
+    trigger:
+      on_demand: true
+    graph: plan-execute
+    graph_config:
+      max_replan_attempts: 1
+    inputs:
+      - key: instance_id
+        label: Instance ID
+        description: VM instance ID to decommission.
+        type: string
+        required: true
+      - key: snapshot_before_delete
+        label: Snapshot before deletion
+        description: >
+          Create a VM snapshot before deleting. Recommended if you may want to
+          restore (incurs brief additional cost while snapshot is taken).
+        type: boolean
+        required: false
+        default: false
+    services_used:
+      - service: virtualmachine
+        operations: [vm_get, vm_stop, vm_snapshots, vm_delete]
+    prompt: |
+      Safely decommission a stallari-gpu-worker VM. Build a plan, confirm,
+      then execute.
+
+      Step 1 — Existence check.
+        Call vm_get(instance_id).
+        If not found: abort — "Instance {{inputs.instance_id}} not found."
+        Record: label, region, GPU type, power_status, hourly cost.
+
+      Step 2 — Stop if running.
+        If power_status=running, call vm_stop(instance_id).
+        Wait for power_status=stopped before proceeding.
+
+      Step 3 — Snapshot (conditional).
+        If inputs.snapshot_before_delete=true:
+          Call vm_snapshots to create a snapshot.
+          Record snapshot ID in the teardown receipt.
+
+      Step 4 — Deletion confirmation (REQUIRED).
+        Show the user:
+          "About to PERMANENTLY DELETE:
+            Label:   <label>
+            ID:      {{inputs.instance_id}}
+            Region:  <region>
+            GPU:     <gpu_type>
+          This cannot be undone. Confirm? (y/n)"
+        Abort if user does not confirm.
+
+      Step 5 — Delete.
+        Call vm_delete(instance_id, confirm=true).
+
+      Step 6 — Teardown receipt.
+        Return: instance_id, label, region, snapshot_id (if taken), deleted_at.
+
+  # 6. cloud-init-draft — critique-refine
+  #    Generates a cloud-init payload for the 11C pattern, then self-critiques
+  #    for security, idempotency, and correctness before returning.
+  - name: cloud-init-draft
+    description: >
+      Generate and refine a cloud-init YAML for the 11C distribution (Ubuntu
+      24.04 + CUDA 12.8.1 + stallari-gpu-worker). Self-critiques for secret
+      safety, idempotency, and Tailscale auth correctness before emitting
+      the final payload. Accepts QR-code or pre-auth-key auth mode.
+    agent: provision-operator
+    category: transform
+    trigger:
+      on_demand: true
+    graph: critique-refine
+    graph_config:
+      critique_criteria: [secret-safety, idempotency, tailscale-auth, compose-correctness]
+      max_critique_rounds: 2
+    inputs:
+      - key: auth_mode
+        label: Tailscale auth mode
+        description: "preauth (embed key) | qrcode (omit key, tailscale up in runcmd) | manual"
+        type: string
+        required: true
+      - key: ts_auth_key
+        label: Tailscale pre-auth key
+        description: Required only when auth_mode=preauth.
+        type: secret
+        required: false
+      - key: bearer_token
+        label: MCP bearer token
+        description: Bearer token for the MCP server.
+        type: secret
+        required: true
+      - key: worker_name
+        label: Worker hostname
+        type: string
+        required: true
+      - key: image_tag
+        label: Container image tag
+        type: string
+        required: false
+        default: latest
+    services_used:
+      - service: documentation
+        operations: [search, samples]
+    prompt: |
+      Generate a cloud-init YAML payload for the stallari-gpu-worker 11C
+      distribution (Ubuntu 24.04 LTS + CUDA 12.8.1 base).
+
+      AUTH MODE VARIANTS:
+
+      preauth (inputs.auth_mode=preauth):
+        - Inject STALLARI_TS_AUTH_KEY into the .env heredoc
+        - The tsnet library reads this on first boot to join the tailnet
+        - Key is consumed once; subsequent boots reuse tsnet state persisted
+          as a Docker named volume at /var/lib/stallari/tsnet
+
+      qrcode (inputs.auth_mode=qrcode):
+        - Omit STALLARI_TS_AUTH_KEY from cloud-init and .env entirely
+        - The worker calls tailscale up on start and outputs the auth URL
+          as a QR code in Docker logs — user scans from VM console
+
+      manual (inputs.auth_mode=manual):
+        - Omit TS_AUTH_KEY from cloud-init and .env
+        - Add final runcmd comment: "# SSH to VM and run: sudo tailscale up"
+
+      Generate the full #cloud-config YAML:
+        - package_update: true
+        - packages: [docker.io, docker-compose-v2, nvidia-container-toolkit, wget]
+        - runcmd: Docker setup, nvidia-ctk, docker-compose.yml, .env, compose up,
+          systemd unit install
+
+      SELF-CRITIQUE (apply after drafting, before emitting):
+
+      secret-safety:
+        - ts_auth_key and bearer_token must ONLY appear inside the .env heredoc
+        - Neither may appear in runcmd echo statements, comments, or docker-compose.yml
+        - docker-compose.yml must reference secrets via env_file: /opt/stallari/.env
+          or ${VAR} syntax, never as hardcoded literals
+
+      idempotency:
+        - All mkdir calls use -p
+        - cat > overwrites safely on re-run
+        - systemctl enable is idempotent
+        - docker compose up -d is idempotent
+
+      tailscale-auth:
+        - preauth: STALLARI_TS_AUTH_KEY present in .env exactly once, no blanks
+        - qrcode/manual: STALLARI_TS_AUTH_KEY absent from .env entirely
+        - tsnet state volume mounted in all modes
+
+      compose-correctness:
+        - GPU reservation: driver: nvidia, count: all, capabilities: [gpu]
+        - restart: unless-stopped present
+        - Named volume tsnet-state declared in top-level volumes: section
+        - env_file path matches the .env write location
+
+      Return: fenced cloud-init YAML block + one-line critique summary.
+
+# ---------------------------------------------------------------------------
+# Workflows — two composed pipelines.
+# ---------------------------------------------------------------------------
+
+workflows:
+  - name: full-standup
+    description: >
+      End-to-end GPU worker provisioning. Classifies Tailscale auth mode,
+      provisions the VM, then verifies health.
+    steps:
+      - skill: ts-auth-provision
+      - skill: gpu-standup
+        depends_on: [ts-auth-provision]
+      - skill: worker-verify
+        depends_on: [gpu-standup]
+
+  - name: safe-teardown
+    description: >
+      Verify worker is in a known state, then safely decommission.
+    steps:
+      - skill: worker-verify
+      - skill: instance-teardown
+        depends_on: [worker-verify]
+
+# ---------------------------------------------------------------------------
+# Pack-level config.
+# ---------------------------------------------------------------------------
+
+config:
+  user_inputs:
+    - key: default_region
+      label: Preferred Vultr region
+      description: >
+        Default datacenter slug for new GPU workers (e.g. ewr, lax, sjc, nrt).
+        Leave blank to auto-select nearest region with GPU availability.
+      type: string
+      required: false
+
+    - key: default_gpu_plan
+      label: Default GPU plan
+      description: >
+        Preferred Vultr GPU plan slug (e.g. vcg-a40-1c-6g, vcg-a100-80g-sxm4).
+        Leave blank to select cheapest available GPU plan.
+      type: string
+      required: false
+
+    - key: worker_image_tag
+      label: Default image tag
+      description: "Default stallari-gpu-worker container image tag."
+      type: string
+      required: false
+      default: latest
+
+    - key: worker_name_prefix
+      label: Worker hostname prefix
+      description: >
+        Prefix for auto-generated worker hostnames (e.g. "gpu" yields "gpu-1").
+      type: string
+      required: false
+      default: gpu
+
+# ---------------------------------------------------------------------------
+# Guardrails — pack author rules enforced at runtime.
+# ---------------------------------------------------------------------------
+
+guardrails:
+  version: "1.0.0"
+  reviewed: "2026-04-20"
+  rules:
+    - id: infra-001
+      category: data-safety
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: infra-002
+      category: destructive-ops
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: infra-003
+      category: cost-awareness
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: infra-004
+      category: idempotency
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: infra-005
+      category: scope
+      severity: medium
+      scope: [community, verified, certified]
+      added: "2026-04-20"
