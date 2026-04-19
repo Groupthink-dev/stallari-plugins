@@ -1,0 +1,146 @@
+{
+  "name": "runpod-mcp",
+  "title": "RunPod GPU Cloud",
+  "description": "Manage RunPod GPU infrastructure — pods, serverless endpoints, templates, network volumes, and container registries. 43 tools covering the full RunPod API surface.",
+  "tagline": "GPU cloud management — pods, endpoints, and serverless inference",
+  "version": "0.3.0",
+  "author": "runpod",
+  "licence": "MIT",
+  "icon": "/icons/runpod-mcp.svg",
+  "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
+  "contract": "virtualmachine-v1",
+  "contract_notes": "Pod operations map to virtualmachine-v1. Serverless endpoint/job tools extend beyond the contract scope — future gpu-inference-v1 contract may be warranted.",
+  "homepage": "https://github.com/runpod/runpod-mcp",
+  "repository": "https://github.com/runpod/runpod-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🖥️",
+      "text": "43 tools — full RunPod API: pods, endpoints, templates, volumes"
+    },
+    {
+      "icon": "⚡",
+      "text": "Serverless — deploy endpoints, submit jobs, stream results"
+    },
+    {
+      "icon": "💾",
+      "text": "Network volumes — persistent storage across pod restarts"
+    },
+    {
+      "icon": "📊",
+      "text": "GPU inventory — list GPU types and datacentre availability"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/runpod/runpod-mcp"
+    },
+    {
+      "label": "npm Package",
+      "url": "https://www.npmjs.com/package/@runpod/mcp-server"
+    },
+    {
+      "label": "RunPod Console",
+      "url": "https://www.runpod.io/console"
+    },
+    {
+      "label": "RunPod API Docs",
+      "url": "https://docs.runpod.io/reference"
+    },
+    {
+      "label": "Create API Key",
+      "url": "https://www.runpod.io/console/user/settings"
+    }
+  ],
+  "readme": "### What it does\n\nRunPod GPU Cloud provides full control over your RunPod infrastructure through 43 MCP tools. Manage GPU pods, deploy serverless inference endpoints, configure templates, and provision persistent storage — all from your AI agent.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Infrastructure | 2 | List GPU types, browse datacentres |\n| Pods | 5 | Create, update, start, stop, delete GPU pods |\n| Endpoints | 5 | Create, update, delete serverless endpoints |\n| Serverless | 7 | Submit jobs (sync/async), stream output, cancel, retry, health check, purge queue |\n| Templates | 5 | Create, update, delete pod/endpoint templates |\n| Network Volumes | 5 | Create, update, delete persistent storage |\n| Registry Auth | 4 | Manage private container registry credentials |\n| GPU Inventory | 2 | List available GPU types and datacentre capacity |\n\n### Serverless workflow\n\nDeploy a model endpoint, submit inference jobs, and stream results in real-time. The `runsync-endpoint` tool blocks until the job completes — ideal for interactive use. For batch workloads, `run-endpoint` submits asynchronously and `stream-job` streams output as it's generated.\n\n### Community plugin\n\nThis wraps the official [runpod/runpod-mcp](https://github.com/runpod/runpod-mcp) TypeScript server maintained by RunPod. It is listed as a community plugin because it is not built or maintained by Stallari.\n\n### Safety\n\nThis MCP exposes full write access to your RunPod account. Creating pods incurs GPU compute charges immediately. Deleting resources is destructive and irreversible. Use with appropriate cost awareness.",
+  "install": {
+    "runtime": "npx",
+    "package": "@runpod/mcp-server"
+  },
+  "env": [
+    {
+      "name": "RUNPOD_API_KEY",
+      "description": "RunPod API key for authentication — all tools require this",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "cpu",
+    "product": "RunPod",
+    "blurb": "GPU cloud management — 43 tools for pods, serverless endpoints, templates, and volumes. Deploy models and run inference on H100, A100, and RTX GPUs.",
+    "help_text": "Create an API key at runpod.io/console/user/settings. The key provides full access to your RunPod account including creating pods (which incur GPU charges).",
+    "help_url": "https://docs.runpod.io/get-started/api-keys",
+    "fields": [
+      {
+        "key": "RUNPOD_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "Create at runpod.io → Settings → API Keys",
+        "required": true,
+        "help": "Full-access API key. Pod creation incurs GPU compute charges immediately."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.runpod.io/graphql",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Create API Key",
+        "url": "https://www.runpod.io/console/user/settings"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://docs.runpod.io/reference"
+      },
+      {
+        "label": "GPU Pricing",
+        "url": "https://www.runpod.io/pricing"
+      }
+    ],
+    "prerequisites": [
+      "RunPod account",
+      "API key",
+      "Node.js 18+ runtime"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "runpod-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Deploy an inference endpoint",
+      "body": "List available GPU types, create a serverless endpoint with a container image, submit a test job via runsync, and verify the response."
+    },
+    {
+      "type": "workflow",
+      "target": "runpod-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Spin up a GPU pod for development",
+      "body": "Browse GPU availability, create a pod with SSH access and a network volume for persistent storage, then connect."
+    },
+    {
+      "type": "workflow",
+      "target": "runpod-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Cost audit — list all active resources",
+      "body": "List all pods and endpoints, check their GPU types and hourly rates, identify idle resources, and stop or delete anything not in use."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "untested",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "Official RunPod MCP server. 43 tools covering the full API surface. TypeScript, npm-distributed. Uses REST and GraphQL APIs. No write gating — all tools execute immediately. Cost-sensitive: pod creation starts GPU billing instantly."
+}
