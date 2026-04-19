@@ -1,0 +1,77 @@
+{
+  "name": "expedia-travel-mcp",
+  "title": "Expedia Travel Recommendations",
+  "description": "Official Expedia MCP server for travel recommendations — search hotels, flights, activities, and car rentals via Expedia's platform.",
+  "tagline": "Expedia-powered travel search for hotels, flights, activities, and cars",
+  "version": "0.1.0",
+  "author": "ExpediaGroup",
+  "licence": "Apache-2.0",
+  "icon": "/icons/expedia-travel-mcp.svg",
+  "tier": "community",
+  "author_type": "community",
+  "readiness": "beta",
+  "contract": "travel-v1",
+  "contract_notes": "Community-contributed listing of ExpediaGroup's official open-source MCP. Implements travel search (no booking). Complements sabre-blade-mcp for read-only travel exploration without GDS credentials.",
+  "homepage": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp",
+  "repository": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🏨",
+      "text": "Hotels — search Expedia's inventory with real-time availability"
+    },
+    {
+      "icon": "✈️",
+      "text": "Flights — search across Expedia's airline partners"
+    },
+    {
+      "icon": "🎯",
+      "text": "Activities — discover tours, attractions, and experiences"
+    },
+    {
+      "icon": "🚗",
+      "text": "Cars — rental car search across multiple providers"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp"
+    },
+    {
+      "label": "Expedia Partner Solutions",
+      "url": "https://www.expediagroup.com/partners"
+    }
+  ],
+  "readme": "### What it does\n\nExpedia Travel Recommendations provides travel search tools powered by Expedia's inventory. Search hotels, flights, activities, and rental cars without needing GDS credentials.\n\n### How it compares to sabre-blade-mcp\n\n| | Expedia MCP | sabre-blade-mcp |\n|---|---|---|\n| **Source** | Expedia (official) | groupthink-dev |\n| **Scope** | Search/recommendations only | Full workflow: search, price, book, manage |\n| **Credentials** | Expedia affiliate key | Sabre GDS credentials (PCC + OAuth) |\n| **Booking** | No | Yes (write-gated) |\n| **Coverage** | Expedia inventory | 420+ airlines, 2M+ hotels via GDS |\n\nUse Expedia for casual travel exploration. Use Sabre for professional travel management and booking.",
+  "install": {
+    "runtime": "npx",
+    "package": "@anthropic-ai/expedia-travel-recommendations-mcp"
+  },
+  "env": [],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "trivial",
+    "icon": "airplane",
+    "product": "Expedia",
+    "blurb": "Search Expedia's travel inventory — hotels, flights, activities, and cars. No credentials required for basic search.",
+    "help_text": "Install and run with npx. No API keys required for basic recommendations.",
+    "help_url": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp",
+    "fields": []
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "expedia-travel-mcp",
+      "target_type": "plugin",
+      "shared_services": ["travel"],
+      "label": "Explore vacation destinations",
+      "body": "Search for hotels in Bali for a week-long trip, find popular activities and tours nearby, and compare flight options from your departure city."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "last_tested": null
+  },
+  "notes": "Community listing of ExpediaGroup's official open-source MCP. Read-only travel search — no booking capability. Complementary to sabre-blade-mcp."
+}

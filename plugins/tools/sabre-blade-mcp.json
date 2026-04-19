@@ -1,0 +1,178 @@
+{
+  "name": "sabre-blade-mcp",
+  "title": "Sabre Travel Platform",
+  "description": "Search flights, hotels, and rental cars on the Sabre GDS. Book and manage trips with 15 tools, token-efficient output, and dual write-gates on all booking operations.",
+  "tagline": "Flights, hotels, cars, and trip management via the Sabre GDS",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/sabre-blade-mcp.svg",
+  "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "beta",
+  "contract": "travel-v1",
+  "contract_notes": "Implements travel-v1 contract — air shopping (Bargain Finder Max), hotel search, car rental, trip management. 13 read tools + 3 write-gated tools.",
+  "homepage": "https://github.com/groupthink-dev/sabre-blade-mcp",
+  "repository": "https://github.com/groupthink-dev/sabre-blade-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "✈️",
+      "text": "Air — search 420+ airlines (ATPCO, LCC, NDC), price itineraries, seat maps, fare rules"
+    },
+    {
+      "icon": "🏨",
+      "text": "Hotels — search 2M+ properties, rates, availability, property content"
+    },
+    {
+      "icon": "🚗",
+      "text": "Cars — 40+ rental brands across 40,000 locations worldwide"
+    },
+    {
+      "icon": "📋",
+      "text": "Trips — retrieve, list, and cancel PNRs with full segment detail"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/sabre-blade-mcp"
+    },
+    {
+      "label": "Sabre Developer Portal",
+      "url": "https://developer.sabre.com"
+    }
+  ],
+  "readme": "### What it does\n\nSabre Travel Platform provides 15 MCP tools for searching, pricing, and booking travel through the Sabre GDS (Global Distribution System). It covers the full travel workflow: shop for flights across 420+ airlines, search 2M+ hotel properties, compare rental cars from 40+ brands, and manage bookings via PNR operations.\n\n### Why another Sabre MCP?\n\nSabre's official MCP server is enterprise-only — locked inside SabreMosaic with no public repo, no npm package, and no self-host option. This blade provides the same capabilities as an open-source, self-hosted MCP with token-efficient output and dual safety gates.\n\n### Key design choices\n\n- **Token-efficient formatters** strip 60%+ of raw GDS response — agents see fares, schedules, and rates without parsing XML-era field bloat\n- **Dual write-gates** on all booking operations — env var (`SABRE_WRITE_ENABLED=true`) AND per-call `confirm: true` prevent accidental live reservations\n- **7-day token caching** — Sabre's sessionless OAuth tokens are cached and refreshed proactively, eliminating per-request auth overhead\n- **Dual transport** — stdio for Claude Desktop/Code, HTTP for remote access via tunnels\n\n### Tools\n\n**Air (5 tools):** `sabre_air_search` · `sabre_air_price` · `sabre_air_rules` · `sabre_air_seatmap` · `sabre_air_book`\n\n**Hotel (3 tools):** `sabre_hotel_search` · `sabre_hotel_avail` · `sabre_hotel_content` · `sabre_hotel_book`\n\n**Trip (3 tools):** `sabre_trip_get` · `sabre_trip_list` · `sabre_trip_cancel`\n\n**Utility (4 tools):** `sabre_geo_search` · `sabre_airline_lookup` · `sabre_destinations` · `sabre_car_search`",
+  "install": {
+    "runtime": "npx",
+    "package": "sabre-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "SABRE_CLIENT_ID",
+      "description": "Sabre API client ID from developer.sabre.com",
+      "secret": true
+    },
+    {
+      "name": "SABRE_CLIENT_SECRET",
+      "description": "Sabre API client secret (paired with client ID)",
+      "secret": true
+    },
+    {
+      "name": "SABRE_PCC",
+      "description": "Pseudo City Code (PCC) — identifies your agency/organization in the Sabre GDS",
+      "secret": false
+    },
+    {
+      "name": "SABRE_ENVIRONMENT",
+      "description": "API environment: 'cert' (sandbox, default) or 'production'",
+      "secret": false
+    },
+    {
+      "name": "SABRE_WRITE_ENABLED",
+      "description": "Set to 'true' to enable booking and cancellation operations (write gate)",
+      "secret": false
+    }
+  ],
+  "setup": {
+    "auth_model": "oauth2",
+    "complexity": "moderate",
+    "icon": "airplane",
+    "product": "Sabre GDS",
+    "blurb": "Search flights, hotels, and cars across the Sabre Global Distribution System. Book and manage trips with safety gates.",
+    "help_text": "Sign up at developer.sabre.com to get sandbox credentials (Client ID, Client Secret, PCC). Production access requires a commercial agreement with Sabre.",
+    "help_url": "https://developer.sabre.com/guides/travel-agency/developer-guides/getting-started",
+    "fields": [
+      {
+        "key": "SABRE_CLIENT_ID",
+        "label": "Client ID",
+        "secret": true,
+        "placeholder": "From developer.sabre.com application settings",
+        "required": true,
+        "help": "Create an app at developer.sabre.com to get your Client ID"
+      },
+      {
+        "key": "SABRE_CLIENT_SECRET",
+        "label": "Client Secret",
+        "secret": true,
+        "placeholder": "Paired with your Client ID",
+        "required": true,
+        "help": "The secret key associated with your Client ID"
+      },
+      {
+        "key": "SABRE_PCC",
+        "label": "Pseudo City Code",
+        "secret": false,
+        "placeholder": "e.g. ABC1 (4-character PCC)",
+        "required": true,
+        "help": "Your agency's PCC — provided when you register with Sabre. Sandbox accounts have a test PCC."
+      },
+      {
+        "key": "SABRE_ENVIRONMENT",
+        "label": "Environment",
+        "type": "string",
+        "secret": false,
+        "placeholder": "cert (sandbox) or production",
+        "required": false,
+        "help": "Defaults to 'cert' (sandbox). Set to 'production' only after verifying with sandbox."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api-crt.cert.platform.sabre.com/v2/auth/token",
+      "auth_style": "basic"
+    },
+    "prerequisites": [
+      "Sabre developer account (free sandbox at developer.sabre.com)",
+      "Client ID and Client Secret",
+      "PCC (Pseudo City Code)",
+      "Node.js 20+ runtime"
+    ],
+    "help_links": [
+      {
+        "label": "Create Developer Account",
+        "url": "https://developer.sabre.com"
+      },
+      {
+        "label": "Getting Started Guide",
+        "url": "https://developer.sabre.com/guides/travel-agency/developer-guides/getting-started"
+      },
+      {
+        "label": "API Explorer",
+        "url": "https://developer.sabre.com/product-collection"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "sabre-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["travel"],
+      "label": "Search and price a round-trip flight",
+      "body": "Search for flights from SYD to LAX departing next month in economy class. Pick the cheapest non-stop option, price it to confirm availability and fare, then show the fare rules for cancellation penalties."
+    },
+    {
+      "type": "workflow",
+      "target": "sabre-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["travel"],
+      "label": "Find hotels near an airport",
+      "body": "Search for 4+ star hotels near LAX for a 3-night stay. Get detailed rates for the best-value property, then retrieve full property content including amenities and check-in times."
+    },
+    {
+      "type": "workflow",
+      "target": "sabre-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["travel"],
+      "label": "Plan a multi-modal trip",
+      "body": "Look up the airport code for 'Queenstown New Zealand', search for flights from Sydney, find hotels near the destination airport, and compare rental car options for the trip dates."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "gated": "3/3",
+    "last_tested": "2026-04-20"
+  },
+  "notes": "First GDS (Global Distribution System) blade MCP. TypeScript, dual transport (stdio + HTTP). 15 tools (13 read + 3 write-gated), travel-v1 contract. OAuth 2.0 client credentials with 7-day token cache."
+}
