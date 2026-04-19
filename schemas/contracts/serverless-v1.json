@@ -1,0 +1,110 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/serverless-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Serverless GPU compute service contract v1 — 18 operations across endpoint deployment, job execution, template and volume management.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List all serverless endpoints with status, GPU type, and active worker count",
+      "name": "endpoint_list"
+    },
+    {
+      "classification": "required",
+      "description": "Get details for a single endpoint including configuration, scaling, and health",
+      "name": "endpoint_get"
+    },
+    {
+      "classification": "gated",
+      "description": "Deploy a new serverless endpoint with container image, GPU type, and scaling config (incurs charges)",
+      "name": "endpoint_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Update endpoint configuration (scaling, GPU, container image)",
+      "name": "endpoint_update"
+    },
+    {
+      "classification": "gated",
+      "description": "Permanently delete a serverless endpoint (destructive, requires confirmation)",
+      "name": "endpoint_delete"
+    },
+    {
+      "classification": "required",
+      "description": "Get endpoint health metrics — workers ready, jobs in queue, request rate",
+      "name": "endpoint_health"
+    },
+    {
+      "classification": "gated",
+      "description": "Submit an async job to an endpoint — returns job ID for polling",
+      "name": "job_submit"
+    },
+    {
+      "classification": "gated",
+      "description": "Submit a job and block until completion — returns result directly",
+      "name": "job_submit_sync"
+    },
+    {
+      "classification": "recommended",
+      "description": "Stream job output as it's generated (SSE/chunked)",
+      "name": "job_stream"
+    },
+    {
+      "classification": "required",
+      "description": "Get status and output for a submitted job by ID",
+      "name": "job_status"
+    },
+    {
+      "classification": "gated",
+      "description": "Cancel a queued or running job",
+      "name": "job_cancel"
+    },
+    {
+      "classification": "gated",
+      "description": "Retry a failed job with the same input",
+      "name": "job_retry"
+    },
+    {
+      "classification": "gated",
+      "description": "Purge all queued jobs for an endpoint (destructive, requires confirmation)",
+      "name": "queue_purge"
+    },
+    {
+      "classification": "required",
+      "description": "List available templates (container image + config presets)",
+      "name": "template_list"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a template for reusable endpoint/pod configuration",
+      "name": "template_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete a template (destructive, requires confirmation)",
+      "name": "template_delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "List network volumes (persistent storage across restarts)",
+      "name": "volume_list"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a network volume for persistent model/data storage (incurs charges)",
+      "name": "volume_create"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "serverless-v1"
+    },
+    "service": {
+      "const": "serverless"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "serverless-v1",
+  "type": "object"
+}

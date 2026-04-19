@@ -116,6 +116,21 @@
       "service": "brokerage"
     },
     {
+      "contract": "documentation-v1",
+      "description": "Developer documentation, API references, package registries, knowledge bases (read-only).",
+      "service": "documentation"
+    },
+    {
+      "contract": "virtualmachine-v1",
+      "description": "VM lifecycle, GPU provisioning, cloud-init deployment (Vultr, DO, RunPod, Vast.ai).",
+      "service": "virtualmachine"
+    },
+    {
+      "contract": "serverless-v1",
+      "description": "Serverless GPU compute — endpoint deployment, job submission, streaming, queue management.",
+      "service": "serverless"
+    },
+    {
       "contract": "prediction-market-v1",
       "description": "Prediction markets (Polymarket, Kalshi).",
       "service": "prediction-market"

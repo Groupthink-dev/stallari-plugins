@@ -1,0 +1,100 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/virtualmachine-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Virtual machine lifecycle service contract v1 — 16 operations across VM provisioning, GPU management, and cloud-init deployment.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List all VMs/instances with status, region, GPU type, and hourly cost",
+      "name": "vm_list"
+    },
+    {
+      "classification": "required",
+      "description": "Get details for a single VM by ID including IP addresses and provisioning state",
+      "name": "vm_get"
+    },
+    {
+      "classification": "required",
+      "description": "Get current power state and health for a VM",
+      "name": "vm_status"
+    },
+    {
+      "classification": "required",
+      "description": "List available regions/datacentres with GPU plan availability",
+      "name": "vm_list_regions"
+    },
+    {
+      "classification": "required",
+      "description": "List available VM plans/sizes with GPU specs (name, VRAM, count) and hourly pricing",
+      "name": "vm_list_plans"
+    },
+    {
+      "classification": "recommended",
+      "description": "List available OS images and snapshots for VM creation",
+      "name": "vm_list_images"
+    },
+    {
+      "classification": "recommended",
+      "description": "List SSH keys available for injection into new VMs",
+      "name": "vm_ssh_keys"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a new VM with GPU, inject cloud-init user data for worker bootstrap (destructive, requires confirmation)",
+      "name": "vm_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Permanently destroy a VM and its resources (destructive, requires confirmation)",
+      "name": "vm_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Start a stopped VM",
+      "name": "vm_start"
+    },
+    {
+      "classification": "gated",
+      "description": "Stop a running VM (preserves disk, stops compute billing on most providers)",
+      "name": "vm_stop"
+    },
+    {
+      "classification": "gated",
+      "description": "Reboot a running VM",
+      "name": "vm_reboot"
+    },
+    {
+      "classification": "gated",
+      "description": "Change VM plan/GPU type (provider-dependent, may require restart)",
+      "name": "vm_resize"
+    },
+    {
+      "classification": "optional",
+      "description": "Get console access URL or recent console output",
+      "name": "vm_console"
+    },
+    {
+      "classification": "optional",
+      "description": "Get CPU, GPU, memory, and network metrics for a VM",
+      "name": "vm_metrics"
+    },
+    {
+      "classification": "optional",
+      "description": "List, create, or restore VM snapshots",
+      "name": "vm_snapshots"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "virtualmachine-v1"
+    },
+    "service": {
+      "const": "virtualmachine"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "virtualmachine-v1",
+  "type": "object"
+}
