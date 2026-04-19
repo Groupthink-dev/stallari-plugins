@@ -1,0 +1,147 @@
+{
+  "name": "vastai-blade-mcp",
+  "title": "Vast.ai GPU Marketplace",
+  "description": "Search and provision GPU instances on the Vast.ai P2P marketplace — search offers, accept bids, manage instances, and track billing. 16 tools implementing virtualmachine-v1 contract.",
+  "tagline": "GPU marketplace — search offers, provision instances, manage bids and billing",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/vastai-blade-mcp.svg",
+  "tier": "certified",
+  "author_type": "stallari",
+  "readiness": "beta",
+  "contract": ["virtualmachine-v1"],
+  "contract_notes": "Marketplace-adapted virtualmachine-v1 — offer search replaces plan listing, instance creation accepts offers via PUT /asks/{id}. 16 tools, dual write-gate.",
+  "homepage": "https://github.com/groupthink-dev/vastai-blade-mcp",
+  "repository": "https://github.com/groupthink-dev/vastai-blade-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🔍",
+      "text": "GPU marketplace search — filter by model, VRAM, price, location, reliability"
+    },
+    {
+      "icon": "💰",
+      "text": "Bid pricing — interruptible instances with dynamic bid management"
+    },
+    {
+      "icon": "🐳",
+      "text": "Container-native — Docker images, onstart scripts, templates"
+    },
+    {
+      "icon": "🔒",
+      "text": "Dual write-gate — env var + per-call confirm for all 8 destructive ops"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/vastai-blade-mcp"
+    },
+    {
+      "label": "Vast.ai Console",
+      "url": "https://cloud.vast.ai"
+    },
+    {
+      "label": "Vast.ai API Docs",
+      "url": "https://docs.vast.ai"
+    },
+    {
+      "label": "Get API Key",
+      "url": "https://cloud.vast.ai/cli/"
+    }
+  ],
+  "readme": "### What it does\n\nVast.ai GPU Marketplace provides 16 MCP tools for searching and provisioning GPU compute on the Vast.ai peer-to-peer marketplace. Search available GPU offers from hosts worldwide, accept offers to create instances, manage bid pricing, and track billing.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Offers | 2 | Search GPU offers with filters, browse pre-built templates |\n| Instances | 7 | List, get, create, delete, start, stop, reboot GPU instances |\n| Extras | 3 | Fetch logs, set labels, change bid prices |\n| SSH Keys | 2 | List and add SSH keys |\n| Account | 2 | Account info with balance, billing invoices |\n\n### GPU provisioning flow\n\nSearch offers (`vastai_search_offers` with GPU model, VRAM, price filters), pick an offer, accept it (`vastai_instance_create` with `offer_id`, Docker image, and optional onstart script). Poll `vastai_instance_get` until status is running. SSH in via the returned host:port. Delete when done.\n\n### Marketplace concepts\n\nVast.ai is a P2P GPU marketplace, not traditional IaaS. Key differences:\n- **Offers** are available GPU machines from hosts. You search and accept offers — no fixed plans.\n- **Bid pricing** — interruptible instances can be cheaper. Change bids dynamically.\n- **Container-native** — instances run Docker images. No cloud-init. Use `onstart` for setup.\n- **Templates** — pre-configured images (PyTorch, TensorFlow) for quick starts.\n\n### Token efficiency\n\nFormatters strip ~60% of Vast.ai's verbose API responses. Offer summaries show GPU model, VRAM, price/hr, reliability, and location — not 50+ fields of host metadata.\n\n### Safety\n\nAll 8 write operations require dual confirmation: `VASTAI_WRITE_ENABLED=true` environment variable AND `confirm: true` per-call parameter.",
+  "install": {
+    "runtime": "npx",
+    "package": "vastai-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "VASTAI_API_KEY",
+      "description": "Vast.ai API key for authentication — all tools require this",
+      "secret": true
+    },
+    {
+      "name": "VASTAI_WRITE_ENABLED",
+      "description": "Set to 'true' to enable write operations (create, delete, start, stop, reboot, change bid)",
+      "secret": false
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "gpu",
+    "product": "Vast.ai",
+    "blurb": "GPU marketplace — 16 tools for searching offers, provisioning instances, managing bids, and tracking billing on the world's largest GPU marketplace.",
+    "help_text": "Get your API key at cloud.vast.ai/cli/. The key provides access to your Vast.ai account including creating instances (which incur compute charges).",
+    "help_url": "https://docs.vast.ai",
+    "fields": [
+      {
+        "key": "VASTAI_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "Get at cloud.vast.ai/cli/",
+        "required": true,
+        "help": "Full-access API key. Accepting GPU offers incurs compute charges immediately."
+      }
+    ],
+    "test": {
+      "endpoint": "https://console.vast.ai/api/v0/users/current/",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Get API Key",
+        "url": "https://cloud.vast.ai/cli/"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://docs.vast.ai"
+      },
+      {
+        "label": "GPU Marketplace",
+        "url": "https://cloud.vast.ai"
+      }
+    ],
+    "prerequisites": [
+      "Vast.ai account",
+      "API key",
+      "Node.js 20+ runtime"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "vastai-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Find cheapest A100 GPU",
+      "body": "Search GPU offers filtering for A100 with at least 80GB VRAM, sort by price ascending, and show the top 5 cheapest offers with their location and reliability scores."
+    },
+    {
+      "type": "workflow",
+      "target": "vastai-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Provision a PyTorch training instance",
+      "body": "Search for a 4x A100 offer under $5/hr, accept it with the PyTorch template, set an onstart script to clone a repo and start training, then monitor until running."
+    },
+    {
+      "type": "workflow",
+      "target": "vastai-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Cost audit — review GPU spend",
+      "body": "List all running instances with their hourly costs, check billing invoices for the last 7 days, and identify instances that could be moved to cheaper bid pricing."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "not_applicable",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "First-party Stallari blade MCP. Marketplace-adapted virtualmachine-v1 contract (offers replace plans, PUT /asks/{id} replaces POST /instances). TypeScript, dual transport (stdio + HTTP). 16 tools, 33 tests, dual write-gate pattern."
+}
