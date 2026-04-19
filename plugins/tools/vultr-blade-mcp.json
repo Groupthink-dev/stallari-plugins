@@ -1,0 +1,148 @@
+{
+  "name": "vultr-blade-mcp",
+  "title": "Vultr GPU Cloud",
+  "description": "Manage Vultr GPU infrastructure — create, start, stop, and delete cloud VMs with GPU provisioning and cloud-init deployment. 12 tools implementing the virtualmachine-v1 contract.",
+  "tagline": "GPU cloud management — VM lifecycle, plans, regions, and cloud-init provisioning",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/vultr-blade-mcp.svg",
+  "tier": "certified",
+  "author_type": "stallari",
+  "readiness": "beta",
+  "contract": ["virtualmachine-v1"],
+  "contract_notes": "Full virtualmachine-v1 implementation. All 5 required ops, 2 recommended, 5 gated. GPU-first: plans default to GPU type filter.",
+  "homepage": "https://github.com/groupthink-dev/vultr-blade-mcp",
+  "repository": "https://github.com/groupthink-dev/vultr-blade-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🖥️",
+      "text": "12 tools — full VM lifecycle: create, start, stop, delete, reboot"
+    },
+    {
+      "icon": "⚡",
+      "text": "GPU-first — plans default to GPU type with VRAM and pricing"
+    },
+    {
+      "icon": "☁️",
+      "text": "Cloud-init — inject user_data for automated GPU worker deployment"
+    },
+    {
+      "icon": "🔒",
+      "text": "Dual write-gate — env var + per-call confirm for all destructive ops"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/vultr-blade-mcp"
+    },
+    {
+      "label": "Vultr Console",
+      "url": "https://my.vultr.com"
+    },
+    {
+      "label": "Vultr API Docs",
+      "url": "https://www.vultr.com/api/"
+    },
+    {
+      "label": "Create API Key",
+      "url": "https://my.vultr.com/settings/#settingsapi"
+    }
+  ],
+  "readme": "### What it does\n\nVultr GPU Cloud provides full control over Vultr VM instances through 12 MCP tools. Provision GPU-accelerated VMs, deploy with cloud-init, and manage the complete VM lifecycle — all from your AI agent.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Instances | 3 | List, get details, check status |\n| VM lifecycle | 5 | Create, delete, start, stop, reboot |\n| Plans | 1 | List plans with GPU specs and pricing |\n| Regions | 1 | List available datacentres |\n| Images | 1 | List OS images |\n| SSH Keys | 1 | List keys for injection |\n\n### GPU provisioning flow\n\nList GPU plans (`type=vcg`), pick a region, select an OS image, inject cloud-init user_data (installs Docker + NVIDIA toolkit + pulls your OCI image), and create. Poll status until `server_status=ok`. Delete when done.\n\n### Token efficiency\n\nFormatters strip ~60% of Vultr's verbose API responses. Plans prominently display GPU specs (type, VRAM, count) and pricing. Responses are capped at 4000 characters with pagination guidance.\n\n### Safety\n\nAll write operations require dual confirmation: `VULTR_WRITE_ENABLED=true` environment variable AND `confirm: true` per-call parameter. Creating instances incurs GPU compute charges immediately.",
+  "install": {
+    "runtime": "npx",
+    "package": "vultr-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "VULTR_API_KEY",
+      "description": "Vultr API key for authentication — all tools require this",
+      "secret": true
+    },
+    {
+      "name": "VULTR_WRITE_ENABLED",
+      "description": "Set to 'true' to enable write operations (create, delete, start, stop, reboot)",
+      "secret": false
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "cpu",
+    "product": "Vultr",
+    "setup_guide": "docs/setup-guide.md",
+    "blurb": "GPU cloud management — 12 tools for VM lifecycle, GPU provisioning, and cloud-init deployment across Vultr's global datacentres.",
+    "help_text": "Create an API key at my.vultr.com/settings/#settingsapi. The key provides access to your Vultr account including creating instances (which incur compute charges).",
+    "help_url": "https://www.vultr.com/api/",
+    "fields": [
+      {
+        "key": "VULTR_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "Create at my.vultr.com → Settings → API",
+        "required": true,
+        "help": "Full-access API key. Instance creation incurs GPU compute charges immediately."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.vultr.com/v2/account",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Create API Key",
+        "url": "https://my.vultr.com/settings/#settingsapi"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://www.vultr.com/api/"
+      },
+      {
+        "label": "GPU Pricing",
+        "url": "https://www.vultr.com/pricing/#cloud-gpu"
+      }
+    ],
+    "prerequisites": [
+      "Vultr account",
+      "API key",
+      "Node.js 20+ runtime"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "vultr-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Provision a GPU VM with cloud-init",
+      "body": "List GPU plans, pick the cheapest A100, select a region near you, create an instance with cloud-init user_data that installs Docker and pulls a GPU worker image, then poll status until ready."
+    },
+    {
+      "type": "workflow",
+      "target": "vultr-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Cost audit — find idle instances",
+      "body": "List all instances, check their power status and cost, identify stopped instances still incurring charges, and delete any that are no longer needed."
+    },
+    {
+      "type": "workflow",
+      "target": "vultr-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Compare GPU plan pricing",
+      "body": "List all GPU plans with pricing, sort by hourly cost, and identify the best value for A100, L40S, and A16 GPU types across regions."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "not_applicable",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "First-party Stallari blade MCP. Reference implementation for virtualmachine-v1 contract. TypeScript, dual transport (stdio + HTTP). GPU-first defaults. Dual write-gate pattern."
+}
