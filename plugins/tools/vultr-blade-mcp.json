@@ -1,36 +1,36 @@
 {
   "name": "vultr-blade-mcp",
   "title": "Vultr GPU Cloud",
-  "description": "Manage Vultr GPU infrastructure — create, start, stop, and delete cloud VMs with GPU provisioning and cloud-init deployment. 12 tools implementing the virtualmachine-v1 contract.",
-  "tagline": "GPU cloud management — VM lifecycle, plans, regions, and cloud-init provisioning",
-  "version": "0.1.0",
+  "description": "Manage Vultr GPU compute infrastructure — VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualmachine-v1, serverless-v1, and dns-v1 contracts.",
+  "tagline": "GPU compute infrastructure — VMs, bare metal, inference, DNS, firewall, snapshots, billing",
+  "version": "0.2.0",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",
   "readiness": "beta",
-  "contract": ["virtualmachine-v1"],
-  "contract_notes": "Full virtualmachine-v1 implementation. All 5 required ops, 2 recommended, 5 gated. GPU-first: plans default to GPU type filter.",
+  "contract": ["virtualmachine-v1", "serverless-v1", "dns-v1"],
+  "contract_notes": "Extended virtualmachine-v1 (VMs + bare metal), serverless-v1 (inference subscriptions + usage), dns-v1 (domains + records). 50 tools, dual write-gate.",
   "homepage": "https://github.com/groupthink-dev/vultr-blade-mcp",
   "repository": "https://github.com/groupthink-dev/vultr-blade-mcp",
   "multi_instance": false,
   "highlights": [
     {
       "icon": "🖥️",
-      "text": "12 tools — full VM lifecycle: create, start, stop, delete, reboot"
+      "text": "50 tools — VMs, bare metal, inference, DNS, firewall, snapshots, billing"
     },
     {
       "icon": "⚡",
       "text": "GPU-first — plans default to GPU type with VRAM and pricing"
     },
     {
-      "icon": "☁️",
-      "text": "Cloud-init — inject user_data for automated GPU worker deployment"
+      "icon": "🧠",
+      "text": "Serverless inference — manage subscriptions and track token usage"
     },
     {
       "icon": "🔒",
-      "text": "Dual write-gate — env var + per-call confirm for all destructive ops"
+      "text": "Dual write-gate — env var + per-call confirm for all 24 destructive ops"
     }
   ],
   "links": [
@@ -51,7 +51,7 @@
       "url": "https://my.vultr.com/settings/#settingsapi"
     }
   ],
-  "readme": "### What it does\n\nVultr GPU Cloud provides full control over Vultr VM instances through 12 MCP tools. Provision GPU-accelerated VMs, deploy with cloud-init, and manage the complete VM lifecycle — all from your AI agent.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Instances | 3 | List, get details, check status |\n| VM lifecycle | 5 | Create, delete, start, stop, reboot |\n| Plans | 1 | List plans with GPU specs and pricing |\n| Regions | 1 | List available datacentres |\n| Images | 1 | List OS images |\n| SSH Keys | 1 | List keys for injection |\n\n### GPU provisioning flow\n\nList GPU plans (`type=vcg`), pick a region, select an OS image, inject cloud-init user_data (installs Docker + NVIDIA toolkit + pulls your OCI image), and create. Poll status until `server_status=ok`. Delete when done.\n\n### Token efficiency\n\nFormatters strip ~60% of Vultr's verbose API responses. Plans prominently display GPU specs (type, VRAM, count) and pricing. Responses are capped at 4000 characters with pagination guidance.\n\n### Safety\n\nAll write operations require dual confirmation: `VULTR_WRITE_ENABLED=true` environment variable AND `confirm: true` per-call parameter. Creating instances incurs GPU compute charges immediately.",
+  "readme": "### What it does\n\nVultr GPU Compute Infrastructure provides comprehensive control over Vultr's GPU-oriented services through 50 MCP tools. Provision VMs and bare metal, manage serverless inference, configure DNS and firewalls, take snapshots, and track billing — all from your AI agent.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Instances | 11 | List, get, status, bandwidth, create, delete, start, stop, reboot, update, reverse DNS |\n| Bare Metal | 9 | List, get, bandwidth, plans, create, delete, start, stop, reboot |\n| Inference | 5 | List, get, create, delete subscriptions, track usage |\n| DNS | 5 | List domains, list/create/update/delete records |\n| Firewall | 6 | List/get/create/delete groups, list/create rules |\n| Snapshots | 4 | List, get, create, delete |\n| Scripts | 4 | List, get, create, delete startup scripts |\n| Reference | 4 | Plans (GPU specs + pricing), regions, OS images, SSH keys |\n| Account | 2 | Account info, billing history |\n\n### GPU provisioning flow\n\nList GPU plans (`type=vcg`), pick a region, select an OS image, inject cloud-init user_data (installs Docker + NVIDIA toolkit + pulls your OCI image), attach a firewall group and startup script, and create. Poll status until `server_status=ok`. Snapshot before teardown. Delete when done.\n\n### Token efficiency\n\nFormatters strip ~60% of Vultr's verbose API responses. Plans prominently display GPU specs (type, VRAM, count) and pricing. Inference API keys are masked. Responses are capped at 4000 characters with pagination guidance.\n\n### Safety\n\nAll 24 write operations require dual confirmation: `VULTR_WRITE_ENABLED=true` environment variable AND `confirm: true` per-call parameter. Creating instances and bare metal incurs compute charges immediately.",
   "install": {
     "runtime": "npx",
     "package": "vultr-blade-mcp"
@@ -74,7 +74,7 @@
     "icon": "cpu",
     "product": "Vultr",
     "setup_guide": "docs/setup-guide.md",
-    "blurb": "GPU cloud management — 12 tools for VM lifecycle, GPU provisioning, and cloud-init deployment across Vultr's global datacentres.",
+    "blurb": "GPU compute infrastructure — 50 tools for VMs, bare metal, inference, DNS, firewall, snapshots, and billing across Vultr's global datacentres.",
     "help_text": "Create an API key at my.vultr.com/settings/#settingsapi. The key provides access to your Vultr account including creating instances (which incur compute charges).",
     "help_url": "https://www.vultr.com/api/",
     "fields": [
@@ -144,5 +144,5 @@
     "gated": "untested",
     "last_tested": null
   },
-  "notes": "First-party Stallari blade MCP. Reference implementation for virtualmachine-v1 contract. TypeScript, dual transport (stdio + HTTP). GPU-first defaults. Dual write-gate pattern."
+  "notes": "First-party Stallari blade MCP. Reference implementation for virtualmachine-v1, serverless-v1, and dns-v1 contracts. TypeScript, dual transport (stdio + HTTP). GPU-first defaults. 50 tools, 74 tests, dual write-gate pattern."
 }
