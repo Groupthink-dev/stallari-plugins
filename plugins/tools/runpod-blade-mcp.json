@@ -1,0 +1,147 @@
+{
+  "name": "runpod-blade-mcp",
+  "title": "RunPod GPU Compute",
+  "description": "Manage GPU pods, serverless endpoints, and job queues on RunPod — create pods, deploy autoscaling inference endpoints, submit jobs, and monitor GPU resources. 19 tools implementing both virtualmachine-v1 and serverless-v1 contracts.",
+  "tagline": "GPU pods + serverless inference — manage pods, endpoints, jobs, and GPU resources",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "licence": "MIT",
+  "icon": "/icons/runpod-blade-mcp.svg",
+  "tier": "certified",
+  "author_type": "stallari",
+  "readiness": "beta",
+  "contract": ["virtualmachine-v1", "serverless-v1"],
+  "contract_notes": "Dual-contract blade — virtualmachine-v1 for GPU pods (8 tools), serverless-v1 for autoscaling endpoints and job queues (9 tools). First blade to implement both contracts. 19 tools total, dual write-gate.",
+  "homepage": "https://github.com/groupthink-dev/runpod-blade-mcp",
+  "repository": "https://github.com/groupthink-dev/runpod-blade-mcp",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🖥️",
+      "text": "GPU pods — create, start, stop, restart on-demand GPU VMs"
+    },
+    {
+      "icon": "⚡",
+      "text": "Serverless inference — autoscaling endpoints with job queues"
+    },
+    {
+      "icon": "🔄",
+      "text": "Dual contract — virtualmachine-v1 + serverless-v1 in one blade"
+    },
+    {
+      "icon": "🔒",
+      "text": "Dual write-gate — env var + per-call confirm for all 11 destructive ops"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/groupthink-dev/runpod-blade-mcp"
+    },
+    {
+      "label": "RunPod Console",
+      "url": "https://www.runpod.io/console"
+    },
+    {
+      "label": "RunPod API Docs",
+      "url": "https://docs.runpod.io"
+    },
+    {
+      "label": "Get API Key",
+      "url": "https://www.runpod.io/console/user/settings"
+    }
+  ],
+  "readme": "### What it does\n\nRunPod GPU Compute provides 19 MCP tools for managing GPU compute on RunPod. Create GPU pods for interactive development, deploy autoscaling serverless endpoints for inference, submit and monitor jobs, and explore available GPU types.\n\n### Tool coverage\n\n| Domain | Tools | What you can do |\n|--------|-------|-----------------|\n| Pods | 8 | List, get, create, delete, start, stop, restart pods; browse GPU types |\n| Endpoints | 5 | List, get, create, update, delete serverless endpoints |\n| Jobs | 4 | Submit async/sync jobs, check status, cancel |\n| Account | 2 | Account info with balance, list templates |\n\n### GPU pod workflow\n\nBrowse GPU types (`runpod_gpu_types`), create a pod (`runpod_pod_create` with GPU type, image, disk), wait for RUNNING status. Stop when idle to save costs, restart when needed. Delete when done.\n\n### Serverless workflow\n\nList templates (`runpod_template_list`), create an endpoint (`runpod_endpoint_create` with template, GPU tier, scaling config). Submit jobs (`runpod_job_run` for async, `runpod_job_runsync` for sync). Poll results with `runpod_job_status`. The endpoint autoscales workers based on queue depth.\n\n### Dual contract\n\nThis is the first blade to implement both `virtualmachine-v1` (pods) and `serverless-v1` (endpoints/jobs). Agentic platforms can use the same contract interface to manage RunPod alongside Vultr, Vast.ai, and other GPU providers.\n\n### Token efficiency\n\nFormatters strip ~60% of RunPod's API responses. Pod summaries show GPU model, cost/hr, uptime, and status — not internal machine IDs, environment variables, or Docker args.\n\n### Safety\n\nAll 11 write operations require dual confirmation: `RUNPOD_WRITE_ENABLED=true` environment variable AND `confirm: true` per-call parameter.",
+  "install": {
+    "runtime": "npx",
+    "package": "runpod-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "RUNPOD_API_KEY",
+      "description": "RunPod API key for authentication — all tools require this",
+      "secret": true
+    },
+    {
+      "name": "RUNPOD_WRITE_ENABLED",
+      "description": "Set to 'true' to enable write operations (create/delete pods, submit jobs, manage endpoints)",
+      "secret": false
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "trivial",
+    "icon": "gpu",
+    "product": "RunPod",
+    "blurb": "GPU compute — 19 tools for managing GPU pods, serverless endpoints, job queues, and GPU resources on RunPod.",
+    "help_text": "Get your API key at runpod.io/console/user/settings. The key provides access to your RunPod account including creating pods and submitting jobs (which incur compute charges).",
+    "help_url": "https://docs.runpod.io",
+    "fields": [
+      {
+        "key": "RUNPOD_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "Get at runpod.io/console/user/settings",
+        "required": true,
+        "help": "Full-access API key. Creating pods and submitting jobs incurs compute charges immediately."
+      }
+    ],
+    "test": {
+      "endpoint": "https://api.runpod.io/graphql",
+      "auth_style": "bearer"
+    },
+    "help_links": [
+      {
+        "label": "Get API Key",
+        "url": "https://www.runpod.io/console/user/settings"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://docs.runpod.io"
+      },
+      {
+        "label": "RunPod Console",
+        "url": "https://www.runpod.io/console"
+      }
+    ],
+    "prerequisites": [
+      "RunPod account",
+      "API key",
+      "Node.js 20+ runtime"
+    ]
+  },
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "runpod-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Spin up a GPU pod for training",
+      "body": "List available GPU types with at least 24GB VRAM, create an A100 pod with PyTorch image and 100GB volume, wait for RUNNING status, then show the pod details with SSH access info."
+    },
+    {
+      "type": "workflow",
+      "target": "runpod-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["serverless"],
+      "label": "Deploy a serverless inference endpoint",
+      "body": "List available templates, create a serverless endpoint with AMPERE_24 GPU tier and scale-to-zero config, then submit a test job and wait for results."
+    },
+    {
+      "type": "workflow",
+      "target": "runpod-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine", "serverless"],
+      "label": "GPU resource audit",
+      "body": "Check account balance and spending, list all running pods with hourly costs, list all serverless endpoints with worker counts, and identify idle resources that could be stopped or scaled down."
+    }
+  ],
+  "conformance": {
+    "required": "untested",
+    "recommended": "untested",
+    "optional": "not_applicable",
+    "gated": "untested",
+    "last_tested": null
+  },
+  "notes": "First-party Stallari blade MCP. First dual-contract blade (virtualmachine-v1 + serverless-v1). Three API bases (REST, GraphQL, Jobs). TypeScript, dual transport (stdio + HTTP). 19 tools, 26 tests, dual write-gate pattern."
+}
