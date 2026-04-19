@@ -1,0 +1,60 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/documentation-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Documentation and reference service contract v1 — 8 operations for searching, browsing, and retrieving developer documentation, API references, package registries, and knowledge bases. Read-only by design. Covers NixOS, Apple Developer, language docs, and similar reference MCPs.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Full-text search across the documentation corpus — returns ranked results with titles, summaries, and identifiers",
+      "name": "search"
+    },
+    {
+      "classification": "required",
+      "description": "Get detailed content for a specific item — API page, package detail, option definition, or article",
+      "name": "info"
+    },
+    {
+      "classification": "recommended",
+      "description": "List categories, topics, technologies, or taxonomy — hierarchical navigation of the documentation structure",
+      "name": "browse"
+    },
+    {
+      "classification": "recommended",
+      "description": "Version history, updates, changelogs, or release notes — track changes over time",
+      "name": "versions"
+    },
+    {
+      "classification": "optional",
+      "description": "Resolve cross-references between items — batch link resolution, dependency graphs, or related-item lookups",
+      "name": "references"
+    },
+    {
+      "classification": "optional",
+      "description": "Sample code, working examples, or implementation patterns from the documentation source",
+      "name": "samples"
+    },
+    {
+      "classification": "optional",
+      "description": "Platform, version, or environment compatibility information for a specific item",
+      "name": "compatibility"
+    },
+    {
+      "classification": "optional",
+      "description": "Find related, similar, or alternative items — recommendations, see-also, or functional equivalents",
+      "name": "related"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "documentation-v1"
+    },
+    "service": {
+      "const": "documentation"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "documentation-v1",
+  "type": "object"
+}

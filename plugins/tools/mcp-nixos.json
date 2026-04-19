@@ -1,0 +1,146 @@
+{
+  "name": "mcp-nixos",
+  "title": "NixOS",
+  "description": "Search NixOS packages, options, Home Manager, nix-darwin, flakes, FlakeHub, NixVim, wiki, Noogle, and NixHub version history",
+  "tagline": "NixOS ecosystem reference — packages, options, flakes, and docs",
+  "version": "2.3.1",
+  "author": "utensils",
+  "licence": "MIT",
+  "icon": "/icons/mcp-nixos.svg",
+  "author_type": "community",
+  "readiness": "beta",
+  "contract": "documentation-v1",
+  "repository": "https://github.com/utensils/mcp-nixos",
+  "homepage": "https://github.com/utensils/mcp-nixos",
+  "multi_instance": false,
+  "highlights": [
+    {
+      "icon": "🔍",
+      "text": "10 sources — NixOS, Home Manager, nix-darwin, Flakes, FlakeHub, NixVim, wiki, nix.dev, Noogle, NixHub"
+    },
+    {
+      "icon": "📦",
+      "text": "Package search — find packages, programs, and options across channels"
+    },
+    {
+      "icon": "⏳",
+      "text": "Version history — track package versions across Nixpkgs commits via NixHub"
+    },
+    {
+      "icon": "❄️",
+      "text": "Flake inputs — browse and read flake input metadata from FlakeHub"
+    },
+    {
+      "icon": "📖",
+      "text": "Docs search — wiki, nix.dev guides, and Noogle function reference"
+    },
+    {
+      "icon": "🔓",
+      "text": "No auth required — all queries hit public APIs"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/utensils/mcp-nixos"
+    },
+    {
+      "label": "PyPI Package",
+      "url": "https://pypi.org/project/mcp-nixos/"
+    },
+    {
+      "label": "NixOS Package Search",
+      "url": "https://search.nixos.org"
+    },
+    {
+      "label": "NixHub Version History",
+      "url": "https://www.nixhub.io"
+    }
+  ],
+  "readme": "### What it does\n\nNixOS MCP gives your AI agent comprehensive reference access to the NixOS ecosystem. Two tools cover package search, option lookup, version history, flake discovery, and documentation search across 10 sources.\n\nYour agent can find the right package name, check available NixOS or Home Manager options, look up function signatures via Noogle, trace version history across Nixpkgs channels, and browse flake inputs — all without leaving the conversation.\n\n### Tool coverage\n\n| Tool | What it does |\n|------|--------------|\n| `nix` | Search, info, stats, options, channels, flake-inputs, and cache queries across NixOS, Home Manager, nix-darwin, Flakes, FlakeHub, NixVim, wiki, nix.dev, Noogle, and NixHub |\n| `nix_versions` | Package version history from NixHub.io — find which Nixpkgs commit introduced a specific version |\n\n### Source coverage\n\n| Source | What it searches |\n|--------|------------------|\n| `nixos` | NixOS packages and options (search.nixos.org) |\n| `home-manager` | Home Manager options and programs |\n| `darwin` | nix-darwin options (macOS system configuration) |\n| `flakes` | Flake metadata and inputs |\n| `flakehub` | FlakeHub registry — versioned flake distribution |\n| `nixvim` | NixVim plugin options |\n| `wiki` | NixOS Wiki articles |\n| `nix-dev` | nix.dev guides and tutorials |\n| `noogle` | Nix function reference (type signatures, docs) |\n| `nixhub` | NixHub.io package version history |\n\n### No auth required\n\nAll queries hit public APIs — no API keys, tokens, or accounts needed. Install and use immediately.\n\n### Use cases\n\n- **NixOS configuration authoring** — find package names, check option types and defaults\n- **Declarative infrastructure** — pair with VM provisioning MCPs to build NixOS-based infrastructure\n- **Home Manager / nix-darwin setup** — search options for dotfile and macOS management\n- **Flake development** — discover flake inputs, check FlakeHub registry\n- **Debugging** — trace package version history to find regressions",
+  "install": {
+    "runtime": "uv",
+    "package": "mcp-nixos"
+  },
+  "env": [],
+  "setup": {
+    "auth_model": "none",
+    "complexity": "trivial",
+    "icon": "snowflake",
+    "product": "NixOS Reference",
+    "blurb": "NixOS ecosystem search — packages, options, flakes, and version history. No credentials needed.",
+    "help_text": "No configuration required. All queries use public NixOS APIs. Install and use immediately.",
+    "help_links": [
+      {
+        "label": "NixOS Package Search",
+        "url": "https://search.nixos.org"
+      },
+      {
+        "label": "NixHub Version History",
+        "url": "https://www.nixhub.io"
+      },
+      {
+        "label": "Noogle Function Reference",
+        "url": "https://noogle.dev"
+      }
+    ]
+  },
+  "services": {
+    "documentation": {
+      "search": "nix",
+      "info": "nix",
+      "browse": "nix",
+      "versions": "nix_versions"
+    }
+  },
+  "scenarios": [
+    {
+      "type": "companion",
+      "target": "vultr-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["virtualmachine"],
+      "label": "Provision a NixOS VM on Vultr",
+      "body": "Search for NixOS packages needed for the server role, look up configuration options, then use vultr-blade-mcp to provision a VM with cloud-init that bootstraps NixOS with the discovered configuration."
+    },
+    {
+      "type": "companion",
+      "target": "cloudflare-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["dns"],
+      "label": "Configure a NixOS service with DNS",
+      "body": "Look up NixOS service options (e.g. services.nginx, services.ntfy-sh), check the package version history for stability, then configure DNS records via Cloudflare for the new service endpoint."
+    },
+    {
+      "type": "workflow",
+      "target": "mcp-nixos",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Audit Nixpkgs version availability",
+      "body": "Check version history for critical packages across channels, identify which Nixpkgs commit provides the required versions, and verify option compatibility between NixOS and Home Manager."
+    }
+  ],
+  "conformance": {
+    "required": "2/2",
+    "recommended": "2/2",
+    "optional": "0/4",
+    "last_tested": "2026-04-20"
+  },
+  "certification": {
+    "status": "pending",
+    "stability": "stable",
+    "platform_tested": ["macos-arm64"],
+    "checklist": {
+      "tools_enumerate": true,
+      "tools_callable": true,
+      "installs_cleanly": true,
+      "licence_compatible": true,
+      "no_data_exfil": true,
+      "auth_reviewed": true
+    },
+    "security_notes": "Read-only. No credentials. All queries to public APIs (search.nixos.org, nixhub.io, flakehub.com, noogle.dev, wiki.nixos.org). No write operations. No local filesystem access.",
+    "validated_version": "2.3.1",
+    "validated_date": "2026-04-20",
+    "validator": "system-architect"
+  },
+  "notes": "Community listing for utensils/mcp-nixos (593 stars). Read-only NixOS ecosystem reference. 2 tools, 10 search sources. Zero auth. Implements documentation-v1 (required + recommended). Pairs with virtualmachine-v1 providers (vultr-blade-mcp, runpod-mcp) for declarative infrastructure workflows."
+}
