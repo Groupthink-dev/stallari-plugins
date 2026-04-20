@@ -1,0 +1,914 @@
+pack: "1.7"
+name: business-ops
+title: "Business Operations"
+featured: false
+version: "1.0.0"
+tagline: "Revenue, accounting, payroll, and compliance in one operator"
+description: >-
+  Multi-service business operations automation — subscription revenue tracking,
+  double-entry accounting reconciliation, payroll compliance, and regulatory
+  reporting. Three services, one operator, fourteen skills that follow the money
+  from billing to BAS lodgement.
+icon: /icons/business-ops.svg
+author:
+  name: groupthink-dev
+  url: https://github.com/groupthink-dev
+licence: MIT
+visibility: open
+author_type: first-party
+readiness: beta
+pricing: null
+bundled: false
+
+readme:
+  format: markdown
+  body: |
+    # Business Operations Pack
+
+    Multi-service business operations for Stallari — subscription revenue
+    tracking, double-entry accounting reconciliation, payroll compliance,
+    and regulatory reporting. Connects billing, accounting, and vault into
+    a coherent financial operations layer.
+
+    ## What it does
+
+    This pack treats your billing and accounting platforms as one observable
+    pipeline. Revenue flows in from subscriptions, expenses flow out to
+    vendors, payroll runs on schedule, and compliance deadlines tick down.
+    Your agent reconciles, reports, and alerts across all of it.
+
+    ### Revenue (billing service)
+
+    - **Subscription dashboard** — MRR, churn rate, ARPU, LTV on demand
+    - **Churn alert** — daily detection of cancellations and past-due subscriptions
+    - **Refund processor** — policy-checked refund requests with human approval gate
+
+    ### Accounting (accounting service)
+
+    - **Invoice reconciliation** — cross-reference billing transactions against
+      accounting invoices on the 1st and 15th
+    - **Monthly financials** — revenue breakdown, expenses, margin, and runway
+    - **Expense entry** — structure and post expense records to accounting from
+      user-provided amounts or vault cost notes
+    - **Cost anomaly** — weekly trend analysis across expense categories
+    - **Tax prep** — quarterly summary for your external accountant
+    - **Vendor reconciliation** — match accounting expenses against billing transactions
+
+    ### Payroll (accounting service, payroll scope)
+
+    - **Payroll summary** — pay run status, upcoming dates, leave balances
+    - **Super compliance** — monthly superannuation guarantee payment checks
+    - **Leave balances** — employee leave accruals and entitlement checks
+
+    ### Compliance (vault + accounting)
+
+    - **BAS lodgement prep** — quarterly BAS data pull from accounting reports
+    - **Compliance digest** — monthly scan of vault-tracked deadlines (ASIC
+      review dates, insurance renewals, contract expiry)
+
+    ## Who this is for
+
+    Small businesses and SaaS operators who use separate billing and accounting
+    platforms and want automated reconciliation, churn detection, expense
+    tracking, payroll visibility, and compliance preparation without building
+    custom integrations.
+
+    ## Safety model
+
+    - **All accounting writes require explicit human confirmation** — the pack
+      never auto-posts expenses, bills, or adjustments
+    - **All billing writes (refunds) require explicit human confirmation** —
+      the pack never auto-refunds
+    - **Payroll access is strictly read-only** — no pay run modifications,
+      no leave adjustments, no superannuation changes
+    - Revenue figures are **rounded in stdout** and exact only in vault notes
+      (always `publish: false`)
+    - Customer PII is **hashed or truncated in logs** — full details only in
+      vault notes
+    - **Graceful degradation** — billing service is recommended, not required.
+      Accounting-only mode works without billing, skipping revenue skills
+
+highlights:
+  - icon: "\U0001F4B0"
+    text: "Revenue tracking — MRR, churn, ARPU, LTV from your billing provider"
+  - icon: "\U0001F4CA"
+    text: "Accounting reconciliation — billing and accounting kept in sync on the 1st and 15th"
+  - icon: "\U0001F4B3"
+    text: "Payroll visibility — pay run status, leave balances, super compliance (read-only)"
+  - icon: "\U0001F4CB"
+    text: "Compliance automation — BAS prep, vendor reconciliation, deadline tracking"
+  - icon: "\U0001F512"
+    text: "All writes require human approval — no auto-posting, no auto-refunds, ever"
+
+links:
+  - label: Source Code
+    url: https://github.com/groupthink-dev/stallari-plugins
+  - label: Stallari Documentation
+    url: https://stallari.ai/docs
+  - label: Pack Spec
+    url: https://stallari.ai/docs/pack-spec
+  - label: Accounting contract (accounting-v1)
+    url: https://stallari.dev/schemas/contracts/accounting-v1
+  - label: Billing contract (billing-v1)
+    url: https://stallari.dev/schemas/contracts/billing-v1
+
+min_stallari: "0.60"
+
+# ── Plugin suggestions ──────────────────────────────────────────────
+
+suggested_plugins:
+  - service: accounting
+    required: true
+    note: "Double-entry accounting platform. Required for reconciliation, financials, payroll, and compliance."
+    plugins:
+      - name: xero-blade-mcp
+        title: "Xero"
+        author_type: first-party
+        note: "Full Xero API — invoices, bills, payments, reports, Payroll AU, BAS. AU/NZ focus."
+
+  - service: billing
+    required: false
+    note: "Subscription billing platform. Adds MRR tracking, churn detection, and refund processing."
+    plugins:
+      - name: paddle-billing-blade-mcp
+        title: "Paddle Billing"
+        author_type: first-party
+        note: "Products, prices, subscriptions, transactions, adjustments. Sandbox-first."
+
+# ── Service requirements ────────────────────────────────────────────
+
+requires:
+  services:
+    - service: vault
+      operations: [read, search, create]
+    - service: accounting
+      operations:
+        - invoices
+        - bills
+        - payments
+        - accounts
+        - profit_loss
+        - balance_sheet
+        - contacts
+        - tax_rates
+
+recommends:
+  services:
+    - service: accounting
+      operations:
+        - employees
+        - employee
+        - payslips
+        - payslip
+        - bank_transactions
+        - aged_receivables
+        - aged_payables
+        - trial_balance
+        - credit_notes
+    - service: billing
+      operations:
+        - subscriptions
+        - customers
+        - transactions
+        - adjustments
+        - subscription
+        - customer
+
+data:
+  reads: [accounting, billing, vault]
+  writes: [accounting, billing, vault]
+  stores: nothing
+  phones_home: false
+
+# ── Scenarios ───────────────────────────────────────────────────────
+
+scenarios:
+  - type: pairs_with
+    target: saas-revenue-ops
+    target_type: pack
+    shared_services: [billing]
+    label: "Combine with SaaS Revenue Ops for end-to-end billing + accounting"
+    body: >-
+      SaaS Revenue Ops monitors the billing pipeline (subscriptions, orders,
+      delivery). Business Ops picks up where revenue lands — reconciling
+      billing against accounting, tracking expenses, managing payroll, and
+      preparing compliance reports. Together they cover checkout to BAS.
+
+  - type: pairs_with
+    target: product-operations-starter
+    target_type: pack
+    shared_services: [billing, vault]
+    label: "Combine with Product Operations Starter for comms + accounting"
+    body: >-
+      Product Operations Starter handles release announcements, customer
+      onboarding, and contact sync. Business Ops handles the financial
+      back-office — reconciliation, expenses, payroll, compliance. Together
+      they cover the full product operations lifecycle.
+
+# ── Agent ───────────────────────────────────────────────────────────
+
+agents:
+  bizops:
+    role: operator
+    prompt: |
+      You are a business operations operator. You manage the full financial
+      lifecycle — subscription revenue from billing, double-entry accounting
+      reconciliation, payroll visibility, and regulatory compliance
+      preparation.
+
+      Four operational domains:
+
+      1. Revenue — subscription metrics (MRR, churn, ARPU, LTV), churn
+         detection, and policy-checked refunds via the billing service.
+      2. Accounting — invoice reconciliation between billing and accounting,
+         monthly financial reports, expense entry, cost anomaly detection,
+         tax preparation, and vendor reconciliation.
+      3. Payroll — read-only access to pay run status, leave balances, and
+         superannuation compliance via the accounting service payroll scope.
+      4. Compliance — BAS/GST lodgement preparation and compliance deadline
+         tracking via vault-stored obligation records.
+
+      Safety rules:
+        - All accounting writes (creating bills, posting expenses) require
+          explicit human confirmation before execution. Never auto-post.
+        - All billing writes (refunds, adjustments) require explicit human
+          confirmation. Present the refund amount and policy check first.
+        - Payroll access is strictly read-only. Never attempt to modify
+          pay runs, leave, or superannuation records.
+        - Revenue figures: round to nearest dollar in stdout. Exact figures
+          only in vault notes (always publish: false).
+        - Customer PII: hash or truncate email addresses and names in all
+          log and stdout output. Full details only in vault notes.
+        - When billing service is not configured, report gracefully and
+          skip revenue skills. Never error on missing optional services.
+
+      Output style:
+        - Currency amounts include currency code (e.g. $1,234 AUD)
+        - Use markdown tables for metrics and reconciliation results
+        - Flag items needing attention with severity indicators
+        - Always state which services were checked and which unavailable
+    model_preference:
+      - claude-sonnet-4-6
+
+# ── Skills ──────────────────────────────────────────────────────────
+
+skills:
+
+  # ── Revenue ─────────────────────────────────────────────────────
+
+  - name: subscription-dashboard
+    agent: bizops
+    description: Subscription revenue dashboard — MRR, churn, ARPU, LTV
+    category: report
+    graph: react-extract
+    services_used:
+      - service: billing
+        operations: [subscriptions, customers, products, transactions]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Produce a subscription revenue dashboard from the billing service.
+
+      If the billing service is not configured, report that it is unavailable
+      and exit gracefully — do not error.
+
+      Metrics to calculate:
+        1. Call {{billing.subscriptions}} — group by status (active, trialing,
+           past_due, paused, cancelled). Count each group.
+        2. Calculate MRR from active subscriptions (sum of recurring amounts
+           normalised to monthly).
+        3. Derive ARPU = MRR / active subscription count.
+        4. Call {{billing.transactions}} for the trailing 30 days — calculate
+           total revenue and estimate LTV from average revenue per customer
+           and average subscription age.
+        5. Calculate churn rate = cancelled in period / total at period start.
+
+      Format as a markdown table with section headers. Round currency to
+      nearest dollar in output. Archive the full report to vault with
+      {{vault.create}} — set publish: false, include exact unrounded figures
+      in the vault note.
+
+  - name: churn-alert
+    agent: bizops
+    description: Daily detection of subscription cancellations and past-due events
+    category: triage
+    graph: react-extract
+    services_used:
+      - service: billing
+        operations: [subscriptions, subscription, transactions]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 7 * * *"
+    prompt: |
+      Detect subscription churn signals from the billing service.
+
+      If the billing service is not configured, skip silently.
+
+      Steps:
+        1. Call {{billing.subscriptions}} filtered to status changes in the
+           last 24 hours — look for cancellations, past-due, and paused.
+        2. For each flagged subscription, call {{billing.subscription}} to
+           get detail — subscription age, plan, revenue impact.
+        3. Score severity:
+           - High: revenue impact above the configured threshold or
+             subscription age > 6 months
+           - Medium: standard cancellation within first 3 months
+           - Low: trial expiry or free-tier churn
+        4. If total events exceed {{config.churn_threshold}}, flag as
+           attention-needed in the output.
+        5. Archive to vault with {{vault.create}} — publish: false, hash
+           customer identifiers in output.
+
+      Output a summary table: subscription ID (first 8 chars), status change,
+      revenue impact (rounded), severity. Never expose full customer email
+      or name in stdout.
+
+  - name: refund-processor
+    agent: bizops
+    description: Policy-checked refund request with human approval gate
+    category: review
+    graph: react-verify
+    services_used:
+      - service: billing
+        operations: [subscription, customer, transactions, create_adjustment]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Process a refund request for a subscription or transaction.
+
+      Step 1 — Identify:
+        Accept a customer identifier (email, subscription ID, or transaction
+        ID). Call {{billing.customer}} or {{billing.subscription}} to look up
+        the account. Call {{billing.transactions}} filtered to this customer
+        to find the transaction in question.
+
+      Step 2 — Policy check:
+        Verify the transaction date is within {{config.refund_window_days}}
+        days. Check the transaction status is eligible (completed, not
+        already refunded). Calculate the refund amount.
+
+      Step 3 — Present for human confirmation:
+        Display: transaction date, amount, subscription status, policy
+        check result (eligible/ineligible with reason). If ineligible,
+        explain why and stop — do not offer to override.
+        NEVER process a refund without explicit human approval.
+
+      Step 4 — Execute (only after human confirmation):
+        Call {{billing.create_adjustment}} with type=refund, the transaction
+        ID, and the approved amount.
+
+      Step 5 — Record:
+        Create a vault note with {{vault.create}} — publish: false. Include
+        the refund amount, transaction reference (truncated), policy check
+        result, and timestamp. Hash customer email in the note.
+
+  # ── Accounting ──────────────────────────────────────────────────
+
+  - name: invoice-reconciliation
+    agent: bizops
+    description: Reconcile billing transactions against accounting invoices
+    category: sync
+    graph: react-extract
+    services_used:
+      - service: billing
+        operations: [transactions, subscriptions]
+      - service: accounting
+        operations: [invoices, payments]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 8 1,15 * *"
+    prompt: |
+      Reconcile billing transactions against accounting invoices for the
+      current period.
+
+      Step 1 — Pull billing data:
+        Call {{billing.transactions}} for the period since last reconciliation
+        (default: last 15 days). Extract transaction ID, amount, date,
+        customer, and status.
+
+      Step 2 — Pull accounting data:
+        Call {{accounting.invoices}} for the same period. Extract invoice
+        number, amount, date, contact, and payment status.
+
+      Step 3 — Match:
+        Cross-reference by amount and date (within 3-day tolerance).
+        Classify each item as: matched, unmatched-billing (in billing but
+        not accounting), unmatched-accounting (in accounting but not
+        billing), or amount-mismatch.
+
+      Step 4 — Report:
+        Produce a reconciliation table with columns: billing ref (first 8
+        chars), accounting ref, amount, date, status. Summarise: total
+        matched, total unmatched, total discrepancy amount.
+
+      Step 5 — Escalation:
+        Flag for attention if: >5 unmatched items, any amount discrepancy,
+        or total discrepancy > $100.
+
+      Step 6 — Archive:
+        Create vault note with {{vault.create}} — publish: false. Include
+        the full reconciliation table with exact amounts.
+
+      If billing service is not configured, report that reconciliation
+      requires both billing and accounting services, and exit.
+
+  - name: monthly-financials
+    agent: bizops
+    description: Monthly financial report — revenue, expenses, margin, runway
+    category: report
+    graph: react-extract
+    services_used:
+      - service: accounting
+        operations: [profit_loss, balance_sheet, trial_balance, accounts]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 8 1 * *"
+    prompt: |
+      Produce a monthly financial report from the accounting service for
+      the previous calendar month.
+
+      Data to pull:
+        1. Call {{accounting.profit_loss}} for the previous month — extract
+           revenue lines, expense lines, and net profit.
+        2. Call {{accounting.balance_sheet}} as at end of previous month —
+           extract current assets, liabilities, equity.
+        3. Call {{accounting.trial_balance}} — verify debits equal credits.
+        4. Optionally call {{accounting.accounts}} to resolve account names.
+
+      Report sections:
+        - Revenue summary (by category if available)
+        - Expense summary (by category)
+        - Net profit / loss
+        - Key ratios: gross margin, expense ratio
+        - Balance sheet snapshot
+        - Month-over-month comparison (if prior month data available)
+
+      Format as markdown with tables. Round to nearest dollar in output.
+      Archive full report to vault with {{vault.create}} — publish: false,
+      exact figures in vault note.
+
+  - name: expense-entry
+    agent: bizops
+    description: Structure and post expense records to accounting
+    category: sync
+    graph: react-verify
+    services_used:
+      - service: accounting
+        operations: [contacts, accounts, create_bill]
+      - service: vault
+        operations: [read, search, create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Create expense records in the accounting service from user-provided
+      data or vault cost notes.
+
+      Step 1 — Gather expense data:
+        Accept expense details from the user: vendor name, amount, currency,
+        date, category/description. Alternatively, search vault with
+        {{vault.search}} for cost notes tagged with a relevant category.
+
+      Step 2 — Resolve accounting references:
+        Call {{accounting.contacts}} to find or confirm the vendor contact.
+        Call {{accounting.accounts}} to identify the correct expense account
+        code for the category.
+
+      Step 3 — Present for human confirmation:
+        Display the proposed bill/expense entry: vendor, amount, account
+        code, date, description. Include the account name for clarity.
+        NEVER post without explicit human approval.
+
+      Step 4 — Execute (only after human confirmation):
+        Call {{accounting.create_bill}} with the confirmed details.
+
+      Step 5 — Record:
+        Create a vault note with {{vault.create}} — publish: false. Record
+        the posted expense, accounting reference, and timestamp.
+
+  - name: cost-anomaly
+    agent: bizops
+    description: Weekly expense trend analysis and spike detection
+    category: report
+    graph: react-extract
+    services_used:
+      - service: accounting
+        operations: [bills, bank_transactions, profit_loss]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 8 * * 1"
+    prompt: |
+      Analyse expense trends from the accounting service and flag anomalies.
+
+      Step 1 — Pull expense data:
+        Call {{accounting.bills}} for the last 4 weeks. Group by vendor and
+        expense category.
+        Optionally call {{accounting.bank_transactions}} for the same period
+        to catch direct debits not recorded as bills.
+
+      Step 2 — Trend analysis:
+        Compare this week's expenses to the trailing 4-week average by
+        category. Calculate percentage change for each category.
+
+      Step 3 — Flag anomalies:
+        Flag any category where spend exceeds the 4-week average by >25%
+        or where a new vendor appears for the first time.
+        Severity: high (>50% increase or >$500 absolute increase),
+        medium (25-50% increase), low (new vendor, small amount).
+
+      Step 4 — Report:
+        Produce a trend table: category, trailing average, this week,
+        change %, severity. Highlight flagged items.
+
+      Step 5 — Archive:
+        Create vault note with {{vault.create}} — publish: false.
+
+  - name: tax-prep
+    agent: bizops
+    description: Quarterly tax summary for external accountant
+    category: report
+    graph: react-extract
+    services_used:
+      - service: accounting
+        operations: [tax_rates, profit_loss, balance_sheet, invoices, bills]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 9 1 1,4,7,10 *"
+    prompt: |
+      Prepare a quarterly tax summary from the accounting service for the
+      previous quarter.
+
+      Step 1 — Determine the quarter:
+        Calculate the previous calendar quarter dates (e.g. Jan-Mar, Apr-Jun,
+        Jul-Sep, Oct-Dec).
+
+      Step 2 — Pull data:
+        Call {{accounting.profit_loss}} for the quarter period.
+        Call {{accounting.tax_rates}} to identify applicable rates.
+        Call {{accounting.invoices}} for the quarter — summarise sales by
+        tax rate.
+        Call {{accounting.bills}} for the quarter — summarise purchases by
+        tax rate.
+
+      Step 3 — Produce summary:
+        - Total sales (ex-tax) grouped by tax rate
+        - Total purchases (ex-tax) grouped by tax rate
+        - GST collected on sales
+        - GST paid on purchases
+        - Net GST position (collected minus paid)
+        - Any exempt or out-of-scope transactions
+        - Revenue vs expenses summary
+
+      Step 4 — Format:
+        Produce a clean narrative report suitable for forwarding to an
+        external accountant. Include tables and totals.
+
+      Step 5 — Archive:
+        Create vault note with {{vault.create}} — publish: false.
+
+  - name: vendor-reconciliation
+    agent: bizops
+    description: Match accounting expenses against billing transactions by vendor
+    category: sync
+    graph: react-extract
+    services_used:
+      - service: accounting
+        operations: [bills, contacts, payments]
+      - service: billing
+        operations: [transactions]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 9 1 * *"
+    prompt: |
+      Reconcile vendor expenses in accounting against known billing
+      transactions for the previous month.
+
+      Step 1 — Pull accounting expenses:
+        Call {{accounting.bills}} for the previous month. Group by vendor
+        contact. Call {{accounting.contacts}} for vendor details.
+
+      Step 2 — Pull billing transactions (if available):
+        If billing service is configured, call {{billing.transactions}} for
+        the same period. Match billing transactions to accounting bills by
+        amount and date.
+
+      Step 3 — Identify discrepancies:
+        Flag: bills without matching billing transactions, billing
+        transactions without corresponding bills, amount mismatches,
+        and unpaid bills past due date.
+
+      Step 4 — Report:
+        Vendor-grouped table: vendor name, bill count, total billed,
+        total paid, outstanding, discrepancies.
+
+      Step 5 — Archive:
+        Create vault note with {{vault.create}} — publish: false.
+
+      If billing service is not configured, produce an accounting-only
+      vendor summary (bills and payment status).
+
+  # ── Payroll ─────────────────────────────────────────────────────
+
+  - name: payroll-summary
+    agent: bizops
+    description: Pay run status, upcoming dates, and leave balances
+    category: report
+    graph: react
+    services_used:
+      - service: accounting
+        operations: [employees, payslips]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Produce a payroll summary from the accounting service.
+
+      This is a READ-ONLY skill. Never attempt to modify pay runs,
+      employee records, or leave balances.
+
+      Steps:
+        1. Call {{accounting.employees}} to list current employees.
+        2. Call {{accounting.payslips}} for the most recent pay run —
+           summarise earnings, deductions, super, and tax per employee.
+        3. Report: employee count, total payroll cost for last run,
+           next expected pay date (if available), any anomalies.
+
+      If payroll scope is not available in the accounting service,
+      report that payroll features require additional scopes and exit.
+
+      Format as markdown table. Hash employee names in stdout — full
+      details only in vault note. Archive with {{vault.create}} —
+      publish: false.
+
+  - name: super-compliance
+    agent: bizops
+    description: Monthly superannuation guarantee payment check
+    category: review
+    graph: react-verify
+    services_used:
+      - service: accounting
+        operations: [employees, employee, payslips, payslip]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 9 28 * *"
+    prompt: |
+      Check superannuation guarantee compliance for the current quarter.
+
+      This is a READ-ONLY skill. Never attempt to modify super payments
+      or employee records.
+
+      Context: Superannuation Guarantee (SG) contributions must be paid
+      by the 28th of the month following each quarter end. Late payment
+      triggers the non-deductible Super Guarantee Charge (SGC) which
+      includes interest and an administration fee.
+
+      Steps:
+        1. Call {{accounting.employees}} to list employees with super
+           obligations.
+        2. For each employee, call {{accounting.employee}} to check super
+           fund details and contribution rate.
+        3. Call {{accounting.payslips}} for the current quarter — calculate
+           total ordinary time earnings and expected SG at the current
+           rate (currently 12% in Australia).
+        4. Check: are contributions on track? Are any employees missing
+           super fund details? Is the quarterly deadline approaching?
+
+      Report:
+        - Compliance status per employee (on-track / at-risk / overdue)
+        - Total SG liability for the quarter
+        - Days until next quarterly deadline
+        - Any employees missing super fund details
+
+      Severity flags:
+        - Critical: deadline within 7 days and contributions not recorded
+        - High: employees missing super fund details
+        - Medium: approaching deadline, contributions appear on track
+
+      Archive with {{vault.create}} — publish: false. Hash employee
+      names in stdout.
+
+  - name: leave-balances
+    agent: bizops
+    description: Employee leave accruals and entitlement checks
+    category: report
+    graph: react
+    services_used:
+      - service: accounting
+        operations: [employees, employee]
+      - service: vault
+        operations: [create]
+    trigger:
+      on_demand: true
+    prompt: |
+      Report on employee leave balances from the accounting service.
+
+      This is a READ-ONLY skill. Never attempt to modify leave records.
+
+      Steps:
+        1. Call {{accounting.employees}} to list current employees.
+        2. For each employee, call {{accounting.employee}} to retrieve
+           leave balances — annual leave, personal/carer's leave, long
+           service leave (if applicable).
+        3. Flag: any employee with leave balance exceeding 30 days
+           (potential liability concern), any employee with negative
+           balance, any employee approaching a leave milestone.
+
+      Format as markdown table: employee (hashed in stdout), annual
+      leave balance, personal leave balance, flags. Archive with
+      {{vault.create}} — publish: false, full names in vault note only.
+
+  # ── Compliance ──────────────────────────────────────────────────
+
+  - name: bas-lodgement-prep
+    agent: bizops
+    description: Quarterly BAS data pull from accounting reports
+    category: report
+    graph: react-extract
+    services_used:
+      - service: accounting
+        operations: [tax_rates, profit_loss, balance_sheet, invoices, bills, aged_receivables, aged_payables]
+      - service: vault
+        operations: [create]
+    trigger:
+      schedule: "0 9 1 1,4,7,10 *"
+    prompt: |
+      Prepare Business Activity Statement (BAS) data from the accounting
+      service for the previous quarter.
+
+      This skill produces structured data for BAS form fields — not a
+      narrative report (see tax-prep for that).
+
+      Steps:
+        1. Determine the previous quarter dates.
+        2. Call {{accounting.invoices}} for the quarter — extract total
+           sales, GST collected, export sales (GST-free).
+        3. Call {{accounting.bills}} for the quarter — extract total
+           purchases, GST paid (input tax credits).
+        4. Call {{accounting.tax_rates}} to verify applicable rates.
+        5. Optionally call {{accounting.aged_receivables}} and
+           {{accounting.aged_payables}} for outstanding amounts.
+
+      Produce BAS field mapping:
+        - G1: Total sales (including GST)
+        - G2: Export sales (GST-free)
+        - G3: Other GST-free sales
+        - G10: Capital purchases
+        - G11: Non-capital purchases
+        - 1A: GST on sales (GST collected)
+        - 1B: GST on purchases (input tax credits)
+
+      Flag any discrepancies between calculated GST and the accounting
+      system's GST reports.
+
+      Archive with {{vault.create}} — publish: false. This note is
+      intended for review by an external accountant before lodgement.
+
+  - name: compliance-digest
+    agent: bizops
+    description: Monthly scan of vault-tracked compliance deadlines
+    category: digest
+    graph: react-extract
+    services_used:
+      - service: vault
+        operations: [search, read]
+    trigger:
+      schedule: "0 8 1 * *"
+    prompt: |
+      Scan the vault for tracked compliance deadlines and produce a
+      monthly digest.
+
+      Step 1 — Search for obligations:
+        Call {{vault.search}} for notes with compliance-related properties
+        — look for notes with fields like due_date, review_date,
+        renewal_date, or expiry_date, or notes tagged with compliance,
+        ASIC, insurance, or regulatory categories.
+
+      Step 2 — Check deadlines:
+        For each obligation found, compare its deadline to the current
+        date. Categorise as: overdue, due this month, due next month,
+        upcoming (2-3 months), or no deadline.
+
+      Step 3 — Report:
+        Produce a compliance digest grouped by category:
+          - Corporate (ASIC annual reviews, officeholder changes)
+          - Insurance (policy renewals, coverage gaps)
+          - Contracts (expiry dates, renewal windows)
+          - Tax (BAS lodgement, PAYG, FBT)
+          - Payroll (SG deadlines — cross-reference super-compliance)
+
+      Severity:
+        - Critical: overdue items
+        - High: due within 14 days
+        - Medium: due this month
+        - Low: due next month
+
+      Output as a structured digest with action items. This skill reads
+      vault notes only — it does not create, modify, or delete any notes.
+
+# ── Workflows ───────────────────────────────────────────────────────
+
+workflows:
+  - name: monthly-ops
+    description: Monthly financial operations — reconciliation, financials, expenses, vendors
+    schedule: "0 8 1 * *"
+    steps:
+      - skill: invoice-reconciliation
+      - skill: monthly-financials
+        after: [invoice-reconciliation]
+      - skill: vendor-reconciliation
+        after: [invoice-reconciliation]
+
+  - name: quarterly-compliance
+    description: Quarterly tax and BAS preparation
+    schedule: "0 9 1 1,4,7,10 *"
+    steps:
+      - skill: tax-prep
+      - skill: bas-lodgement-prep
+        after: [tax-prep]
+
+  - name: monthly-compliance
+    description: Monthly compliance and payroll checks
+    schedule: "0 9 1 * *"
+    steps:
+      - skill: compliance-digest
+      - skill: super-compliance
+
+# ── Configuration ───────────────────────────────────────────────────
+
+config:
+  user_inputs:
+    - key: organization_name
+      type: string
+      label: Organisation name
+      description: "Your organisation name (used in report headers and vault note titles)"
+      required: true
+    - key: support_email
+      type: string
+      label: Support email
+      description: "Contact email for refund confirmations and compliance notifications"
+      required: false
+    - key: refund_window_days
+      type: number
+      label: Refund window (days)
+      description: "Maximum days after purchase for refund eligibility"
+      default: 30
+      required: false
+    - key: churn_threshold
+      type: number
+      label: Churn alert threshold
+      description: "Number of cancellations or past-due events in a day to trigger an alert"
+      default: 3
+      required: false
+    - key: super_due_day
+      type: number
+      label: Super due day
+      description: "Day of month when superannuation contributions are due"
+      default: 28
+      required: false
+
+# ── Guardrails ──────────────────────────────────────────────────────
+
+guardrails:
+  version: "1.0.0"
+  reviewed: "2026-04-20"
+  rules:
+    - id: finance-001
+      category: data-handling
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: finance-002
+      category: data-handling
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: finance-003
+      category: data-handling
+      severity: critical
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: finance-004
+      category: data-handling
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-20"
+
+    - id: finance-005
+      category: vault
+      severity: high
+      scope: [community, verified, certified]
+      added: "2026-04-20"
