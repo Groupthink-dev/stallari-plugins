@@ -6,8 +6,8 @@ featured: false
 version: "3.4.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
-  security auditing, fleet monitoring, notification delivery, and the six
-  operator agents that power every Stallari installation. Bundled with every install.
+  security auditing, fleet monitoring, notification delivery, registry management,
+  and the six operator agents that power every Stallari installation. Bundled with every install.
 icon: /icons/stallari-core.svg
 author:
   name: Stallari
@@ -17,7 +17,7 @@ visibility: open
 tier: certified
 pricing: null
 bundled: true
-tagline: "Six operators, 25 skills — the platform foundation bundled with every install"
+tagline: "Six operators, 28 skills — the platform foundation bundled with every install"
 
 readme:
   format: markdown
@@ -87,7 +87,7 @@ highlights:
   - icon: "\U0001F916"
     text: "6 operator agents — PKM, comms, scheduling, security, fleet, and notifications"
   - icon: "\U0001F9E9"
-    text: "25 skills spanning vault ops, email triage, calendar, secops, fleet health, and delivery"
+    text: "28 skills spanning vault ops, email triage, calendar, secops, fleet health, registry, and delivery"
   - icon: "\U0001F4E6"
     text: "Bundled — ships with every Stallari installation, zero configuration needed"
   - icon: "\U0001F6E1\uFE0F"
@@ -727,6 +727,67 @@ skills:
       Generate daily notification delivery report. Aggregate by channel
       and category. Archive to calendar/notes/{date} — notification
       delivery report.md.
+
+  # --- Registry operations (fleet-operator) ---
+
+  - name: registry-publish
+    agent: fleet-operator
+    description: Publish a local pack to the org registry
+    tier: standard
+    category: sync
+    services_used:
+      - service: vault
+        operations: [read]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      Publish a pack to the local org registry. Reads the pack manifest,
+      validates it, and publishes to the registry server.
+
+      Steps:
+      1. Read the pack manifest YAML from the specified path
+      2. Validate manifest against pack schema
+      3. POST to /registry/packs/{name}/{version} on the local daemon
+      4. Report: pack name, version, org, publish status
+
+  - name: registry-list
+    agent: fleet-operator
+    description: List packs in the org registry
+    tier: standard
+    category: report
+    services_used:
+      - service: vault
+        operations: [read]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      List all packs available in the local org registry.
+
+      Steps:
+      1. GET /registry/catalog from the local daemon
+      2. Format output: name, version, org, last updated
+      3. Report: total packs, per-org breakdown
+
+  - name: registry-remove
+    agent: fleet-operator
+    description: Remove a pack from the org registry
+    tier: standard
+    category: sync
+    services_used:
+      - service: vault
+        operations: [read]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      Remove a pack from the local org registry.
+
+      Steps:
+      1. Confirm pack name with the user
+      2. DELETE /registry/packs/{name} on the local daemon
+      3. Report: pack name, removal status
 
 guardrails:
   version: "1.0.0"
