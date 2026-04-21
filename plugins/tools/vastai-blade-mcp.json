@@ -3,7 +3,7 @@
   "title": "Vast.ai GPU Marketplace",
   "description": "Search and provision GPU instances on the Vast.ai P2P marketplace — search offers, accept bids, manage instances, and track billing. 16 tools implementing virtualmachine-v1 contract.",
   "tagline": "GPU marketplace — search offers, provision instances, manage bids and billing",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/vastai-blade-mcp.svg",

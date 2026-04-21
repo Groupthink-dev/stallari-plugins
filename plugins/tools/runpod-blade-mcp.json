@@ -3,7 +3,7 @@
   "title": "RunPod GPU Compute",
   "description": "Manage GPU pods, serverless endpoints, and job queues on RunPod — create pods, deploy autoscaling inference endpoints, submit jobs, and monitor GPU resources. 19 tools implementing both virtualmachine-v1 and serverless-v1 contracts.",
   "tagline": "GPU pods + serverless inference — manage pods, endpoints, jobs, and GPU resources",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/runpod-blade-mcp.svg",

@@ -3,7 +3,7 @@
   "title": "Vultr GPU Cloud",
   "description": "Manage Vultr GPU compute infrastructure — VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualmachine-v1, serverless-v1, and dns-v1 contracts.",
   "tagline": "GPU compute infrastructure — VMs, bare metal, inference, DNS, firewall, snapshots, billing",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
