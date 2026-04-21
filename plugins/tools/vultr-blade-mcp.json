@@ -3,14 +3,18 @@
   "title": "Vultr GPU Cloud",
   "description": "Manage Vultr GPU compute infrastructure — VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualmachine-v1, serverless-v1, and dns-v1 contracts.",
   "tagline": "GPU compute infrastructure — VMs, bare metal, inference, DNS, firewall, snapshots, billing",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",
   "readiness": "beta",
-  "contract": ["virtualmachine-v1", "serverless-v1", "dns-v1"],
+  "contract": [
+    "virtualmachine-v1",
+    "serverless-v1",
+    "dns-v1"
+  ],
   "contract_notes": "Extended virtualmachine-v1 (VMs + bare metal), serverless-v1 (inference subscriptions + usage), dns-v1 (domains + records). 50 tools, dual write-gate.",
   "homepage": "https://github.com/groupthink-dev/vultr-blade-mcp",
   "repository": "https://github.com/groupthink-dev/vultr-blade-mcp",
@@ -116,7 +120,9 @@
       "type": "workflow",
       "target": "vultr-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine"],
+      "shared_services": [
+        "virtualmachine"
+      ],
       "label": "Provision a GPU VM with cloud-init",
       "body": "List GPU plans, pick the cheapest A100, select a region near you, create an instance with cloud-init user_data that installs Docker and pulls a GPU worker image, then poll status until ready."
     },
@@ -124,7 +130,9 @@
       "type": "workflow",
       "target": "vultr-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine"],
+      "shared_services": [
+        "virtualmachine"
+      ],
       "label": "Cost audit — find idle instances",
       "body": "List all instances, check their power status and cost, identify stopped instances still incurring charges, and delete any that are no longer needed."
     },
@@ -132,7 +140,9 @@
       "type": "workflow",
       "target": "vultr-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine"],
+      "shared_services": [
+        "virtualmachine"
+      ],
       "label": "Compare GPU plan pricing",
       "body": "List all GPU plans with pricing, sort by hourly cost, and identify the best value for A100, L40S, and A16 GPU types across regions."
     }

@@ -3,7 +3,7 @@
   "title": "Starlink Dish",
   "description": "Local Starlink dish monitoring and control via gRPC — connectivity, alerts, obstruction mapping, throughput history, GPS, diagnostics, and hardware control. No cloud API or credentials required.",
   "tagline": "Local-first dish monitoring — no cloud, no credentials",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/starlink-blade-mcp.svg",

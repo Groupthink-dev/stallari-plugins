@@ -3,14 +3,17 @@
   "title": "RunPod GPU Compute",
   "description": "Manage GPU pods, serverless endpoints, and job queues on RunPod — create pods, deploy autoscaling inference endpoints, submit jobs, and monitor GPU resources. 19 tools implementing both virtualmachine-v1 and serverless-v1 contracts.",
   "tagline": "GPU pods + serverless inference — manage pods, endpoints, jobs, and GPU resources",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/runpod-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",
   "readiness": "beta",
-  "contract": ["virtualmachine-v1", "serverless-v1"],
+  "contract": [
+    "virtualmachine-v1",
+    "serverless-v1"
+  ],
   "contract_notes": "Dual-contract blade — virtualmachine-v1 for GPU pods (8 tools), serverless-v1 for autoscaling endpoints and job queues (9 tools). First blade to implement both contracts. 19 tools total, dual write-gate.",
   "homepage": "https://github.com/groupthink-dev/runpod-blade-mcp",
   "repository": "https://github.com/groupthink-dev/runpod-blade-mcp",
@@ -115,7 +118,9 @@
       "type": "workflow",
       "target": "runpod-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine"],
+      "shared_services": [
+        "virtualmachine"
+      ],
       "label": "Spin up a GPU pod for training",
       "body": "List available GPU types with at least 24GB VRAM, create an A100 pod with PyTorch image and 100GB volume, wait for RUNNING status, then show the pod details with SSH access info."
     },
@@ -123,7 +128,9 @@
       "type": "workflow",
       "target": "runpod-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["serverless"],
+      "shared_services": [
+        "serverless"
+      ],
       "label": "Deploy a serverless inference endpoint",
       "body": "List available templates, create a serverless endpoint with AMPERE_24 GPU tier and scale-to-zero config, then submit a test job and wait for results."
     },
@@ -131,7 +138,10 @@
       "type": "workflow",
       "target": "runpod-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine", "serverless"],
+      "shared_services": [
+        "virtualmachine",
+        "serverless"
+      ],
       "label": "GPU resource audit",
       "body": "Check account balance and spending, list all running pods with hourly costs, list all serverless endpoints with worker counts, and identify idle resources that could be stopped or scaled down."
     }

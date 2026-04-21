@@ -2,7 +2,7 @@
   "name": "xboxlive-blade-mcp",
   "title": "Xbox Live (Blade)",
   "description": "Xbox Live operations — profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, messaging",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/xboxlive-blade-mcp.svg",

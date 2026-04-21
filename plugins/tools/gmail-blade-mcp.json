@@ -3,7 +3,7 @@
   "title": "Google Gmail",
   "description": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation.",
   "tagline": "Gmail management with Gemini-powered classification",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/gmail-blade-mcp.svg",

@@ -3,7 +3,7 @@
   "title": "Control-D — DNS Filtering & Privacy",
   "description": "Control-D DNS management — profiles, content filters, service routing, custom rules, device endpoints, and analytics. 22 tools with write gating and credential scrubbing.",
   "tagline": "DNS filtering and privacy from the conversation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/controld-blade-mcp.svg",

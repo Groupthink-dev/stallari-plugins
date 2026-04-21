@@ -3,7 +3,7 @@
   "title": "Apple Messages",
   "description": "Apple Messages (iMessage) operations — conversations, search, contacts, attachments, send",
   "tagline": "Read, search, and send via iMessage on macOS",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/messages-blade-mcp.svg",

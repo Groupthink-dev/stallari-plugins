@@ -3,7 +3,7 @@
   "title": "Paddle Billing",
   "description": "Paddle Billing API operations — products, prices, subscriptions, transactions, webhooks. Token-efficient, write-gated, confirm-gated for destructive ops.",
   "tagline": "Subscriptions, products, and revenue through Paddle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/paddle-billing-blade-mcp.svg",

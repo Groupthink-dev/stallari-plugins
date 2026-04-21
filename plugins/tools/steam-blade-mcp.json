@@ -3,7 +3,7 @@
   "title": "Steam Games",
   "description": "Steam gaming platform — library, achievements, friends, store data, market prices",
   "tagline": "Steam library, achievements, friends, and market data",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/steam-blade-mcp.svg",

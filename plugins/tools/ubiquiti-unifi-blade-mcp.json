@@ -3,7 +3,7 @@
   "title": "Ubiquiti UniFi",
   "description": "Ubiquiti UniFi network monitoring and security — device health, client visibility, firewall policies, traffic routes, DPI restrictions, and port forwards",
   "tagline": "Monitor and secure your UniFi network — devices, clients, firewalls, and traffic",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/ubiquiti-unifi-blade-mcp.svg",

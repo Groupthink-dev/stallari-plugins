@@ -3,7 +3,7 @@
   "title": "Google Home",
   "description": "Google Home / Nest device control via SDM API — thermostats, cameras, doorbells, event streams",
   "tagline": "Nest thermostat, camera, and doorbell control via SDM",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/google-home-blade-mcp.svg",

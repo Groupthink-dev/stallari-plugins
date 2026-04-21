@@ -3,7 +3,7 @@
   "title": "Mastodon",
   "description": "Mastodon operations — timelines, statuses, notifications, search, interactions, multi-instance",
   "tagline": "Browse, post, and interact across the fediverse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/mastodon-blade-mcp.svg",

@@ -2,7 +2,7 @@
   "name": "auspost-blade-mcp",
   "title": "Australia Post",
   "description": "Australia Post — postage calculator, shipping, tracking, and locations via official AusPost APIs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/auspost-blade-mcp.svg",

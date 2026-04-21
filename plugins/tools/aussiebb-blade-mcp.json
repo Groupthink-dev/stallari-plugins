@@ -3,7 +3,7 @@
   "title": "Aussie Broadband",
   "description": "Aussie Broadband ISP operations — usage monitoring, outage tracking, billing, and line diagnostics via the MyAussie API",
   "tagline": "Monitor your NBN — usage, outages, billing, and diagnostics",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/aussiebb-blade-mcp.svg",

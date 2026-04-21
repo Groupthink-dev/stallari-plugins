@@ -3,7 +3,7 @@
   "title": "Microsoft OneDrive",
   "description": "OneDrive and SharePoint file operations via Microsoft Graph API — browse, read, search, upload, share, delta sync",
   "tagline": "Browse, search, and sync files across OneDrive and SharePoint",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/onedrive-blade-mcp.svg",

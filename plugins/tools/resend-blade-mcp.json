@@ -3,7 +3,7 @@
   "title": "Resend",
   "description": "Resend transactional email — send, contacts, broadcasts, templates, domains, webhooks. Security-first with no filesystem access.",
   "tagline": "Transactional email with zero filesystem exposure",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/resend-blade-mcp.svg",

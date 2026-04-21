@@ -3,7 +3,7 @@
   "title": "WiCAN Vehicle",
   "description": "Universal vehicle monitoring via meatPi WiCAN Pro OBD-II adapter — standard PIDs over MQTT, raw CAN bus decoding, diagnostic trouble codes, and trip data. Works with any OBD-II vehicle.",
   "tagline": "Universal OBD-II vehicle monitoring via WiCAN Pro and MQTT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/wican-blade-mcp.svg",

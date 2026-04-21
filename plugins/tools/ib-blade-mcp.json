@@ -1,7 +1,7 @@
 {
   "name": "ib-blade-mcp",
   "title": "Interactive Brokers",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interactive Brokers MCP Server — portfolio, market data, orders, scanners via Client Portal Gateway",
   "tagline": "Trade, scan, and monitor your portfolio through IB",
   "author": "groupthink-dev",

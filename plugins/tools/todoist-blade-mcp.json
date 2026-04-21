@@ -3,7 +3,7 @@
   "title": "Todoist",
   "description": "Todoist task management — projects, sections, tasks, labels, comments, incremental sync, batch commands, filter queries",
   "tagline": "Todoist tasks with dual API and incremental sync",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/todoist-blade-mcp.svg",

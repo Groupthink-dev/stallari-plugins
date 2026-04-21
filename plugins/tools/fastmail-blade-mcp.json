@@ -3,7 +3,7 @@
   "title": "Fastmail",
   "description": "Fastmail email operations via JMAP — search, read, send, manage, masked email, push notifications",
   "tagline": "Full Fastmail control via JMAP with masked email",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/fastmail-blade-mcp.svg",

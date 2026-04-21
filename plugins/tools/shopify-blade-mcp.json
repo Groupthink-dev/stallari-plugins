@@ -3,7 +3,7 @@
   "title": "Shopify",
   "description": "Shopify Admin API operations via GraphQL — products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, analytics",
   "tagline": "Full Shopify store management via GraphQL Admin API",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/shopify-blade-mcp.svg",

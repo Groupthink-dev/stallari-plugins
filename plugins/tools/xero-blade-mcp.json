@@ -2,7 +2,7 @@
   "name": "xero-blade-mcp",
   "title": "Xero",
   "description": "Xero Accounting + Payroll AU API operations — contacts, invoices, bills, payments, reports, payroll. Token-efficient, write-gated, confirm-gated for destructive ops.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/xero-blade-mcp.svg",

@@ -3,7 +3,7 @@
   "title": "Microsoft Office 365",
   "description": "Microsoft 365 operations via Graph API — email, calendar, tasks (To Do + Planner). Token-efficient, write-gated, dual auth.",
   "tagline": "Email, calendar, and tasks through Microsoft Graph",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/office365-blade-mcp.svg",

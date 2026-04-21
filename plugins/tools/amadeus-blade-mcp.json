@@ -3,7 +3,7 @@
   "title": "Amadeus Travel",
   "description": "Flight search, pricing, status, delay predictions, hotel offers, seat maps, and airport reference data via the Amadeus Self-Service APIs. Works with 500+ airlines and 150,000+ hotels worldwide.",
   "tagline": "Global flight and hotel intelligence from the Amadeus GDS",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "groupthink-dev",
   "licence": "MIT",
   "icon": "/icons/amadeus-blade-mcp.svg",
