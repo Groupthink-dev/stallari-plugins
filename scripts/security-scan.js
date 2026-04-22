@@ -17,6 +17,11 @@ const ROOT = resolve(import.meta.dirname, "..");
 const PACKS_DIR = join(ROOT, "plugins", "packs");
 const EXCEPTIONS_DIR = join(ROOT, "plugins", "scan-exceptions");
 
+/** First-party packs that are excluded from security scanning. */
+const SKIP_PACKS = new Set([
+  "declarative-infra",
+]);
+
 /**
  * Load per-pack scan exceptions from plugins/scan-exceptions/{name}.json.
  * Returns empty array if no exceptions file exists.
@@ -40,11 +45,13 @@ async function main() {
     return;
   }
 
-  // Load all pack content
+  // Load all pack content (skip whitelisted first-party packs)
   const packs = [];
   for (const file of files) {
+    const name = file.replace(/\.(yaml|yml)$/, "");
+    if (SKIP_PACKS.has(name)) continue;
     const yaml = await readFile(join(PACKS_DIR, file), "utf-8");
-    packs.push({ name: file.replace(/\.(yaml|yml)$/, ""), yaml });
+    packs.push({ name, yaml });
   }
 
   // Build corpus from all packs for cross-pack clone detection
@@ -98,7 +105,7 @@ async function main() {
   }
 
   console.log(
-    `\n  ${files.length} pack(s) scanned. ${totalFindings} SINJ + ${totalCloneFindings} clone finding(s).\n`,
+    `\n  ${packs.length} pack(s) scanned. ${totalFindings} SINJ + ${totalCloneFindings} clone finding(s).\n`,
   );
 
   if (overallResult === "fail") process.exit(1);
