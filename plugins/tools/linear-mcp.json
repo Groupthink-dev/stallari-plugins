@@ -5,7 +5,7 @@
   "tagline": "Issue tracking and sprint management via Linear",
   "version": "1.0.0",
   "author": "linear",
-  "licence": "proprietary",
+  "license": "proprietary",
   "icon": "/icons/linear-mcp.svg",
   "tier": "community",
   "author_type": "community",

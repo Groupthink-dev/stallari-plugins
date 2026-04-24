@@ -5,7 +5,7 @@
   "tagline": "Push notifications with priority, scheduling, and PII scrubbing",
   "version": "0.1.0",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/ntfy-blade-mcp.svg",
   "contract": "notifications-push-v1",
   "tier": "certified",

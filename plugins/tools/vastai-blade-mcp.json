@@ -5,7 +5,7 @@
   "tagline": "GPU marketplace — search offers, provision instances, manage bids and billing",
   "version": "0.1.2",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/vastai-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",

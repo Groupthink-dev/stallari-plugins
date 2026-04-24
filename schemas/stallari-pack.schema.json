@@ -612,8 +612,8 @@
       "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/stallari-core.svg').",
       "type": "string"
     },
-    "licence": {
-      "description": "SPDX licence identifier (e.g. MIT, Apache-2.0).",
+    "license": {
+      "description": "SPDX license identifier (e.g. MIT, Apache-2.0).",
       "type": "string"
     },
     "min_stallari": {

@@ -5,7 +5,7 @@
   "tagline": "Cloud fleet management for enterprise Starlink accounts",
   "version": "0.1.0",
   "author": "ry-ops",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/starlink-enterprise-mcp.svg",
   "tier": "community",
   "author_type": "community",

@@ -5,7 +5,7 @@
   "tagline": "GPU cloud management — pods, endpoints, and serverless inference",
   "version": "0.3.0",
   "author": "runpod",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/runpod-mcp.svg",
   "tier": "community",
   "author_type": "community",

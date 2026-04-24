@@ -187,7 +187,7 @@ describe("pluginToCatalogEntry", () => {
       tier: "certified",
       install: { runtime: "node", package: "fastmail-blade-mcp" },
       repository: "https://github.com/example/fastmail-blade-mcp",
-      licence: "MIT",
+      license: "MIT",
     };
 
     const entry = pluginToCatalogEntry(raw);
@@ -202,7 +202,7 @@ describe("pluginToCatalogEntry", () => {
     assert.equal(entry.tier, "certified");
     assert.equal(entry.runtime, "node");
     assert.equal(entry.repository, "https://github.com/example/fastmail-blade-mcp");
-    assert.equal(entry.licence, "MIT");
+    assert.equal(entry.license, "MIT");
     assert.equal(entry.visibility, "open");
     assert.equal(entry.min_stallari, null);
     assert.equal(entry.installs, null);
@@ -218,7 +218,7 @@ describe("pluginToCatalogEntry", () => {
       author: "groupthink-dev",
       tier: "certified",
       install: { runtime: "uv", package: "shopify-blade-mcp" },
-      licence: "MIT",
+      license: "MIT",
       contract: "ecommerce-v1",
       env: [
         { name: "SHOPIFY_STORE_URL", description: "Store URL" },
@@ -249,7 +249,7 @@ describe("pluginToCatalogEntry", () => {
       author: "test",
       tier: "community",
       install: { runtime: "uv", package: "test" },
-      licence: "MIT",
+      license: "MIT",
       contract: null,
       env: [
         { name: "API_KEY", description: "Key", secret: true },
@@ -271,7 +271,7 @@ describe("pluginToCatalogEntry", () => {
       author: "test",
       tier: "certified",
       install: { runtime: "native" },
-      licence: "MIT",
+      license: "MIT",
       contract: "vault-v1",
     };
 
@@ -290,7 +290,7 @@ describe("pluginToCatalogEntry", () => {
       author: "test",
       tier: "certified",
       install: { runtime: "uv", package: "things3-blade-mcp" },
-      licence: "MIT",
+      license: "MIT",
       contract: "tasks-v1",
       setup: { auth_model: "none" },
     };

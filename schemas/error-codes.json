@@ -49,8 +49,8 @@
       "description": "The description exceeds the per-spec character limit."
     },
     {
-      "code": "invalid-licence",
-      "description": "The licence field is not an SPDX identifier."
+      "code": "invalid-license",
+      "description": "The license field is not an SPDX identifier."
     },
     {
       "code": "unknown-service",

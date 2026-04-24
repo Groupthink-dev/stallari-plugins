@@ -4,7 +4,7 @@
   "description": "Blender 3D modelling via TCP socket addon — object CRUD, materials, scene inspection, code execution, screenshot capture",
   "version": "1.5.5",
   "author": "ahujasid",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/blender-mcp.svg",
   "tier": "community",
   "author_type": "community",

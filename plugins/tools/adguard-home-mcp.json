@@ -5,7 +5,7 @@
   "tagline": "Your entire AdGuard Home from the conversation",
   "version": "0.7.0",
   "author": "samik081",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/adguard-home-mcp.svg",
   "tier": "verified",
   "author_type": "community",

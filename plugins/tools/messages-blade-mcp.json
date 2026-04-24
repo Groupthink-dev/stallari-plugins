@@ -5,7 +5,7 @@
   "tagline": "Read, search, and send via iMessage on macOS",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/messages-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

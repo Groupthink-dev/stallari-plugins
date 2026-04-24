@@ -5,7 +5,7 @@
   "tagline": "GTD task management through Things 3 on macOS",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/things3-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

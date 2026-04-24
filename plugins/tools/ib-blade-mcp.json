@@ -5,7 +5,7 @@
   "description": "Interactive Brokers MCP Server — portfolio, market data, orders, scanners via Client Portal Gateway",
   "tagline": "Trade, scan, and monitor your portfolio through IB",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/ib-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

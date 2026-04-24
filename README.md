@@ -10,7 +10,7 @@
   <a href="https://marketplace.stallari.app"><img src="https://img.shields.io/badge/marketplace-stallari.app-0066CC" alt="marketplace.stallari.app"></a>
   <a href="https://github.com/Groupthink-dev/stallari-plugins/discussions"><img src="https://img.shields.io/github/discussions/Groupthink-dev/stallari-plugins?label=discussions" alt="Discussions"></a>
   <img src="https://img.shields.io/badge/status-developer%20preview-orange" alt="Developer Preview">
-  <img src="https://img.shields.io/badge/licence-Apache%202.0-green" alt="Apache 2.0">
+  <img src="https://img.shields.io/badge/license-Apache%202.0-green" alt="Apache 2.0">
 </p>
 
 Plugin and pack manifests for the [Stallari](https://stallari.ai) agentic platform. Service contract definitions, validation tooling, and contribution workflow.
@@ -102,7 +102,7 @@ guardrails:
 | v1.6 | Tool groups, discovery profiles, client profile enforcement |
 | v1.7 | Guardrails (sealed rule delivery), herald (announcements), agent `role` enum constraint |
 
-Packs can be **open** (source visible, forkable) or **sealed** (encrypted payload, licence-activated).
+Packs can be **open** (source visible, forkable) or **sealed** (encrypted payload, license-activated).
 
 ## Contributing
 
@@ -118,7 +118,7 @@ Packs can be **open** (source visible, forkable) or **sealed** (encrypted payloa
       "version": "1.0.0",
       "description": "What your MCP server does (max 200 chars)",
       "author": "your-github-handle",
-      "licence": "MIT",
+      "license": "MIT",
       "tier": "community",
       "contract": null,
       "repository": "https://github.com/you/your-plugin",
@@ -155,8 +155,8 @@ The `validate-plugin.js` script runs automated checks:
 
 | Check | Automated | Notes |
 |-------|-----------|-------|
-| Schema fields present | Yes | Required: name, version, description, author, licence, tier, install |
-| Licence compatible | Yes | MIT, Apache-2.0, ISC, BSD, Unlicense |
+| Schema fields present | Yes | Required: name, version, description, author, license, tier, install |
+| License compatible | Yes | MIT, Apache-2.0, ISC, BSD, Unlicense |
 | Installs cleanly | Yes | Spawns via declared runtime |
 | Tools enumerate | Yes | Sends MCP `tools/list` over stdio JSON-RPC |
 | Tools callable | Manual | Requires service-specific credentials |
@@ -168,7 +168,7 @@ The `validate-plugin.js` script runs automated checks:
 All external submissions enter at `tier: "community"`. Promotion path:
 
 - **Community** — listed in marketplace, conformance untested
-- **Verified** — maintainers have validated the plugin (install, enumeration, licence, security review)
+- **Verified** — maintainers have validated the plugin (install, enumeration, license, security review)
 - **Certified** — first-party plugins with full conformance testing against a service contract
 
 ### Sidecar manifest

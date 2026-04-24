@@ -107,7 +107,7 @@ function pluginToCatalogEntry(raw) {
     readiness,
     contract: raw.contract || null,
     runtime: raw.install?.runtime || raw.runtime || null,
-    licence: raw.licence || null,
+    license: raw.license || null,
     conformance: raw.conformance || null,
     inference: raw.inference || null,
     certification: raw.certification || null,
@@ -182,7 +182,7 @@ function packToCatalogEntry(pack) {
     tier: packTier,
     author_type,
     readiness,
-    licence: pack.licence || null,
+    license: pack.license || null,
     pack_spec: pack.pack || null,
     // Pack-specific metadata
     skill_count: skillCount,

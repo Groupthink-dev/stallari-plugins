@@ -4,7 +4,7 @@
   "description": "Xbox Live operations — profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, messaging",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/xboxlive-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

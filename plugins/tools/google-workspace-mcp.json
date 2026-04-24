@@ -5,7 +5,7 @@
   "tagline": "Gmail and Workspace email via the official Google API",
   "version": "0.1.0",
   "author": "community",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/google-workspace-mcp.svg",
   "tier": "community",
   "author_type": "community",

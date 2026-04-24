@@ -28,7 +28,7 @@ const COMPATIBLE_LICENCES = [
   "Unlicense", "0BSD", "BlueOak-1.0.0",
 ];
 
-const REQUIRED_FIELDS = ["name", "version", "description", "author", "licence", "tier", "install"];
+const REQUIRED_FIELDS = ["name", "version", "description", "author", "license", "tier", "install"];
 
 // --- Helpers ---
 
@@ -218,7 +218,7 @@ async function main() {
     tools_callable: false,
     no_data_exfil: false,
     auth_reviewed: false,
-    licence_compatible: false,
+    license_compatible: false,
   };
   let failures = 0;
 
@@ -235,19 +235,19 @@ async function main() {
     failures++;
   }
 
-  // 2. Licence check
-  const licence = raw.licence || "";
-  if (COMPATIBLE_LICENCES.includes(licence)) {
-    pass(`Licence: ${licence} (compatible)`);
-    checklist.licence_compatible = true;
-  } else if (licence.startsWith("GPL") || licence.startsWith("AGPL")) {
-    warn(`Licence: ${licence} (copyleft — needs review)`);
-    checklist.licence_compatible = false;
+  // 2. License check
+  const license = raw.license || "";
+  if (COMPATIBLE_LICENCES.includes(license)) {
+    pass(`License: ${license} (compatible)`);
+    checklist.license_compatible = true;
+  } else if (license.startsWith("GPL") || license.startsWith("AGPL")) {
+    warn(`License: ${license} (copyleft — needs review)`);
+    checklist.license_compatible = false;
     failures++;
-  } else if (licence) {
-    warn(`Licence: ${licence} (unknown — needs manual review)`);
+  } else if (license) {
+    warn(`License: ${license} (unknown — needs manual review)`);
   } else {
-    fail("No licence specified");
+    fail("No license specified");
     failures++;
   }
 

@@ -149,8 +149,8 @@
               "description": "Plugin installs without errors via declared runtime.",
               "type": "boolean"
             },
-            "licence_compatible": {
-              "description": "Licence is compatible (MIT, Apache-2.0, ISC, BSD).",
+            "license_compatible": {
+              "description": "License is compatible (MIT, Apache-2.0, ISC, BSD).",
               "type": "boolean"
             },
             "no_data_exfil": {
@@ -463,8 +463,8 @@
       ],
       "type": "object"
     },
-    "licence": {
-      "description": "SPDX licence identifier (e.g. MIT, Apache-2.0).",
+    "license": {
+      "description": "SPDX license identifier (e.g. MIT, Apache-2.0).",
       "type": "string"
     },
     "multi_instance": {
@@ -744,7 +744,7 @@
     "version",
     "description",
     "author",
-    "licence",
+    "license",
     "install"
   ],
   "title": "Stallari Plugin Manifest",

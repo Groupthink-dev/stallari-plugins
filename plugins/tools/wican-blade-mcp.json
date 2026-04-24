@@ -5,7 +5,7 @@
   "tagline": "Universal OBD-II vehicle monitoring via WiCAN Pro and MQTT",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/wican-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

@@ -5,7 +5,7 @@
   "description": "Polymarket prediction market data — events, markets, orderbooks, prices, analytics. 22 tools across 3 APIs. No credentials required.",
   "tagline": "Real-time prediction market data, pricing, and analytics",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",

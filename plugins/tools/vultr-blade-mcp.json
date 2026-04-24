@@ -5,7 +5,7 @@
   "tagline": "GPU compute infrastructure — VMs, bare metal, inference, DNS, firewall, snapshots, billing",
   "version": "0.2.2",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",

@@ -13,7 +13,7 @@ icon: /icons/business-ops.svg
 author:
   name: groupthink-dev
   url: https://github.com/groupthink-dev
-licence: MIT
+license: MIT
 visibility: open
 author_type: first-party
 readiness: beta

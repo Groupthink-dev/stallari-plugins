@@ -4,7 +4,7 @@
   "description": "Xbox Live profiles, achievements, and presence via OpenXBL (xbl.io) API proxy — simple API key auth, no OAuth",
   "version": "0.1.0",
   "author": "community",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/xbox-openxbl-mcp.svg",
   "tier": "community",
   "author_type": "community",

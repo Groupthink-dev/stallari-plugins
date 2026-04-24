@@ -5,7 +5,7 @@
   "tagline": "Native Apple Reminders access on macOS",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",

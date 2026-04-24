@@ -4,7 +4,7 @@
   "description": "Australia Post — postage calculator, shipping, tracking, and locations via official AusPost APIs",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/auspost-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

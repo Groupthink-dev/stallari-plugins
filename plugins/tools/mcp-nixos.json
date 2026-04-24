@@ -5,7 +5,7 @@
   "tagline": "NixOS ecosystem reference — packages, options, flakes, and docs",
   "version": "2.3.1",
   "author": "utensils",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/mcp-nixos.svg",
   "author_type": "community",
   "readiness": "beta",

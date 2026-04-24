@@ -5,7 +5,7 @@
   "tagline": "Google Calendar events and scheduling via REST API",
   "version": "0.1.0",
   "author": "community",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/google-calendar-mcp.svg",
   "tier": "community",
   "author_type": "community",

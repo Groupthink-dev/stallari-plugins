@@ -5,7 +5,7 @@
   "tagline": "Tesla vehicle control with summary-first responses and built-in safety gates",
   "version": "2.0.0",
   "author": "keithah",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/tessie-mcp.svg",
   "tier": "community",
   "author_type": "community",

@@ -5,7 +5,7 @@
   "tagline": "DNS filtering and privacy from the conversation",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/controld-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

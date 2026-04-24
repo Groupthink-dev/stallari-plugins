@@ -5,7 +5,7 @@
   "tagline": "Trophy tracking, game library, and friends on PSN",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/psn-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

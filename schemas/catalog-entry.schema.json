@@ -10,7 +10,7 @@
     "properties": { "type": { "const": "plugin" } }
   },
   "then": {
-    "required": ["name", "type", "description", "version", "author", "tier", "licence", "contract", "repository", "install"]
+    "required": ["name", "type", "description", "version", "author", "tier", "license", "contract", "repository", "install"]
   },
   "else": {
     "if": {
@@ -40,9 +40,9 @@
     "author": {
       "type": "string"
     },
-    "licence": {
+    "license": {
       "type": "string",
-      "description": "SPDX licence identifier. Required for plugins."
+      "description": "SPDX license identifier. Required for plugins."
     },
     "tier": {
       "type": "string",

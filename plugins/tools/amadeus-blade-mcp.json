@@ -5,7 +5,7 @@
   "tagline": "Global flight and hotel intelligence from the Amadeus GDS",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/amadeus-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

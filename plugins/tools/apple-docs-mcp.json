@@ -5,7 +5,7 @@
   "tagline": "Apple Developer Documentation, WWDC sessions, and API reference",
   "version": "1.0.26",
   "author": "kimsungwhee",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/apple-docs-mcp.svg",
   "author_type": "community",
   "readiness": "beta",

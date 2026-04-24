@@ -22,7 +22,7 @@ All external submissions enter at `tier: "community"`. See the README for the pr
 ## What to expect from review
 
 - We aim to triage new PRs within a few days
-- Automated checks run on every PR (schema validation, licence compatibility)
+- Automated checks run on every PR (schema validation, license compatibility)
 - A maintainer will review for manifest correctness, data declarations, and security posture
 - We may ask clarifying questions — this is collaborative, not adversarial
 

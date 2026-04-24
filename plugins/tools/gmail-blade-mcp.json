@@ -5,7 +5,7 @@
   "tagline": "Gmail management with Gemini-powered classification",
   "version": "0.2.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/gmail-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

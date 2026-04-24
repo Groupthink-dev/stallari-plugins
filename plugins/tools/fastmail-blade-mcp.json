@@ -5,7 +5,7 @@
   "tagline": "Full Fastmail control via JMAP with masked email",
   "version": "0.1.1",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/fastmail-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

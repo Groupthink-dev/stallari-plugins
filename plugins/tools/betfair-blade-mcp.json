@@ -5,7 +5,7 @@
   "description": "Betfair Exchange MCP Server — markets, prices, orders, account, certificate auth, weight-aware rate limiting. 22 tools covering the full betting-exchange-v1 contract.",
   "tagline": "Live exchange data, trading, and account management for Betfair",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/betfair-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

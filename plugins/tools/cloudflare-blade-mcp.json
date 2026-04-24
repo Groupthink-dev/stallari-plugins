@@ -5,7 +5,7 @@
   "tagline": "Full-stack Cloudflare management from DNS to deploy",
   "version": "0.2.2",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/cloudflare-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

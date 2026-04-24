@@ -5,7 +5,7 @@
   "description": "Obsidian vault operations via Swift MCP — read, write, search, properties, graph analysis, lens semantic tools",
   "version": "0.5.0",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/stallari-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",

@@ -12,7 +12,7 @@ icon: server
 author:
   name: Groupthink Dev
   url: https://stallari.ai
-licence: MIT
+license: MIT
 min_stallari: "0.68"
 author_type: first-party
 readiness: experimental

@@ -5,7 +5,7 @@
   "description": "Domain adapter for email — canonical email_* tools with per-provider transforms (Fastmail, Gmail)",
   "version": "0.1.0",
   "author": "groupthink-dev",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/stallari-email-adapter.svg",
   "tier": "certified",
   "author_type": "first-party",

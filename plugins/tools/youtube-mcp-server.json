@@ -4,7 +4,7 @@
   "description": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3",
   "version": "1.0.0",
   "author": "ZubeidHendricks",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/youtube-mcp-server.svg",
   "tier": "community",
   "author_type": "community",

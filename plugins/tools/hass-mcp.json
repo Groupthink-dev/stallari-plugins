@@ -5,7 +5,7 @@
   "tagline": "Community Home Assistant with camera snapshots",
   "version": "0.3.0",
   "author": "bendavid",
-  "licence": "MIT",
+  "license": "MIT",
   "icon": "/icons/hass-mcp.svg",
   "repository": "https://github.com/bendavid/hass-mcp",
   "highlights": [
