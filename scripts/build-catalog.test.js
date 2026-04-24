@@ -5,6 +5,7 @@ import {
   slugify,
   contractToService,
   extractPackServices,
+  computeCanonicalDigest,
   pluginToCatalogEntry,
   packToCatalogEntry,
   buildServices,
@@ -352,5 +353,116 @@ describe("buildServices", () => {
 
   it("returns empty array when given no entries", () => {
     assert.deepEqual(buildServices([]), []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// computeCanonicalDigest (DD-163)
+// ---------------------------------------------------------------------------
+
+describe("computeCanonicalDigest", () => {
+  it("produces a deterministic 64-char hex digest", () => {
+    const pack = {
+      skills: [
+        { name: "greet", prompt: "Say hello" },
+        { name: "farewell", prompt: "Say goodbye" },
+      ],
+    };
+    const hash = computeCanonicalDigest(pack);
+    assert.equal(hash.length, 64);
+    assert.match(hash, /^[a-f0-9]{64}$/);
+
+    // Same input → same output
+    assert.equal(computeCanonicalDigest(pack), hash);
+  });
+
+  it("changes when a skill prompt changes", () => {
+    const pack1 = {
+      skills: [{ name: "greet", prompt: "Say hello" }],
+    };
+    const pack2 = {
+      skills: [{ name: "greet", prompt: "Say hi" }],
+    };
+    assert.notEqual(
+      computeCanonicalDigest(pack1),
+      computeCanonicalDigest(pack2),
+    );
+  });
+
+  it("is stable across skill reordering", () => {
+    const pack1 = {
+      skills: [
+        { name: "alpha", prompt: "A" },
+        { name: "beta", prompt: "B" },
+      ],
+    };
+    const pack2 = {
+      skills: [
+        { name: "beta", prompt: "B" },
+        { name: "alpha", prompt: "A" },
+      ],
+    };
+    assert.equal(
+      computeCanonicalDigest(pack1),
+      computeCanonicalDigest(pack2),
+    );
+  });
+
+  it("includes agents in the digest", () => {
+    const withAgents = {
+      skills: [{ name: "greet", prompt: "Hello" }],
+      agents: { assistant: { prompt: "You are helpful" } },
+    };
+    const withoutAgents = {
+      skills: [{ name: "greet", prompt: "Hello" }],
+    };
+    assert.notEqual(
+      computeCanonicalDigest(withAgents),
+      computeCanonicalDigest(withoutAgents),
+    );
+  });
+
+  it("includes guardrail rules in the digest", () => {
+    const withGuardrails = {
+      skills: [{ name: "greet", prompt: "Hello" }],
+      guardrails: {
+        rules: [{ id: "vault-001", text: "Never delete notes" }],
+      },
+    };
+    const withoutGuardrails = {
+      skills: [{ name: "greet", prompt: "Hello" }],
+    };
+    assert.notEqual(
+      computeCanonicalDigest(withGuardrails),
+      computeCanonicalDigest(withoutGuardrails),
+    );
+  });
+
+  it("is stable across agent key reordering", () => {
+    const pack1 = {
+      skills: [],
+      agents: { zulu: { prompt: "Z" }, alpha: { prompt: "A" } },
+    };
+    const pack2 = {
+      skills: [],
+      agents: { alpha: { prompt: "A" }, zulu: { prompt: "Z" } },
+    };
+    assert.equal(
+      computeCanonicalDigest(pack1),
+      computeCanonicalDigest(pack2),
+    );
+  });
+
+  it("packToCatalogEntry includes integrity field", () => {
+    const pack = {
+      name: "Test Pack",
+      description: "A test pack",
+      data: { reads: [], writes: [], stores: "nothing", phones_home: false },
+      skills: [{ name: "test-skill", prompt: "Do a thing" }],
+    };
+    const entry = packToCatalogEntry(pack);
+    assert.ok(entry.integrity);
+    assert.ok(entry.integrity.sha256);
+    assert.equal(entry.integrity.sha256.length, 64);
   });
 });

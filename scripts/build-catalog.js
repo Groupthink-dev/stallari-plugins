@@ -9,6 +9,7 @@
  * Usage: node scripts/build-catalog.js
  */
 
+import { createHash } from "node:crypto";
 import { readdir, readFile, mkdir, writeFile, copyFile, stat } from "node:fs/promises";
 import { join, resolve, basename, extname } from "node:path";
 import { parse as parseYaml } from "yaml";
@@ -70,6 +71,54 @@ function resolveCertification(source) {
     default:
       return { author_type: "community", readiness: "experimental" };
   }
+}
+
+/**
+ * Compute a canonical SHA-256 content digest for a pack manifest (DD-163).
+ *
+ * Algorithm (must match PackIntegrity.swift):
+ * 1. Skill prompts sorted by skill name, formatted as "skill:{name}\n{prompt}\n"
+ * 2. Agent system prompts sorted by name, formatted as "agent:{name}\n{prompt}\n"
+ * 3. Guardrail rule texts sorted by ID, formatted as "guardrail:{id}\n{text}\n"
+ * 4. SHA-256 of the concatenated UTF-8 bytes, hex-encoded.
+ */
+function computeCanonicalDigest(pack) {
+  const parts = [];
+
+  // Skills — sorted by name (the `name` field on each skill object)
+  const skills = Array.isArray(pack.skills) ? [...pack.skills] : [];
+  skills.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  for (const skill of skills) {
+    if (skill.name && skill.prompt) {
+      parts.push(`skill:${skill.name}\n${skill.prompt}\n`);
+    }
+  }
+
+  // Agents — sorted by name (object keys)
+  if (pack.agents && typeof pack.agents === "object") {
+    const agentNames = Object.keys(pack.agents).sort();
+    for (const name of agentNames) {
+      const agent = pack.agents[name];
+      if (agent.prompt) {
+        parts.push(`agent:${name}\n${agent.prompt}\n`);
+      }
+    }
+  }
+
+  // Guardrail rules — sorted by ID
+  if (pack.guardrails?.rules && Array.isArray(pack.guardrails.rules)) {
+    const rules = [...pack.guardrails.rules].sort((a, b) =>
+      (a.id || "").localeCompare(b.id || ""),
+    );
+    for (const rule of rules) {
+      if (rule.id && rule.text) {
+        parts.push(`guardrail:${rule.id}\n${rule.text}\n`);
+      }
+    }
+  }
+
+  const content = parts.join("");
+  return createHash("sha256").update(content, "utf8").digest("hex");
 }
 
 /** Convert a raw plugin JSON to a CatalogEntry */
@@ -221,6 +270,8 @@ function packToCatalogEntry(pack) {
     // v1.3: org access control (DD104)
     access: pack.access || "public",
     organization: pack.organization || null,
+    // v1.9: content integrity hash (DD163)
+    integrity: { sha256: computeCanonicalDigest(pack) },
   };
 }
 
@@ -567,6 +618,7 @@ export {
   contractToService,
   extractPackServices,
   resolveCertification,
+  computeCanonicalDigest,
   pluginToCatalogEntry,
   packToCatalogEntry,
   buildServices,
