@@ -98,7 +98,7 @@
       "type": "companion",
       "target": "vultr-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualmachine"],
+      "shared_services": ["virtualisation"],
       "label": "Provision a NixOS VM on Vultr",
       "body": "Search for NixOS packages needed for the server role, look up configuration options, then use vultr-blade-mcp to provision a VM with cloud-init that bootstraps NixOS with the discovered configuration."
     },
@@ -142,5 +142,5 @@
     "validated_date": "2026-04-20",
     "validator": "system-architect"
   },
-  "notes": "Community listing for utensils/mcp-nixos (593 stars). Read-only NixOS ecosystem reference. 2 tools, 10 search sources. Zero auth. Implements documentation-v1 (required + recommended). Pairs with virtualmachine-v1 providers (vultr-blade-mcp, runpod-mcp) for declarative infrastructure workflows."
+  "notes": "Community listing for utensils/mcp-nixos (593 stars). Read-only NixOS ecosystem reference. 2 tools, 10 search sources. Zero auth. Implements documentation-v1 (required + recommended). Pairs with virtualisation-v1 providers (vultr-blade-mcp, runpod-mcp) for declarative infrastructure workflows."
 }

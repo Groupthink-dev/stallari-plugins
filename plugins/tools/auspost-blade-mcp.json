@@ -2,14 +2,14 @@
   "name": "auspost-blade-mcp",
   "title": "Australia Post",
   "description": "Australia Post — postage calculator, shipping, tracking, and locations via official AusPost APIs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/auspost-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
-  "contract": "postal-v1",
+  "contract": "logistics-v1",
   "tagline": "Postage rates, parcel tracking, and shipping labels",
   "highlights": [
     {
@@ -62,7 +62,7 @@
       "target": "auspost-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "postal"
+        "logistics"
       ],
       "label": "Quote and ship a parcel",
       "body": "Calculate postage rates for a parcel by weight and dimensions, compare service options (Express vs Standard), then create the shipment and generate a shipping label."
@@ -72,7 +72,7 @@
       "target": "auspost-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "postal"
+        "logistics"
       ],
       "label": "Track a delivery",
       "body": "Look up a tracking number to check current parcel status, estimated delivery date, and scan history across the AusPost network."
@@ -82,7 +82,7 @@
       "target": "auspost-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "postal"
+        "logistics"
       ],
       "label": "Find nearby drop-off points",
       "body": "Search for post offices, parcel lockers, and business hubs near a suburb or postcode, with opening hours and available services."

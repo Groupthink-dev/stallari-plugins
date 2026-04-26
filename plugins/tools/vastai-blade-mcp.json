@@ -1,9 +1,9 @@
 {
   "name": "vastai-blade-mcp",
   "title": "Vast.ai GPU Marketplace",
-  "description": "Search and provision GPU instances on the Vast.ai P2P marketplace — search offers, accept bids, manage instances, and track billing. 16 tools implementing virtualmachine-v1 contract.",
+  "description": "Search and provision GPU instances on the Vast.ai P2P marketplace — search offers, accept bids, manage instances, and track billing. 16 tools implementing virtualisation-v1 contract.",
   "tagline": "GPU marketplace — search offers, provision instances, manage bids and billing",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/vastai-blade-mcp.svg",
@@ -11,9 +11,9 @@
   "author_type": "stallari",
   "readiness": "beta",
   "contract": [
-    "virtualmachine-v1"
+    "virtualisation-v1"
   ],
-  "contract_notes": "Marketplace-adapted virtualmachine-v1 — offer search replaces plan listing, instance creation accepts offers via PUT /asks/{id}. 16 tools, dual write-gate.",
+  "contract_notes": "Marketplace-adapted virtualisation-v1 — offer search replaces plan listing, instance creation accepts offers via PUT /asks/{id}. 16 tools, dual write-gate.",
   "homepage": "https://github.com/groupthink-dev/vastai-blade-mcp",
   "repository": "https://github.com/groupthink-dev/vastai-blade-mcp",
   "multi_instance": false,
@@ -118,7 +118,7 @@
       "target": "vastai-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "virtualmachine"
+        "virtualisation"
       ],
       "label": "Find cheapest A100 GPU",
       "body": "Search GPU offers filtering for A100 with at least 80GB VRAM, sort by price ascending, and show the top 5 cheapest offers with their location and reliability scores."
@@ -128,7 +128,7 @@
       "target": "vastai-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "virtualmachine"
+        "virtualisation"
       ],
       "label": "Provision a PyTorch training instance",
       "body": "Search for a 4x A100 offer under $5/hr, accept it with the PyTorch template, set an onstart script to clone a repo and start training, then monitor until running."
@@ -138,7 +138,7 @@
       "target": "vastai-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "virtualmachine"
+        "virtualisation"
       ],
       "label": "Cost audit — review GPU spend",
       "body": "List all running instances with their hourly costs, check billing invoices for the last 7 days, and identify instances that could be moved to cheaper bid pricing."
@@ -151,5 +151,5 @@
     "gated": "untested",
     "last_tested": null
   },
-  "notes": "First-party Stallari blade MCP. Marketplace-adapted virtualmachine-v1 contract (offers replace plans, PUT /asks/{id} replaces POST /instances). TypeScript, dual transport (stdio + HTTP). 16 tools, 33 tests, dual write-gate pattern."
+  "notes": "First-party Stallari blade MCP. Marketplace-adapted virtualisation-v1 contract (offers replace plans, PUT /asks/{id} replaces POST /instances). TypeScript, dual transport (stdio + HTTP). 16 tools, 33 tests, dual write-gate pattern."
 }
