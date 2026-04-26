@@ -1,7 +1,8 @@
 {
   "$id": "https://stallari.app/schemas/contracts/virtualmachine-v1.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Virtual machine lifecycle service contract v1 — 16 operations across VM provisioning, GPU management, and cloud-init deployment.",
+  "deprecated_by": "virtualisation-v1",
+  "description": "DEPRECATED — superseded by virtualisation-v1 (DD-157). Virtual machine lifecycle service contract v1 — 16 operations across VM provisioning, GPU management, and cloud-init deployment. Retained for backward compatibility; existing packs continue to resolve via the virtualmachine service alias.",
   "operations": [
     {
       "classification": "required",

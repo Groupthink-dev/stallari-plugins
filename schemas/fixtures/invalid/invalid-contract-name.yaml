@@ -1,0 +1,27 @@
+# expected-error: invalid-contract-name
+# Contract name violates the namespacing pattern — uppercase characters and
+# missing -vN suffix. Must be rejected (DD-157).
+pack: "1.1"
+name: bad-contract-name
+version: "0.1.0"
+description: Pack with malformed bundled contract name.
+author:
+  name: Test
+visibility: sealed
+tier: certified
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+contracts:
+  - name: BadName_NoVersion
+    service: bad
+    version: 1
+    operations:
+      - name: x
+        classification: required
+skills:
+  - name: x
+    description: x
+    prompt: x

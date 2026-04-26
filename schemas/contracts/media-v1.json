@@ -1,0 +1,65 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/media-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Media server and automation stack contract (DD-157). For *arr stack (Sonarr, Radarr, Prowlarr) plus Jellyfin, Plex. Library search, request management, download queue, library maintenance.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Search media library (movies, shows, episodes)",
+      "name": "library_search"
+    },
+    {
+      "classification": "required",
+      "description": "Library size, recent additions, transcoding queue",
+      "name": "library_status"
+    },
+    {
+      "classification": "gated",
+      "description": "Add movie / show to wanted list",
+      "name": "request_content"
+    },
+    {
+      "classification": "recommended",
+      "description": "Indexer health and stats",
+      "name": "indexer_status"
+    },
+    {
+      "classification": "required",
+      "description": "Active downloads, progress, ETA",
+      "name": "download_queue"
+    },
+    {
+      "classification": "recommended",
+      "description": "Available quality profiles",
+      "name": "quality_profiles"
+    },
+    {
+      "classification": "recommended",
+      "description": "Upcoming releases (episodes, movies)",
+      "name": "calendar"
+    },
+    {
+      "classification": "gated",
+      "description": "Trigger library rescan",
+      "name": "library_scan"
+    },
+    {
+      "classification": "recommended",
+      "description": "Recent grabs, imports, failures",
+      "name": "history"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "media-v1"
+    },
+    "service": {
+      "const": "media"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "media-v1",
+  "type": "object"
+}

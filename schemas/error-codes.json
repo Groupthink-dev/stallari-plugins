@@ -109,6 +109,10 @@
       "description": "Two skills in the pack share a name."
     },
     {
+      "code": "invalid-contract-name",
+      "description": "A bundled contract name does not match the namespacing pattern (root or org-slug/-prefixed) (DD-157)."
+    },
+    {
       "code": "seal-signature-invalid",
       "description": "A sealed pack's signature does not validate against the author's published key."
     },

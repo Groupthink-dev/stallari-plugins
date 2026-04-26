@@ -1,0 +1,37 @@
+# Pack requiring the unified virtualisation service (DD-157).
+# Exercises the virtualisation-v1 contract via a homelab-style workload skill.
+pack: "1.6"
+name: virtualisation-pack
+version: "0.1.0"
+description: Manage homelab compute workloads via the virtualisation contract.
+
+author:
+  name: Stallari Test Corpus
+
+data:
+  reads: [virtualisation, vault]
+  writes: [virtualisation, vault]
+  stores: nothing
+  phones_home: false
+
+requires:
+  services:
+    - service: virtualisation
+      operations:
+        - host_info
+        - workload_list
+        - workload_get
+        - workload_status
+        - workload_start
+        - workload_stop
+    - service: vault
+      operations: [create, append]
+
+skills:
+  - name: workload-status-report
+    description: Snapshot the host and write a workload status note.
+    trigger:
+      schedule: "0 8 * * *"
+    prompt: |
+      Call host_info, then workload_list. Append a status summary to the
+      vault under spaces/Systems/Areas/Information Infrastructure/.

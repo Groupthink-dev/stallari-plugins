@@ -1,0 +1,50 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/gpu-inference-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Inference API on a running GPU worker (DD-157). Distinct from virtualisation-v1 (deployment) and serverless-v1 (cloud GPU endpoints). First implementer: stallari-gpu-worker.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Hardware info, VRAM, utilisation, temperature, driver",
+      "name": "gpu_status"
+    },
+    {
+      "classification": "gated",
+      "description": "Prompt + conversation → completion (destructive in cost terms, requires confirmation)",
+      "name": "run_inference"
+    },
+    {
+      "classification": "required",
+      "description": "Available models on backend",
+      "name": "model_list"
+    },
+    {
+      "classification": "gated",
+      "description": "Download model to backend",
+      "name": "model_pull"
+    },
+    {
+      "classification": "gated",
+      "description": "Remove model from disk",
+      "name": "model_delete"
+    },
+    {
+      "classification": "required",
+      "description": "Pending, active, completed counts, average wait",
+      "name": "queue_status"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "gpu-inference-v1"
+    },
+    "service": {
+      "const": "gpu-inference"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "gpu-inference-v1",
+  "type": "object"
+}

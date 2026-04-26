@@ -1,0 +1,75 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/logistics-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Logistics and parcel delivery service contract — tracking, shipment creation, rate quoting, and pickup scheduling. First implementer: Australia Post blade MCP.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Get tracking detail for a tracking number (status, events, ETA, last known location)",
+      "name": "tracking_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "List shipments currently being tracked under the account",
+      "name": "tracking_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Subscribe to push updates for a tracking number (webhook or polling cursor)",
+      "name": "tracking_subscribe"
+    },
+    {
+      "classification": "required",
+      "description": "List shipments created by the account",
+      "name": "shipment_list"
+    },
+    {
+      "classification": "required",
+      "description": "Get full detail of a single shipment (parcels, addresses, services, labels, status)",
+      "name": "shipment_get"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a shipment / consignment (sender, receiver, parcels, service options)",
+      "name": "shipment_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Cancel a pending (unposted) shipment",
+      "name": "shipment_cancel"
+    },
+    {
+      "classification": "recommended",
+      "description": "Retrieve shipping label artefact (PDF / PNG / ZPL) for a shipment",
+      "name": "label_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "Quote rates for a from/to/parcel set across available services",
+      "name": "rate_quote"
+    },
+    {
+      "classification": "gated",
+      "description": "Book a courier pickup",
+      "name": "pickup_schedule"
+    },
+    {
+      "classification": "optional",
+      "description": "Validate a postal address (DPID / suburb / postcode confirmation)",
+      "name": "address_validate"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "logistics-v1"
+    },
+    "service": {
+      "const": "logistics"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "logistics-v1",
+  "type": "object"
+}

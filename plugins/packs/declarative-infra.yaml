@@ -7,7 +7,7 @@ description: >
   for unattended standup, or QR-code interactive flow when present.
   Includes fleet health monitoring, post-provision verification, safe teardown,
   and cloud-init generation with security refinement.
-version: "0.1.0"
+version: "0.2.0"
 icon: server
 author:
   name: Groupthink Dev
@@ -20,8 +20,8 @@ visibility: open
 
 requires:
   services:
-    - service: virtualmachine
-      contract: virtualmachine-v1
+    - service: virtualisation
+      contract: virtualisation-v1
       operations:
         - vm_list
         - vm_get
@@ -52,18 +52,18 @@ recommends:
 
 data:
   reads:
-    - virtualmachine
+    - virtualisation
     - overlay-network
     - documentation
   writes:
-    - virtualmachine
+    - virtualisation
   stores: nothing
   phones_home: false
 
 suggested_plugins:
-  - service: virtualmachine
+  - service: virtualisation
     required: true
-    note: "Vultr GPU Cloud is the certified provider. Other virtualmachine-v1 providers will work."
+    note: "Vultr GPU Cloud is the certified provider. Other virtualisation-v1 providers will work."
     plugins:
       - name: vultr-blade-mcp
         title: "Vultr GPU Cloud"
@@ -168,7 +168,7 @@ skills:
         required: false
         default: latest
     services_used:
-      - service: virtualmachine
+      - service: virtualisation
         operations:
           - vm_list
           - vm_list_plans
@@ -368,7 +368,7 @@ skills:
         type: string
         required: true
     services_used:
-      - service: virtualmachine
+      - service: virtualisation
         operations: [vm_get, vm_status]
       - service: overlay-network
         operations: [devices]
@@ -422,7 +422,7 @@ skills:
       schedule: "0 * * * *"
     graph: react-extract
     services_used:
-      - service: virtualmachine
+      - service: virtualisation
         operations: [vm_list, vm_get, vm_status]
     prompt: |
       Produce a fleet health snapshot for all GPU worker instances.
@@ -488,7 +488,7 @@ skills:
         required: false
         default: false
     services_used:
-      - service: virtualmachine
+      - service: virtualisation
         operations: [vm_get, vm_stop, vm_snapshots, vm_delete]
     prompt: |
       Safely decommission a stallari-gpu-worker VM. Build a plan, confirm,

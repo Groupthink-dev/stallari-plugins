@@ -3,142 +3,277 @@
     {
       "contract": "email-v1",
       "description": "Email read / search / send / label / thread.",
-      "service": "email"
+      "service": "email",
+      "tags": [
+        "productivity",
+        "communications"
+      ]
     },
     {
       "contract": "calendar-v1",
       "description": "Calendar events, availability, scheduling.",
-      "service": "calendar"
+      "service": "calendar",
+      "tags": [
+        "productivity"
+      ]
     },
     {
       "contract": "tasks-v1",
       "description": "Task lists with completion state, due dates, nesting.",
-      "service": "tasks"
+      "service": "tasks",
+      "tags": [
+        "productivity"
+      ]
     },
     {
       "contract": "vault-v1",
       "description": "Obsidian-style markdown vault with frontmatter, wikilinks, tags.",
-      "service": "vault"
+      "service": "vault",
+      "tags": [
+        "productivity"
+      ]
     },
     {
       "contract": "messages-v1",
       "description": "Short-form messaging (iMessage, Messages).",
-      "service": "messages"
+      "service": "messages",
+      "tags": [
+        "communications"
+      ]
     },
     {
       "contract": "notifications-v1",
       "description": "Push notifications / ntfy / native notification centre.",
-      "service": "notifications"
+      "service": "notifications",
+      "tags": [
+        "communications"
+      ]
     },
     {
       "contract": "social-v1",
       "description": "Social network posting / reading (Mastodon, Bluesky, etc.).",
-      "service": "social"
+      "service": "social",
+      "tags": [
+        "communications"
+      ]
     },
     {
       "contract": "drive-v1",
       "description": "Cloud file storage (OneDrive, Google Drive, etc.).",
-      "service": "drive"
+      "service": "drive",
+      "tags": [
+        "storage"
+      ]
     },
     {
       "contract": "filesystem-v1",
       "description": "Local filesystem.",
-      "service": "filesystem"
+      "service": "filesystem",
+      "tags": [
+        "storage"
+      ]
     },
     {
-      "contract": "postal-v1",
-      "description": "Postal / shipping tracking.",
-      "service": "postal"
+      "contract": "logistics-v1",
+      "description": "Parcel delivery, tracking, shipment creation, pickup scheduling.",
+      "service": "logistics",
+      "tags": [
+        "logistics",
+        "communications"
+      ]
     },
     {
       "contract": "isp-v1",
       "description": "Internet service provider account (ABB, Aussie Broadband, etc.).",
-      "service": "isp"
+      "service": "isp",
+      "tags": [
+        "networking",
+        "infrastructure"
+      ]
     },
     {
       "contract": "dns-v1",
       "description": "DNS provider (Cloudflare, Route53, etc.).",
-      "service": "dns"
+      "service": "dns",
+      "tags": [
+        "networking",
+        "name-services"
+      ]
     },
     {
       "contract": "network-v1",
       "description": "Local network management (UniFi, similar).",
-      "service": "network"
+      "service": "network",
+      "tags": [
+        "networking",
+        "infrastructure"
+      ]
     },
     {
       "contract": "overlay-network-v1",
       "description": "Mesh VPN overlay (Tailscale, similar).",
-      "service": "overlay-network"
+      "service": "overlay-network",
+      "tags": [
+        "networking",
+        "vpn",
+        "security"
+      ]
     },
     {
       "contract": "leo-modem-v1",
       "description": "Low-earth-orbit satellite modem (Starlink).",
-      "service": "leo-modem"
+      "service": "leo-modem",
+      "tags": [
+        "networking",
+        "infrastructure"
+      ]
     },
     {
       "contract": "edge-platform-v1",
       "description": "Edge compute platform (Cloudflare Workers, Fastly).",
-      "service": "edge-platform"
+      "service": "edge-platform",
+      "tags": [
+        "infrastructure",
+        "compute",
+        "networking"
+      ]
     },
     {
       "contract": "home-v1",
       "description": "Home automation hub (Home Assistant).",
-      "service": "home"
+      "service": "home",
+      "tags": [
+        "automation",
+        "iot",
+        "home"
+      ]
     },
     {
       "contract": "gaming-v1",
       "description": "Gaming platform accounts (Steam, Xbox Live, PSN).",
-      "service": "gaming"
+      "service": "gaming",
+      "tags": [
+        "entertainment"
+      ]
     },
     {
       "contract": "accounting-v1",
       "description": "Double-entry accounting (Xero, QuickBooks).",
-      "service": "accounting"
+      "service": "accounting",
+      "tags": [
+        "finance"
+      ]
     },
     {
       "contract": "billing-v1",
       "description": "SaaS billing (Paddle, Stripe Billing).",
-      "service": "billing"
+      "service": "billing",
+      "tags": [
+        "finance"
+      ]
     },
     {
       "contract": "ecommerce-v1",
       "description": "E-commerce platforms (Shopify, WooCommerce, BigCommerce).",
-      "service": "ecommerce"
+      "service": "ecommerce",
+      "tags": [
+        "finance"
+      ]
     },
     {
       "contract": "transactional-email-v1",
       "description": "Transactional email services (Resend, Postmark, SendGrid).",
-      "service": "transactional-email"
+      "service": "transactional-email",
+      "tags": [
+        "communications"
+      ]
     },
     {
       "contract": "brokerage-v1",
       "description": "Stock / securities brokerage (IB, Saxo).",
-      "service": "brokerage"
+      "service": "brokerage",
+      "tags": [
+        "finance",
+        "trading"
+      ]
     },
     {
       "contract": "documentation-v1",
       "description": "Developer documentation, API references, package registries, knowledge bases (read-only).",
-      "service": "documentation"
+      "service": "documentation",
+      "tags": [
+        "productivity"
+      ]
+    },
+    {
+      "contract": "virtualisation-v1",
+      "description": "Unified compute — VM, container, LXC, and app workload lifecycle across Proxmox, TrueNAS, Docker, libvirt, and cloud VM providers (DD-157).",
+      "service": "virtualisation",
+      "tags": [
+        "compute",
+        "infrastructure",
+        "gpu"
+      ]
     },
     {
       "contract": "virtualmachine-v1",
-      "description": "VM lifecycle, GPU provisioning, cloud-init deployment (Vultr, DO, RunPod, Vast.ai).",
-      "service": "virtualmachine"
+      "deprecated": true,
+      "deprecated_by": "virtualisation-v1",
+      "description": "DEPRECATED — superseded by virtualisation-v1. VM lifecycle, GPU provisioning, cloud-init deployment (Vultr, DO, RunPod, Vast.ai). Existing packs continue to resolve via this alias.",
+      "service": "virtualmachine",
+      "tags": [
+        "compute",
+        "infrastructure"
+      ]
     },
     {
       "contract": "serverless-v1",
       "description": "Serverless GPU compute — endpoint deployment, job submission, streaming, queue management.",
-      "service": "serverless"
+      "service": "serverless",
+      "tags": [
+        "compute",
+        "infrastructure",
+        "gpu",
+        "inference"
+      ]
+    },
+    {
+      "contract": "gpu-inference-v1",
+      "description": "Inference API on a running GPU worker — model management, queue status, completion (DD-157).",
+      "service": "gpu-inference",
+      "tags": [
+        "gpu",
+        "inference",
+        "compute"
+      ]
+    },
+    {
+      "contract": "media-v1",
+      "description": "Media server and automation stack (Sonarr, Radarr, Prowlarr, Jellyfin, Plex) — library, requests, downloads (DD-157).",
+      "service": "media",
+      "tags": [
+        "media",
+        "entertainment",
+        "home"
+      ]
     },
     {
       "contract": "prediction-market-v1",
       "description": "Prediction markets (Polymarket, Kalshi).",
-      "service": "prediction-market"
+      "service": "prediction-market",
+      "tags": [
+        "finance",
+        "trading"
+      ]
     },
     {
       "contract": "betting-exchange-v1",
       "description": "Betting exchanges (Betfair).",
-      "service": "betting-exchange"
+      "service": "betting-exchange",
+      "tags": [
+        "finance",
+        "trading"
+      ]
     }
   ]
 }

@@ -30,6 +30,65 @@
       ],
       "type": "object"
     },
+    "bundledContract": {
+      "additionalProperties": true,
+      "properties": {
+        "deprecated_by": {
+          "description": "If this contract is deprecated, the contract ID that supersedes it (DD-157).",
+          "type": "string"
+        },
+        "name": {
+          "description": "Contract identifier. Root namespace is implied for first-party contracts (e.g. crm-v1); org-scoped contracts use an org-slug/ prefix (e.g. acme-labs/widget-v1) (DD-157).",
+          "pattern": "^([a-z][a-z0-9-]*/)?[a-z][a-z0-9-]*-v\\d+$",
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "additionalProperties": true,
+            "properties": {
+              "classification": {
+                "enum": [
+                  "required",
+                  "recommended",
+                  "optional",
+                  "gated"
+                ],
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "classification"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "service": {
+          "description": "Service name this contract defines.",
+          "type": "string"
+        },
+        "version": {
+          "description": "Contract version number.",
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "name",
+        "service",
+        "version",
+        "operations"
+      ],
+      "type": "object"
+    },
     "requirements": {
       "additionalProperties": false,
       "properties": {
@@ -355,7 +414,7 @@
   "$id": "https://stallari.app/schemas/stallari-pack.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6/v1.7 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146).",
+  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6/v1.7/v1.8/v1.9 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146, DD152, DD163).",
   "properties": {
     "access": {
       "default": "public",
@@ -411,6 +470,13 @@
         }
       },
       "type": "object"
+    },
+    "contracts": {
+      "description": "Additional service contracts this pack introduces. Only permitted for sealed+certified packs (v1.1, DD-157 namespacing).",
+      "items": {
+        "$ref": "#/$defs/bundledContract"
+      },
+      "type": "array"
     },
     "data": {
       "additionalProperties": false,
@@ -612,6 +678,21 @@
       "description": "Relative URL path to icon asset for marketplace display (e.g. '/icons/stallari-core.svg').",
       "type": "string"
     },
+    "integrity": {
+      "additionalProperties": false,
+      "description": "Registry-computed content integrity hash (v1.9, DD163). Set at publish time.",
+      "properties": {
+        "sha256": {
+          "description": "SHA-256 hex digest of canonical pack content.",
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha256"
+      ],
+      "type": "object"
+    },
     "license": {
       "description": "SPDX license identifier (e.g. MIT, Apache-2.0).",
       "type": "string"
@@ -640,7 +721,9 @@
         "1.4",
         "1.5",
         "1.6",
-        "1.7"
+        "1.7",
+        "1.8",
+        "1.9"
       ],
       "type": "string"
     },
@@ -711,6 +794,17 @@
     "requires": {
       "$ref": "#/$defs/requirements",
       "description": "Hard requirements — missing services prevent pack execution."
+    },
+    "sharing": {
+      "default": "none",
+      "description": "Sharing scope within orgs. 'family' allows family org members to use without separate purchase. 'team' for team orgs. 'org' for any org type (v1.8, DD152).",
+      "enum": [
+        "none",
+        "family",
+        "team",
+        "org"
+      ],
+      "type": "string"
     },
     "skills": {
       "description": "Ordered skill list. At least one required.",

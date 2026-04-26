@@ -1,0 +1,37 @@
+# Pack bundling an org-scoped contract (DD-157).
+# Org slug prefix `acme-labs/` namespaces the contract distinctly from any
+# root contract of the same short name.
+pack: "1.1"
+name: bundled-contract-org-scoped
+version: "0.1.0"
+description: Pack that bundles an org-scoped contract definition.
+
+author:
+  name: Acme Labs
+
+visibility: sealed
+tier: certified
+
+data:
+  reads: [vault]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+contracts:
+  - name: acme-labs/widget-v1
+    service: widget
+    version: 1
+    operations:
+      - name: widget_list
+        description: List widgets.
+        classification: required
+      - name: widget_create
+        description: Create a widget (destructive).
+        classification: gated
+
+skills:
+  - name: noop
+    description: Placeholder skill.
+    prompt: |
+      Respond with 'ok'.

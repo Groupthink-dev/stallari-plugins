@@ -1,0 +1,150 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/virtualisation-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Unified compute service contract v1 — 26 operations covering host discovery, catalog, resources, cloud-specific lookups, workload lifecycle, and snapshots. Supersedes virtualmachine-v1 (DD-157). Implementers include Proxmox VE, TrueNAS, Docker Engine, libvirt, and cloud VM providers (Vultr, DO).",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Platform type, capabilities, OS, GPU hardware, resource totals",
+      "name": "host_info"
+    },
+    {
+      "classification": "optional",
+      "description": "Multi-node environments (Proxmox cluster, Docker Swarm)",
+      "name": "host_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "Available templates, OS images, container images, app catalog entries",
+      "name": "catalog_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Search catalog by name, tag, or category",
+      "name": "catalog_search"
+    },
+    {
+      "classification": "optional",
+      "description": "Template / image detail including config schema",
+      "name": "catalog_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "GPUs: passthrough-capable, allocated, free, driver info",
+      "name": "gpu_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Storage pools, datastores, volume locations",
+      "name": "storage_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Bridges, VLANs, overlay networks",
+      "name": "network_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Datacentre regions with availability (cloud providers only)",
+      "name": "region_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Instance types with GPU specs and pricing (cloud providers only)",
+      "name": "plan_list"
+    },
+    {
+      "classification": "required",
+      "description": "All workloads (VMs, containers, apps) with status summary",
+      "name": "workload_list"
+    },
+    {
+      "classification": "required",
+      "description": "Detail of one workload: config, resources, IP, state",
+      "name": "workload_get"
+    },
+    {
+      "classification": "required",
+      "description": "Current state: running, stopped, error, creating, migrating",
+      "name": "workload_status"
+    },
+    {
+      "classification": "gated",
+      "description": "Create workload — payload is platform-appropriate (VM config, compose spec, app schema). Destructive, requires confirmation.",
+      "name": "workload_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Start a stopped workload",
+      "name": "workload_start"
+    },
+    {
+      "classification": "gated",
+      "description": "Stop a running workload (preserves state)",
+      "name": "workload_stop"
+    },
+    {
+      "classification": "gated",
+      "description": "Restart a workload",
+      "name": "workload_restart"
+    },
+    {
+      "classification": "gated",
+      "description": "Destroy workload and its resources (destructive, requires confirmation)",
+      "name": "workload_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Change config, image, resource allocation",
+      "name": "workload_update"
+    },
+    {
+      "classification": "recommended",
+      "description": "Stdout, stderr, console output",
+      "name": "workload_logs"
+    },
+    {
+      "classification": "optional",
+      "description": "Execute command inside workload (docker exec, VM agent, LXC exec)",
+      "name": "workload_exec"
+    },
+    {
+      "classification": "optional",
+      "description": "CPU, memory, GPU, network, disk I/O stats",
+      "name": "workload_metrics"
+    },
+    {
+      "classification": "optional",
+      "description": "List snapshots for a workload",
+      "name": "snapshot_list"
+    },
+    {
+      "classification": "gated",
+      "description": "Create snapshot",
+      "name": "snapshot_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Restore from snapshot",
+      "name": "snapshot_restore"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete snapshot",
+      "name": "snapshot_delete"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "virtualisation-v1"
+    },
+    "service": {
+      "const": "virtualisation"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "virtualisation-v1",
+  "type": "object"
+}

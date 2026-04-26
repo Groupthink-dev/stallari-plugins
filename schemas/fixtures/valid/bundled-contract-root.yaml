@@ -1,0 +1,36 @@
+# Pack bundling a root-namespace contract (DD-157).
+# Root namespace is implied — no slash in the contract name.
+pack: "1.1"
+name: bundled-contract-root
+version: "0.1.0"
+description: Pack that bundles a root-namespace contract definition.
+
+author:
+  name: Stallari Test Corpus
+
+visibility: sealed
+tier: certified
+
+data:
+  reads: [vault]
+  writes: [vault]
+  stores: nothing
+  phones_home: false
+
+contracts:
+  - name: crm-v1
+    service: crm
+    version: 1
+    operations:
+      - name: contact_list
+        description: List contacts in the CRM.
+        classification: required
+      - name: contact_get
+        description: Fetch a single contact.
+        classification: required
+
+skills:
+  - name: noop
+    description: Placeholder skill.
+    prompt: |
+      Respond with 'ok'.
