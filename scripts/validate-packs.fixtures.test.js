@@ -37,12 +37,33 @@ const CODE_PATTERNS = {
 };
 
 // Error codes the hand-rolled validator intentionally does not enforce
-// (covered by the JSON Schema at the marketplace boundary). Fixtures
-// carrying these codes are skipped with a note.
+// (covered by the JSON Schema at the marketplace boundary, or by registry-
+// infra's stricter validator). Fixtures carrying these codes are skipped
+// with a note.
 const SKIPPED_CODES = new Set([
   "description-too-long",
   "invalid-semver",
   "missing-required-field",
+  // Contract-name pattern enforcement lives in registry-infra's validate.ts,
+  // not in this plugins-side hand-rolled validator.
+  "invalid-contract-name",
+]);
+
+// Fixtures from pack-spec that exercise pack-spec features but do not satisfy
+// the marketplace rules layered on top by validate-packs.js (sealed-pack
+// readme + access + encryption + pricing + min prompt length, DD-120). These
+// are accepted as valid as long as the only errors emitted are the known
+// marketplace-only rules.
+const MARKETPLACE_ONLY_RULE_PATTERNS = [
+  /Sealed packs require a "readme" field/i,
+  /Sealed packs require access: "private"/i,
+  /Sealed packs require an "encryption" block/i,
+  /Public sealed packs require a "pricing" block/i,
+  /prompt too short for sealed pack/i,
+];
+const MARKETPLACE_RULE_EXCEPTIONS = new Set([
+  "bundled-contract-org-scoped.yaml",
+  "bundled-contract-root.yaml",
 ]);
 
 function parseExpectedError(yamlText) {
@@ -68,7 +89,16 @@ describe("pack-spec fixture corpus — valid", () => {
       const yaml = readFileSync(join(VALID_DIR, name), "utf-8");
       const parsed = parseYaml(yaml);
       const errors = validatePack(parsed);
-      assert.deepEqual(errors, [], `unexpected errors: ${errors.join(", ")}`);
+      const filteredErrors = MARKETPLACE_RULE_EXCEPTIONS.has(name)
+        ? errors.filter(
+            (msg) => !MARKETPLACE_ONLY_RULE_PATTERNS.some((re) => re.test(msg)),
+          )
+        : errors;
+      assert.deepEqual(
+        filteredErrors,
+        [],
+        `unexpected errors: ${filteredErrors.join(", ")}`,
+      );
     });
   }
 });
