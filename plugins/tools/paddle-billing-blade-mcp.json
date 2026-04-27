@@ -1,16 +1,32 @@
 {
   "name": "paddle-billing-blade-mcp",
   "title": "Paddle Billing",
-  "description": "Paddle Billing API operations — products, prices, subscriptions, transactions, webhooks. Token-efficient, write-gated, confirm-gated for destructive ops.",
+  "description": "Paddle Billing API operations — billing-v1 (subscription billing, products, prices) + payments-v1 (transactions as one-time payments, adjustments as refunds). Token-efficient with pipe-delimited output, field selection, and human-readable money formatting.",
   "tagline": "Subscriptions, products, and revenue through Paddle",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/paddle-billing-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
-  "contract": "billing-v1",
+  "readiness": "beta",
+  "contract": ["billing-v1", "payments-v1"],
+  "not_supported": [
+    "payment_cancel",
+    "payment_complete",
+    "card_create",
+    "location_list",
+    "card_delete",
+    "inventory_count",
+    "inventory_adjust",
+    "dispute_list",
+    "dispute_get",
+    "catalog_list",
+    "catalog_get",
+    "order_pay",
+    "webhook_subscription_create",
+    "webhook_subscription_delete"
+  ],
   "repository": "https://github.com/groupthink-dev/paddle-billing-blade-mcp",
   "install": {
     "runtime": "uv",
@@ -145,10 +161,19 @@
     }
   ],
   "conformance": {
-    "required": "6/6",
-    "recommended": "8/8",
-    "optional": "6/6",
-    "gated": "8/8",
-    "last_tested": "2026-04-18"
+    "billing-v1": {
+      "required": "6/6",
+      "recommended": "8/8",
+      "optional": "6/6",
+      "gated": "8/8",
+      "last_tested": "2026-04-18"
+    },
+    "payments-v1": {
+      "required": "8/12",
+      "recommended": "6/8",
+      "optional": "5/10",
+      "gated": "0/6",
+      "last_tested": "2026-04-27"
+    }
   }
 }

@@ -155,6 +155,7 @@ function pluginToCatalogEntry(raw) {
     author_type,
     readiness,
     contract: raw.contract || null,
+    not_supported: Array.isArray(raw.not_supported) && raw.not_supported.length > 0 ? raw.not_supported : null,
     runtime: raw.install?.runtime || raw.runtime || null,
     license: raw.license || null,
     conformance: raw.conformance || null,
