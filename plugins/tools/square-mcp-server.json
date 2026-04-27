@@ -1,0 +1,135 @@
+{
+  "name": "square-mcp-server",
+  "title": "Square (Official Meta-Tool)",
+  "description": "Square's official MCP server. Single meta-tool (`make_request`) covering the full Square REST surface — Payments, Customers, Orders, Catalog, Inventory, Disputes, Bookings, Loyalty, Gift Cards, Team. Breadth at the cost of token efficiency.",
+  "tagline": "Full Square REST surface via a single meta-tool",
+  "version": "0.5.0",
+  "author": "square",
+  "license": "Apache-2.0",
+  "icon": "/icons/square-mcp-server.svg",
+  "tier": "community",
+  "author_type": "third-party",
+  "readiness": "beta",
+  "contract": null,
+  "repository": "https://github.com/square/square-mcp-server",
+  "install": {
+    "runtime": "npx",
+    "package": "square-mcp-server"
+  },
+  "env": [
+    {
+      "name": "ACCESS_TOKEN",
+      "description": "Square personal access token from Developer Dashboard",
+      "secret": true
+    },
+    {
+      "name": "SANDBOX",
+      "description": "Use sandbox environment (true/false)",
+      "default": "true"
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "square.fill",
+    "product": "Personal Access Token",
+    "help_text": "Create a personal access token at Square → Developer Dashboard → Applications. Defaults to sandbox; set SANDBOX=false to point at production.",
+    "help_url": "https://developer.squareup.com/docs/build-basics/access-tokens",
+    "fields": [
+      {
+        "key": "ACCESS_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "EAAA..."
+      },
+      {
+        "key": "SANDBOX",
+        "label": "Use Sandbox",
+        "secret": false,
+        "placeholder": "true"
+      }
+    ],
+    "prerequisites": [
+      "Square account (sandbox or production)",
+      "Node.js 18+"
+    ],
+    "help_links": [
+      {
+        "label": "Square MCP Server",
+        "url": "https://github.com/square/square-mcp-server"
+      },
+      {
+        "label": "Square Developer Docs",
+        "url": "https://developer.squareup.com/docs"
+      }
+    ]
+  },
+  "highlights": [
+    {
+      "icon": "🌐",
+      "text": "Full breadth — covers every public Square REST endpoint"
+    },
+    {
+      "icon": "🔧",
+      "text": "Single tool — `make_request` parses path/method/body at the model side"
+    },
+    {
+      "icon": "📚",
+      "text": "Schema discovery — `get_service_info` and `get_type_info` document the surface on demand"
+    },
+    {
+      "icon": "🆕",
+      "text": "Always current — auto-tracks new Square API releases without server updates"
+    },
+    {
+      "icon": "⚠️",
+      "text": "Token-heavy — full REST responses, no projection, no formatting"
+    },
+    {
+      "icon": "🚪",
+      "text": "Escape hatch — useful for endpoints not covered by typed-tool blades"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/square/square-mcp-server"
+    },
+    {
+      "label": "Square Developer Docs",
+      "url": "https://developer.squareup.com/docs"
+    },
+    {
+      "label": "Square API Reference",
+      "url": "https://developer.squareup.com/reference/square"
+    }
+  ],
+  "readme": "### What it does\n\nSquare's official MCP server exposes the entire Square REST surface through a single meta-tool, `make_request`. The agent constructs the path, method, and body itself, with help from two discovery tools (`get_service_info`, `get_type_info`) that surface schema info on demand.\n\nThis covers the **full** API — Payments, Refunds, Customers, Cards, Orders, Catalog, Inventory, Disputes, Webhooks, Bookings, Loyalty, Gift Cards, Team, Locations, Devices — without any blade-side curation.\n\n### When to use this vs `square-blade-mcp`\n\n- **Use `square-blade-mcp`** for everyday Payments, Refunds, Customers, Cards, Orders, Catalog, Inventory, Disputes, Webhooks. You get 30 typed tools, formatted output, write/confirm gates, PCI-safe card display, credential scrubbing, and `payments-v1` contract conformance.\n- **Use `square-mcp-server`** as an escape hatch when you need an endpoint the blade does not expose — Bookings, Loyalty, Gift Cards, Team, Devices, beta APIs.\n\nBoth servers can be installed side-by-side. Routing and tool gating are managed by the harness.\n\n### Trade-offs\n\nThe meta-tool pattern is breadth-optimal but token-heavy. Each call returns full REST JSON with all nested objects, dates, IDs, and metadata. Card details include the full PAN if present in the response. There is no write gate, no confirmation step, and no credential scrubbing on errors.\n\nFor production agentic workflows on Payments, prefer `square-blade-mcp`.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "square-mcp-server",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Manage Square Bookings appointments",
+      "body": "Use the meta-tool to list, create, or cancel Bookings appointments — an area not covered by the typed `square-blade-mcp` blade."
+    },
+    {
+      "type": "workflow",
+      "target": "square-mcp-server",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Inspect Loyalty programs",
+      "body": "Query Loyalty program configuration, accounts, and rewards via `make_request` — an escape-hatch for endpoints outside the payments-v1 contract."
+    },
+    {
+      "type": "workflow",
+      "target": "square-mcp-server",
+      "target_type": "plugin",
+      "shared_services": [],
+      "label": "Issue and redeem Gift Cards",
+      "body": "Create gift cards, link them to customers, query balances, and process redemptions through the Gift Cards REST endpoints."
+    }
+  ],
+  "notes": "Square's first-party MCP server. Single-tool meta-pattern (`make_request`) covers the full REST surface. Listed as community/escape-hatch — for typed payments-v1 conformance use square-blade-mcp instead."
+}

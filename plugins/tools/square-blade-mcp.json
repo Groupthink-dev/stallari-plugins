@@ -1,0 +1,160 @@
+{
+  "name": "square-blade-mcp",
+  "title": "Square Payments",
+  "description": "Square Payments API operations — payments, refunds, customers, cards, locations, orders, catalog, inventory, disputes, webhooks. PCI-safe card output, write-gated, confirm-gated for destructive ops.",
+  "tagline": "POS, e-commerce, and recurring payments through Square",
+  "version": "0.1.0",
+  "author": "groupthink-dev",
+  "license": "MIT",
+  "icon": "/icons/square-blade-mcp.svg",
+  "tier": "certified",
+  "author_type": "first-party",
+  "readiness": "beta",
+  "contract": "payments-v1",
+  "repository": "https://github.com/Groupthink-dev/square-blade-mcp",
+  "install": {
+    "runtime": "uv",
+    "package": "square-blade-mcp"
+  },
+  "env": [
+    {
+      "name": "SQUARE_ACCESS_TOKEN",
+      "description": "Square personal access token from Developer Dashboard",
+      "secret": true
+    },
+    {
+      "name": "SQUARE_ENVIRONMENT",
+      "description": "API environment: sandbox or production",
+      "default": "sandbox"
+    },
+    {
+      "name": "SQUARE_WRITE_ENABLED",
+      "description": "Enable write operations (create/update/cancel/delete)",
+      "default": "false"
+    },
+    {
+      "name": "SQUARE_WEBHOOK_SIGNATURE_KEY",
+      "description": "Signing key for webhook HMAC verification",
+      "secret": true
+    }
+  ],
+  "setup": {
+    "auth_model": "api_key",
+    "complexity": "moderate",
+    "icon": "square.fill",
+    "product": "Personal Access Token",
+    "help_text": "Create a personal access token at Square → Developer Dashboard → Applications. Choose sandbox for testing or production for live payments.",
+    "help_url": "https://developer.squareup.com/docs/build-basics/access-tokens",
+    "fields": [
+      {
+        "key": "SQUARE_ACCESS_TOKEN",
+        "label": "Access Token",
+        "secret": true,
+        "placeholder": "EAAA..."
+      },
+      {
+        "key": "SQUARE_ENVIRONMENT",
+        "label": "Environment",
+        "secret": false,
+        "placeholder": "sandbox"
+      },
+      {
+        "key": "SQUARE_WEBHOOK_SIGNATURE_KEY",
+        "label": "Webhook Signature Key (optional)",
+        "secret": true,
+        "placeholder": "Required only for webhook verification"
+      }
+    ],
+    "test": {
+      "endpoint": "https://connect.squareupsandbox.com/v2/locations",
+      "auth_style": "bearer"
+    },
+    "prerequisites": [
+      "Square account (sandbox or production)"
+    ],
+    "help_links": [
+      {
+        "label": "Square Developer Docs",
+        "url": "https://developer.squareup.com/docs"
+      },
+      {
+        "label": "Create Access Token",
+        "url": "https://developer.squareup.com/apps"
+      }
+    ]
+  },
+  "highlights": [
+    {
+      "icon": "💳",
+      "text": "Payments — charge, capture, cancel, refund with audit trail"
+    },
+    {
+      "icon": "👥",
+      "text": "Customers & cards — manage customer profiles and saved cards (PCI-safe display)"
+    },
+    {
+      "icon": "🛒",
+      "text": "Orders & catalog — line items, taxes, fulfilments, inventory counts"
+    },
+    {
+      "icon": "🏬",
+      "text": "Multi-location — POS, online, physical locations with per-location reporting"
+    },
+    {
+      "icon": "🔔",
+      "text": "Webhooks — single-call HMAC verification, event-type discovery"
+    },
+    {
+      "icon": "🛡️",
+      "text": "Write-gated — read-only by default, opt-in writes, confirm-gated destructives"
+    }
+  ],
+  "links": [
+    {
+      "label": "Source Code",
+      "url": "https://github.com/Groupthink-dev/square-blade-mcp"
+    },
+    {
+      "label": "Square Developer Docs",
+      "url": "https://developer.squareup.com/docs"
+    },
+    {
+      "label": "Square Sandbox",
+      "url": "https://developer.squareup.com/apps"
+    }
+  ],
+  "readme": "### What it does\n\nSquare Blade MCP gives your AI agent access to Square Payments — payments, refunds, customers, saved cards, locations, orders, catalog, inventory, disputes, and webhooks. Your agent can investigate a customer issue, process a refund, look up an order's payment history, or verify an inbound webhook signature without leaving the conversation.\n\nIdeal for retail, hospitality, and online merchants who want their AI to read and (selectively) write Square data.\n\n### Sandbox-first\n\nDefaults to Square's sandbox (`SQUARE_ENVIRONMENT=sandbox`). Explore the entire API surface — fake payments, fake customers, fake disputes — without touching real money. Switch to `production` only when you're ready to operate on live data.\n\n### Token efficiency\n\nSquare's REST responses can include large nested objects (full card details, line items, fulfilment graphs). Each tool's formatter projects to pipe-delimited rows for lists and short labelled fields for detail views — money is rendered as `$29.00 USD`, dates as `2026-03-15 14:30`, null fields are dropped.\n\n### PCI safety\n\nCard output is restricted to last_4, brand, exp_month/year, and fingerprint. The full PAN never enters the conversation, even on detail tools. Webhook signature keys are masked in subscription detail views.\n\n### Safety model\n\n- **Reads** work immediately — list payments, view customers, fetch orders\n- **Writes** require `SQUARE_WRITE_ENABLED=true` — create payments, update customers\n- **Destructive operations** require both write enable AND `confirm=true` — cancel payment, delete customer, disable card, delete webhook subscription\n\n### Why not the official Square MCP?\n\nSquare ships an official MCP that exposes a single meta-tool (`make_request`) and pushes parsing onto the model. That works for breadth but burns tokens and removes any chance of structured guardrails. This blade gives you 30 typed tools, formatted output, write/confirm gates, credential scrubbing, and PCI-safe card display. The two can coexist — use the official server as an escape hatch when you need an obscure endpoint.",
+  "scenarios": [
+    {
+      "type": "workflow",
+      "target": "square-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["payments"],
+      "label": "Investigate a customer payment dispute",
+      "body": "Look up the disputed payment, fetch the related customer profile and order, review past payments by this customer to assess their history, and gather the evidence the agent will need to respond to the dispute."
+    },
+    {
+      "type": "workflow",
+      "target": "square-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["payments"],
+      "label": "Process a partial refund",
+      "body": "Fetch the original payment, calculate the refund amount, create the refund with an appropriate reason, and verify the customer is notified by inspecting recent webhooks."
+    },
+    {
+      "type": "workflow",
+      "target": "square-blade-mcp",
+      "target_type": "plugin",
+      "shared_services": ["payments"],
+      "label": "Audit recent inventory changes for a location",
+      "body": "List catalog items for the location, query inventory counts, identify items with low stock or unexpected drops, and surface the affected SKUs for restock."
+    }
+  ],
+  "conformance": {
+    "required": "12/12",
+    "recommended": "8/8",
+    "optional": "10/10",
+    "gated": "2/6",
+    "last_tested": "2026-04-27"
+  }
+}
