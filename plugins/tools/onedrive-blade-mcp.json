@@ -10,7 +10,7 @@
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
-  "contract": "drive-v1",
+  "contract": "file-storage-v1",
   "repository": "https://github.com/groupthink-dev/onedrive-blade-mcp",
   "install": {
     "runtime": "uv",
@@ -152,7 +152,7 @@
       "target": "onedrive-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "drive"
+        "file_storage"
       ],
       "label": "Find and retrieve a document",
       "body": "Search across OneDrive and SharePoint for a document by name or content, browse the containing folder for context, and read the file contents for analysis."
@@ -162,7 +162,7 @@
       "target": "onedrive-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "drive"
+        "file_storage"
       ],
       "label": "Monitor a folder for new files",
       "body": "Use delta sync to check a shared folder for files added since the last check, list the new items with metadata, and read any documents that match specific criteria."
@@ -172,16 +172,17 @@
       "target": "onedrive-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "drive"
+        "file_storage"
       ],
       "label": "Upload and share a report",
       "body": "Upload a generated report to a specific OneDrive folder, create a sharing link with view-only permissions, and verify the file appears in the target directory."
     }
   ],
   "conformance": {
-    "required": "3/3",
-    "recommended": "1/1",
-    "optional": "0/0",
-    "last_tested": "2026-03-31"
+    "required": "4/4",
+    "recommended": "1/4",
+    "optional": "2/3",
+    "gated": "1/3",
+    "last_tested": "2026-04-28"
   }
 }

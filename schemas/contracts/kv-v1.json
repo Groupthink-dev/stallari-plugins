@@ -1,0 +1,55 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/kv-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Key-value store service contract v1 — 7 operations for eventual-consistency key/value stores. Targets Cloudflare Workers KV, Deno KV, Upstash Redis-as-KV. Small values (typically <=25MB), optional TTL on writes, eventual global propagation. Not suitable for strongly-consistent or transactional workloads.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Retrieve the value for a single key",
+      "name": "key_get"
+    },
+    {
+      "classification": "required",
+      "description": "Write a value for a single key with optional TTL and metadata",
+      "name": "key_put"
+    },
+    {
+      "classification": "required",
+      "description": "Delete a single key (destructive, requires confirmation)",
+      "name": "key_delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "List KV namespaces accessible to the credentials",
+      "name": "namespace_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "List keys in a namespace with optional prefix filter",
+      "name": "key_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Write many key-value pairs in a single operation",
+      "name": "bulk_put"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete many keys in a single operation (destructive, requires confirmation)",
+      "name": "bulk_delete"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "kv-v1"
+    },
+    "service": {
+      "const": "kv"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "kv-v1",
+  "type": "object"
+}

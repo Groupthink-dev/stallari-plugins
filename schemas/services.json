@@ -58,11 +58,20 @@
       ]
     },
     {
-      "contract": "drive-v1",
-      "description": "Cloud file storage (OneDrive, Google Drive, etc.).",
-      "service": "drive",
+      "contract": "file-storage-v1",
+      "description": "Hierarchical cloud file storage (OneDrive, Google Drive, Dropbox, iCloud Drive, SharePoint).",
+      "service": "file_storage",
       "tags": [
         "storage"
+      ]
+    },
+    {
+      "contract": "object-storage-v1",
+      "description": "S3-compatible object/blob storage (AWS S3, Cloudflare R2, Backblaze B2, MinIO).",
+      "service": "object_storage",
+      "tags": [
+        "storage",
+        "infrastructure"
       ]
     },
     {
@@ -92,12 +101,22 @@
       ]
     },
     {
-      "contract": "dns-v1",
-      "description": "DNS provider (Cloudflare, Route53, etc.).",
+      "contract": "dns-authoritative-v1",
+      "description": "Authoritative DNS provider (Cloudflare DNS, Route53, Vultr DNS, DigitalOcean DNS).",
       "service": "dns",
       "tags": [
-        "networking",
+        "infrastructure",
         "name-services"
+      ]
+    },
+    {
+      "contract": "protective-dns-v1",
+      "description": "Protective DNS / DNS filtering / managed resolver (Control-D, NextDNS, AdGuard).",
+      "service": "protective_dns",
+      "tags": [
+        "networking",
+        "name-services",
+        "security"
       ]
     },
     {
@@ -129,13 +148,21 @@
       ]
     },
     {
-      "contract": "edge-platform-v1",
-      "description": "Edge compute platform (Cloudflare Workers, Fastly).",
-      "service": "edge-platform",
+      "contract": "kv-v1",
+      "description": "Eventual-consistency key-value store (Cloudflare Workers KV, Deno KV, Upstash Redis-as-KV).",
+      "service": "kv",
       "tags": [
         "infrastructure",
-        "compute",
-        "networking"
+        "storage"
+      ]
+    },
+    {
+      "contract": "functions-v1",
+      "description": "FaaS / edge compute (Cloudflare Workers, AWS Lambda, Vercel Functions, Deno Deploy). Bindings out of scope in v1.",
+      "service": "functions",
+      "tags": [
+        "infrastructure",
+        "compute"
       ]
     },
     {
@@ -170,6 +197,15 @@
       "service": "billing",
       "tags": [
         "finance"
+      ]
+    },
+    {
+      "contract": "payments-v1",
+      "description": "Payments, refunds, orders, customers, cards-on-file, POS, catalog, inventory, webhooks (Square, Stripe Payments, Adyen, Braintree).",
+      "service": "payments",
+      "tags": [
+        "finance",
+        "commerce"
       ]
     },
     {

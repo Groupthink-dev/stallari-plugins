@@ -10,7 +10,7 @@
   "tier": "verified",
   "author_type": "community",
   "readiness": "production",
-  "contract": "dns-v1",
+  "contract": "protective-dns-v1",
   "homepage": "https://github.com/Samik081/mcp-adguard-home",
   "repository": "https://github.com/Samik081/mcp-adguard-home",
   "highlights": [
@@ -141,7 +141,7 @@
       "target": "adguard-home-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Audit blocking effectiveness",
       "body": "Pull query stats and top blocked domains, review active blocklists, check for any client-specific overrides that might weaken protection, and summarise filtering coverage."
@@ -151,7 +151,7 @@
       "target": "adguard-home-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Set up kid-safe browsing",
       "body": "Enable parental controls and safe search, create a client policy for the child's devices, block social media and gaming services, and verify the rules are active in the query log."
@@ -161,7 +161,7 @@
       "target": "adguard-home-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Investigate slow DNS resolution",
       "body": "Check upstream DNS servers and their response times, review cache hit rates, inspect rate limiting config, and search query log for patterns of slow or failed lookups."
@@ -172,7 +172,7 @@
     "recommended": "6/6",
     "gated": "11/11",
     "details": {
-      "note": "Full dns-v1 conformance via 65-tool AdGuard Home API coverage. Access tier and category filtering provide granular control."
+      "note": "Full protective-dns-v1 conformance via 65-tool AdGuard Home API coverage. Access tier and category filtering provide granular control."
     }
   }
 }

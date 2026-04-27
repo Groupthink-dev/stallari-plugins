@@ -1,7 +1,7 @@
 {
   "name": "vultr-blade-mcp",
   "title": "Vultr GPU Cloud",
-  "description": "Manage Vultr GPU compute infrastructure — VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualisation-v1, serverless-v1, and dns-v1 contracts.",
+  "description": "Manage Vultr GPU compute infrastructure — VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualisation-v1, serverless-v1, and dns-authoritative-v1 contracts.",
   "tagline": "GPU compute infrastructure — VMs, bare metal, inference, DNS, firewall, snapshots, billing",
   "version": "0.3.0",
   "author": "groupthink-dev",
@@ -13,9 +13,9 @@
   "contract": [
     "virtualisation-v1",
     "serverless-v1",
-    "dns-v1"
+    "dns-authoritative-v1"
   ],
-  "contract_notes": "Extended virtualisation-v1 (VMs + bare metal), serverless-v1 (inference subscriptions + usage), dns-v1 (domains + records). 50 tools, dual write-gate.",
+  "contract_notes": "Extended virtualisation-v1 (VMs + bare metal), serverless-v1 (inference subscriptions + usage), dns-authoritative-v1 (domains + records). 50 tools, dual write-gate.",
   "homepage": "https://github.com/groupthink-dev/vultr-blade-mcp",
   "repository": "https://github.com/groupthink-dev/vultr-blade-mcp",
   "multi_instance": false,
@@ -154,5 +154,5 @@
     "gated": "untested",
     "last_tested": null
   },
-  "notes": "First-party Stallari blade MCP. Reference implementation for virtualisation-v1, serverless-v1, and dns-v1 contracts. TypeScript, dual transport (stdio + HTTP). GPU-first defaults. 50 tools, 74 tests, dual write-gate pattern."
+  "notes": "First-party Stallari blade MCP. Reference implementation for virtualisation-v1, serverless-v1, and dns-authoritative-v1 contracts. TypeScript, dual transport (stdio + HTTP). GPU-first defaults. 50 tools, 74 tests, dual write-gate pattern."
 }
