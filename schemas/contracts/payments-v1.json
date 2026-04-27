@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stallari.app/schemas/contracts/payments-v1.json",
+  "title": "payments-v1",
+  "description": "Payments service contract v1 — 36 operations spanning one-time payments, refunds, customers, cards-on-file, locations, orders, catalog, inventory, disputes, and webhook events. Sibling to billing-v1 (subscription-shaped). First implementer: square-blade-mcp. Future implementers: Stripe Payments, Adyen, Braintree.",
+  "type": "object",
+  "properties": {
+    "name": { "const": "payments-v1" },
+    "service": { "const": "payments" },
+    "version": { "const": 1 }
+  },
+  "operations": [
+    {
+      "name": "payment_create",
+      "description": "Charge a payment source (token, card-on-file, gift card)",
+      "classification": "required"
+    },
+    {
+      "name": "payment_get",
+      "description": "Fetch a payment by id",
+      "classification": "required"
+    },
+    {
+      "name": "payment_list",
+      "description": "List payments with location, customer, date-range, status filters (cursor-paginated)",
+      "classification": "required"
+    },
+    {
+      "name": "payment_cancel",
+      "description": "Cancel a delayed-capture or authorisation",
+      "classification": "required"
+    },
+    {
+      "name": "payment_complete",
+      "description": "Capture a previously-authorised payment",
+      "classification": "required"
+    },
+    {
+      "name": "refund_create",
+      "description": "Refund a payment in full or part",
+      "classification": "required"
+    },
+    {
+      "name": "refund_get",
+      "description": "Fetch a refund by id",
+      "classification": "required"
+    },
+    {
+      "name": "refund_list",
+      "description": "List refunds with payment, date-range, status filters",
+      "classification": "required"
+    },
+    {
+      "name": "customer_create",
+      "description": "Create a customer record",
+      "classification": "recommended"
+    },
+    {
+      "name": "customer_get",
+      "description": "Fetch a customer by id",
+      "classification": "recommended"
+    },
+    {
+      "name": "customer_list",
+      "description": "List or search customers",
+      "classification": "recommended"
+    },
+    {
+      "name": "customer_update",
+      "description": "Update customer fields",
+      "classification": "recommended"
+    },
+    {
+      "name": "card_list",
+      "description": "List cards-on-file for a customer (returns last_4, brand, exp_month, exp_year, fingerprint; never PAN)",
+      "classification": "recommended"
+    },
+    {
+      "name": "card_create",
+      "description": "Save a card-on-file from a payment source token",
+      "classification": "recommended"
+    },
+    {
+      "name": "card_disable",
+      "description": "Disable a saved card (soft-disable; use card_delete for hard removal)",
+      "classification": "recommended"
+    },
+    {
+      "name": "location_list",
+      "description": "List merchant locations (POS, online, physical)",
+      "classification": "recommended"
+    },
+    {
+      "name": "order_create",
+      "description": "Create an order with line items, taxes, fulfilments",
+      "classification": "optional"
+    },
+    {
+      "name": "order_get",
+      "description": "Fetch an order by id",
+      "classification": "optional"
+    },
+    {
+      "name": "order_list",
+      "description": "Search orders with location, customer, date-range, state filters",
+      "classification": "optional"
+    },
+    {
+      "name": "order_pay",
+      "description": "Pay an existing order using a payment source",
+      "classification": "optional"
+    },
+    {
+      "name": "order_update",
+      "description": "Update line items, fulfilment state, metadata",
+      "classification": "optional"
+    },
+    {
+      "name": "catalog_list",
+      "description": "List catalog items, variations, modifiers, taxes",
+      "classification": "optional"
+    },
+    {
+      "name": "catalog_get",
+      "description": "Fetch a catalog object by id",
+      "classification": "optional"
+    },
+    {
+      "name": "inventory_count",
+      "description": "Get inventory counts for items at a location",
+      "classification": "optional"
+    },
+    {
+      "name": "dispute_list",
+      "description": "List chargebacks and disputes",
+      "classification": "optional"
+    },
+    {
+      "name": "dispute_get",
+      "description": "Fetch a dispute by id with evidence and timeline",
+      "classification": "optional"
+    },
+    {
+      "name": "customer_delete",
+      "description": "Hard-delete a customer (PCI scope; account-deletion semantics)",
+      "classification": "gated"
+    },
+    {
+      "name": "card_delete",
+      "description": "Hard-delete a saved card (use card_disable for reversible removal)",
+      "classification": "gated"
+    },
+    {
+      "name": "payment_void",
+      "description": "Void an authorised payment outright (no settlement, no audit trail)",
+      "classification": "gated"
+    },
+    {
+      "name": "refund_unlinked",
+      "description": "Issue a refund without a backing payment (high fraud risk; provider-specific)",
+      "classification": "gated"
+    },
+    {
+      "name": "inventory_adjust",
+      "description": "Adjust inventory count at a location (physical-state mutation)",
+      "classification": "gated"
+    },
+    {
+      "name": "webhook_subscription_delete",
+      "description": "Delete a webhook subscription (removes audit trail of event delivery)",
+      "classification": "gated"
+    },
+    {
+      "name": "webhook_subscription_list",
+      "description": "List webhook subscriptions",
+      "classification": "required"
+    },
+    {
+      "name": "webhook_subscription_create",
+      "description": "Create a webhook subscription with notification URL and event filter",
+      "classification": "required"
+    },
+    {
+      "name": "webhook_event_types",
+      "description": "Enumerate event types the provider can emit (drives Stallari dispatch wiring per DD-159)",
+      "classification": "required"
+    },
+    {
+      "name": "webhook_verify",
+      "description": "Verify signature on a received webhook payload; returns {verified: bool, event: ParsedEvent}. Provider-specific extras passed via params object (Square requires notification_url; Stripe requires timestamp).",
+      "classification": "required"
+    }
+  ]
+}

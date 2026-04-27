@@ -25,6 +25,7 @@ export const DECLARED_SERVICES: string[] = [
   "network",
   "notifications",
   "overlay-network",
+  "payments",
   "prediction-market",
   "registry",
   "serverless",
