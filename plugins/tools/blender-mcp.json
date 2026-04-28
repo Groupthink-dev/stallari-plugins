@@ -121,7 +121,11 @@
         "url": "https://github.com/ahujasid/blender-mcp"
       }
     ],
-    "blurb": "Blender 3D modelling via TCP socket addon — object CRUD, materials, scene inspection, code execution, screenshot capture"
+    "blurb": "Blender 3D modelling via TCP socket addon — object CRUD, materials, scene inspection, code execution, screenshot capture",
+    "test": {
+      "skip": true,
+      "skip_reason": "Local TCP socket to a running Blender instance — not an HTTP probe target."
+    }
   },
   "certification": {
     "status": "validated",

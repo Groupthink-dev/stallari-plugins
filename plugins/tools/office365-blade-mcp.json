@@ -104,7 +104,14 @@
         "label": "Microsoft Graph API Permissions",
         "url": "https://learn.microsoft.com/en-us/graph/permissions-reference"
       }
-    ]
+    ],
+    "test": {
+      "endpoint": "https://graph.microsoft.com/v1.0/me",
+      "auth_style": "oauth2",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "services": {
     "email": {

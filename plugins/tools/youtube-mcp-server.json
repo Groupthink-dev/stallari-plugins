@@ -114,7 +114,11 @@
         "url": "https://console.cloud.google.com/apis/library/youtube.googleapis.com"
       }
     ],
-    "blurb": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3"
+    "blurb": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3",
+    "test": {
+      "skip": true,
+      "skip_reason": "Third-party MCP using API-key flow; not first-party."
+    }
   },
   "certification": {
     "status": "pending",

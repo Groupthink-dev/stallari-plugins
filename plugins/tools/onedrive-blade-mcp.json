@@ -99,7 +99,14 @@
         "label": "OneDrive API Reference",
         "url": "https://learn.microsoft.com/en-us/onedrive/developer/rest-api/"
       }
-    ]
+    ],
+    "test": {
+      "endpoint": "https://graph.microsoft.com/v1.0/me/drive",
+      "auth_style": "oauth2",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "highlights": [
     {

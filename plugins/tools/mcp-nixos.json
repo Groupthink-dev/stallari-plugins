@@ -83,7 +83,11 @@
         "label": "Noogle Function Reference",
         "url": "https://noogle.dev"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "Read-only public NixOS APIs; no credentials to verify."
+    }
   },
   "services": {
     "documentation": {

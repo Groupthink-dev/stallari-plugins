@@ -63,7 +63,11 @@
         "label": "Expedia documentation",
         "url": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "Third-party MCP vendored as-is; no setup block to probe."
+    }
   },
   "scenarios": [
     {

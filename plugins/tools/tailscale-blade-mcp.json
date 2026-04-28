@@ -106,7 +106,12 @@
     ],
     "test": {
       "tool": "ts_info",
-      "expect": "Devices:"
+      "expect": "Devices:",
+      "endpoint": "https://api.tailscale.com/api/v2/tailnet/-/devices",
+      "auth_style": "bearer",
+      "expected_status": [
+        200
+      ]
     },
     "prerequisites": [
       "Tailscale account",

@@ -81,7 +81,14 @@
         "url": "https://console.cloud.google.com/apis/library/calendar-json.googleapis.com"
       }
     ],
-    "blurb": "Google Calendar via REST API — events, calendars, freebusy, create/update/delete"
+    "blurb": "Google Calendar via REST API — events, calendars, freebusy, create/update/delete",
+    "test": {
+      "endpoint": "https://www.googleapis.com/oauth2/v3/userinfo",
+      "auth_style": "oauth2",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "scenarios": [
     {

@@ -92,7 +92,14 @@
         "label": "GitHub",
         "url": "https://github.com/HexSleeves/tailscale-mcp"
       }
-    ]
+    ],
+    "test": {
+      "endpoint": "https://api.tailscale.com/api/v2/tailnet/-/devices",
+      "auth_style": "bearer",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "conformance": {
     "required": "untested",

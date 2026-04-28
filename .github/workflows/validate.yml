@@ -36,6 +36,8 @@ jobs:
         run: node --test scripts/*.test.js
 
       - name: Build catalog (dry run)
+        env:
+          STRICT_UX: "1"
         run: node scripts/build-catalog.js
 
       - name: Trigger registry deploy

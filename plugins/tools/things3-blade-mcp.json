@@ -36,7 +36,11 @@
         "label": "Things 3 AppleScript Guide",
         "url": "https://culturedcode.com/things/support/articles/2803572/"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "AppleScript-only access to Things 3 — no HTTP surface."
+    }
   },
   "highlights": [
     {

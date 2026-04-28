@@ -63,7 +63,11 @@
         "url": "https://developer.squareup.com/docs"
       }
     ],
-    "blurb": "Square's official MCP server. Single meta-tool (`make_request`) covering the full Square REST surface — Payments, Customers, Orders, Catalog, Inventory, Disputes, Bookings, Loyalty, Gift Cards, Team. Breadth at the cost of token efficiency."
+    "blurb": "Square's official MCP server. Single meta-tool (`make_request`) covering the full Square REST surface — Payments, Customers, Orders, Catalog, Inventory, Disputes, Bookings, Loyalty, Gift Cards, Team. Breadth at the cost of token efficiency.",
+    "test": {
+      "skip": true,
+      "skip_reason": "Third-party meta-tool kept alongside our square-blade-mcp; not first-party."
+    }
   },
   "highlights": [
     {

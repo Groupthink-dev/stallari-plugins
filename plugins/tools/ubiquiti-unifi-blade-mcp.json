@@ -153,7 +153,9 @@
     ],
     "test": {
       "tool": "unifi_info",
-      "expect": "connected"
+      "expect": "connected",
+      "skip": true,
+      "skip_reason": "Cookie auth (POST /api/login → session cookie → GET /api/self) — two-step probe pending."
     },
     "prerequisites": [
       "UniFi controller (UDM, UDR, Cloud Key, or self-hosted)",

@@ -48,7 +48,11 @@
         "label": "Slack OAuth Scopes Reference",
         "url": "https://api.slack.com/scopes"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "OAuth device-code flow — no credentials present until flow completes."
+    }
   },
   "services": {
     "messages": {

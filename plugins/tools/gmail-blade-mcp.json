@@ -102,7 +102,14 @@
         "url": "https://console.cloud.google.com/apis/credentials"
       }
     ],
-    "blurb": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation."
+    "blurb": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation.",
+    "test": {
+      "endpoint": "https://www.googleapis.com/oauth2/v3/userinfo",
+      "auth_style": "oauth2",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "scenarios": [
     {

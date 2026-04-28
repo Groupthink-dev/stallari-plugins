@@ -118,7 +118,12 @@
     ],
     "test": {
       "tool": "abb_info",
-      "expect": "connected"
+      "expect": "connected",
+      "endpoint": "https://myaussie-api.aussiebroadband.com.au/customer",
+      "auth_style": "bearer",
+      "expected_status": [
+        200
+      ]
     },
     "prerequisites": [
       "Aussie Broadband account (any plan)",

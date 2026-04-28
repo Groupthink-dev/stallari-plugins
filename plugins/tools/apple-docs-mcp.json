@@ -79,7 +79,11 @@
         "label": "WWDC Videos",
         "url": "https://developer.apple.com/videos/"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "Read-only public docs API; no credentials to verify."
+    }
   },
   "services": {
     "documentation": {

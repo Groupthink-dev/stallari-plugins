@@ -545,4 +545,50 @@ describe("validatePluginUX", () => {
     };
     assert.deepEqual(validatePluginUX(raw), []);
   });
+
+  it("accepts setup.test.skip:true with a skip_reason", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        help: [{ label: "Docs", url: "https://example.com" }],
+        test: { skip: true, skip_reason: "Read-only public API, no credentials" },
+        fields: [{ key: "X", required: true, help: "h" }],
+      },
+    };
+    assert.deepEqual(validatePluginUX(raw), []);
+  });
+
+  it("warns when setup.test.skip is set without a skip_reason", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        help: [{ label: "Docs", url: "https://example.com" }],
+        test: { skip: true },
+        fields: [{ key: "X", required: true, help: "h" }],
+      },
+    };
+    const warnings = validatePluginUX(raw);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /skip_reason/);
+  });
+
+  it("accepts setup.test.endpoint alongside a tool+expect supplement", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        help: [{ label: "Docs", url: "https://example.com" }],
+        test: {
+          endpoint: "https://api.example.com/me",
+          auth_style: "bearer",
+          tool: "list_things",
+          expect: "Things:",
+        },
+        fields: [{ key: "API_KEY", required: true, help: "h" }],
+      },
+    };
+    assert.deepEqual(validatePluginUX(raw), []);
+  });
 });

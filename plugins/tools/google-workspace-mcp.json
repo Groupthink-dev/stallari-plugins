@@ -81,7 +81,14 @@
         "url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com"
       }
     ],
-    "blurb": "Google Workspace email via Gmail API — search, read, send, labels, threads"
+    "blurb": "Google Workspace email via Gmail API — search, read, send, labels, threads",
+    "test": {
+      "endpoint": "https://www.googleapis.com/oauth2/v3/userinfo",
+      "auth_style": "oauth2",
+      "expected_status": [
+        200
+      ]
+    }
   },
   "scenarios": [
     {

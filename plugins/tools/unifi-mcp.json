@@ -118,7 +118,11 @@
         "label": "npm",
         "url": "https://www.npmjs.com/package/unifi-mcp"
       }
-    ]
+    ],
+    "test": {
+      "skip": true,
+      "skip_reason": "Cookie auth (POST /api/login → session cookie → GET /api/self) — two-step probe pending."
+    }
   },
   "conformance": {
     "required": "untested",

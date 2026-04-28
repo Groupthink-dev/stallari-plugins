@@ -152,8 +152,22 @@ function validatePluginUX(raw) {
     warnings.push("setup.help (help links) missing or empty — user has no path to obtain credentials");
   }
 
-  if (!setup.test || typeof setup.test !== "object" || !setup.test.endpoint) {
-    warnings.push("setup.test.endpoint missing — install dialog cannot verify credentials live");
+  // Two ways to clear this gate: declare a probe endpoint (preferred — live
+  // HTTP verify in the install dialog), or declare skip:true with a non-empty
+  // skip_reason for plugins where probing is genuinely impossible (read-only
+  // public APIs, AppleScript-only access, local-socket servers, OAuth flows
+  // where the access token is minted out-of-band, third-party meta-tools we
+  // don't own). A `tool+expect` block alone is not sufficient — it runs after
+  // install via the daemon's MCP layer, not at credential-entry time.
+  const test = setup.test;
+  if (!test || typeof test !== "object") {
+    warnings.push("setup.test.endpoint missing — install dialog cannot verify credentials live (set skip:true with skip_reason if probing is impossible)");
+  } else if (test.skip === true) {
+    if (!test.skip_reason || typeof test.skip_reason !== "string" || test.skip_reason.trim().length === 0) {
+      warnings.push("setup.test.skip set without skip_reason — declare why probing is not possible");
+    }
+  } else if (!test.endpoint) {
+    warnings.push("setup.test.endpoint missing — install dialog cannot verify credentials live (set skip:true with skip_reason if probing is impossible)");
   }
 
   if (Array.isArray(setup.fields)) {
