@@ -3,14 +3,14 @@
   "title": "Control-D — DNS Filtering & Privacy",
   "description": "Control-D DNS management — profiles, content filters, service routing, custom rules, device endpoints, and analytics. 22 tools with write gating and credential scrubbing.",
   "tagline": "DNS filtering and privacy from the conversation",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/controld-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "production",
-  "contract": "dns-v1",
+  "contract": "protective-dns-v1",
   "homepage": "https://github.com/Groupthink-dev/controld-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/controld-blade-mcp",
   "highlights": [
@@ -118,7 +118,7 @@
       "target": "controld-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Audit DNS filtering coverage",
       "body": "Pull all profiles with cd_profiles, check active filters and custom rules for each, review service-level blocks, and summarise protection gaps across devices."
@@ -128,7 +128,7 @@
       "target": "controld-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Block a domain across all profiles",
       "body": "List profiles with cd_profiles, then create a custom BLOCK rule for the target hostname on each profile using cd_rule_create. Verify the rules are active with cd_rules."
@@ -138,7 +138,7 @@
       "target": "controld-blade-mcp",
       "target_type": "plugin",
       "shared_services": [
-        "dns"
+        "protective_dns"
       ],
       "label": "Route streaming through a proxy",
       "body": "Search the service catalog with cd_service_catalog for the streaming service, then set a SPOOF rule with a proxy location using cd_service_update. Verify with cd_services."

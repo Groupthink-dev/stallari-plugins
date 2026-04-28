@@ -1,194 +1,200 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stallari.app/schemas/contracts/payments-v1.json",
-  "title": "payments-v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Payments service contract v1 — 36 operations spanning one-time payments, refunds, customers, cards-on-file, locations, orders, catalog, inventory, disputes, and webhook events. Sibling to billing-v1 (subscription-shaped). First implementer: square-blade-mcp. Future implementers: Stripe Payments, Adyen, Braintree.",
-  "type": "object",
-  "properties": {
-    "name": { "const": "payments-v1" },
-    "service": { "const": "payments" },
-    "version": { "const": 1 }
-  },
   "operations": [
     {
-      "name": "payment_create",
+      "classification": "required",
       "description": "Charge a payment source (token, card-on-file, gift card)",
-      "classification": "required"
+      "name": "payment_create"
     },
     {
-      "name": "payment_get",
+      "classification": "required",
       "description": "Fetch a payment by id",
-      "classification": "required"
+      "name": "payment_get"
     },
     {
-      "name": "payment_list",
+      "classification": "required",
       "description": "List payments with location, customer, date-range, status filters (cursor-paginated)",
-      "classification": "required"
+      "name": "payment_list"
     },
     {
-      "name": "payment_cancel",
+      "classification": "required",
       "description": "Cancel a delayed-capture or authorisation",
-      "classification": "required"
+      "name": "payment_cancel"
     },
     {
-      "name": "payment_complete",
+      "classification": "required",
       "description": "Capture a previously-authorised payment",
-      "classification": "required"
+      "name": "payment_complete"
     },
     {
-      "name": "refund_create",
+      "classification": "required",
       "description": "Refund a payment in full or part",
-      "classification": "required"
+      "name": "refund_create"
     },
     {
-      "name": "refund_get",
+      "classification": "required",
       "description": "Fetch a refund by id",
-      "classification": "required"
+      "name": "refund_get"
     },
     {
-      "name": "refund_list",
+      "classification": "required",
       "description": "List refunds with payment, date-range, status filters",
-      "classification": "required"
+      "name": "refund_list"
     },
     {
-      "name": "customer_create",
+      "classification": "recommended",
       "description": "Create a customer record",
-      "classification": "recommended"
+      "name": "customer_create"
     },
     {
-      "name": "customer_get",
+      "classification": "recommended",
       "description": "Fetch a customer by id",
-      "classification": "recommended"
+      "name": "customer_get"
     },
     {
-      "name": "customer_list",
+      "classification": "recommended",
       "description": "List or search customers",
-      "classification": "recommended"
+      "name": "customer_list"
     },
     {
-      "name": "customer_update",
+      "classification": "recommended",
       "description": "Update customer fields",
-      "classification": "recommended"
+      "name": "customer_update"
     },
     {
-      "name": "card_list",
+      "classification": "recommended",
       "description": "List cards-on-file for a customer (returns last_4, brand, exp_month, exp_year, fingerprint; never PAN)",
-      "classification": "recommended"
+      "name": "card_list"
     },
     {
-      "name": "card_create",
+      "classification": "recommended",
       "description": "Save a card-on-file from a payment source token",
-      "classification": "recommended"
+      "name": "card_create"
     },
     {
-      "name": "card_disable",
+      "classification": "recommended",
       "description": "Disable a saved card (soft-disable; use card_delete for hard removal)",
-      "classification": "recommended"
+      "name": "card_disable"
     },
     {
-      "name": "location_list",
+      "classification": "recommended",
       "description": "List merchant locations (POS, online, physical)",
-      "classification": "recommended"
+      "name": "location_list"
     },
     {
-      "name": "order_create",
+      "classification": "optional",
       "description": "Create an order with line items, taxes, fulfilments",
-      "classification": "optional"
+      "name": "order_create"
     },
     {
-      "name": "order_get",
+      "classification": "optional",
       "description": "Fetch an order by id",
-      "classification": "optional"
+      "name": "order_get"
     },
     {
-      "name": "order_list",
+      "classification": "optional",
       "description": "Search orders with location, customer, date-range, state filters",
-      "classification": "optional"
+      "name": "order_list"
     },
     {
-      "name": "order_pay",
+      "classification": "optional",
       "description": "Pay an existing order using a payment source",
-      "classification": "optional"
+      "name": "order_pay"
     },
     {
-      "name": "order_update",
+      "classification": "optional",
       "description": "Update line items, fulfilment state, metadata",
-      "classification": "optional"
+      "name": "order_update"
     },
     {
-      "name": "catalog_list",
+      "classification": "optional",
       "description": "List catalog items, variations, modifiers, taxes",
-      "classification": "optional"
+      "name": "catalog_list"
     },
     {
-      "name": "catalog_get",
+      "classification": "optional",
       "description": "Fetch a catalog object by id",
-      "classification": "optional"
+      "name": "catalog_get"
     },
     {
-      "name": "inventory_count",
+      "classification": "optional",
       "description": "Get inventory counts for items at a location",
-      "classification": "optional"
+      "name": "inventory_count"
     },
     {
-      "name": "dispute_list",
+      "classification": "optional",
       "description": "List chargebacks and disputes",
-      "classification": "optional"
+      "name": "dispute_list"
     },
     {
-      "name": "dispute_get",
+      "classification": "optional",
       "description": "Fetch a dispute by id with evidence and timeline",
-      "classification": "optional"
+      "name": "dispute_get"
     },
     {
-      "name": "customer_delete",
+      "classification": "gated",
       "description": "Hard-delete a customer (PCI scope; account-deletion semantics)",
-      "classification": "gated"
+      "name": "customer_delete"
     },
     {
-      "name": "card_delete",
+      "classification": "gated",
       "description": "Hard-delete a saved card (use card_disable for reversible removal)",
-      "classification": "gated"
+      "name": "card_delete"
     },
     {
-      "name": "payment_void",
+      "classification": "gated",
       "description": "Void an authorised payment outright (no settlement, no audit trail)",
-      "classification": "gated"
+      "name": "payment_void"
     },
     {
-      "name": "refund_unlinked",
+      "classification": "gated",
       "description": "Issue a refund without a backing payment (high fraud risk; provider-specific)",
-      "classification": "gated"
+      "name": "refund_unlinked"
     },
     {
-      "name": "inventory_adjust",
+      "classification": "gated",
       "description": "Adjust inventory count at a location (physical-state mutation)",
-      "classification": "gated"
+      "name": "inventory_adjust"
     },
     {
-      "name": "webhook_subscription_delete",
+      "classification": "gated",
       "description": "Delete a webhook subscription (removes audit trail of event delivery)",
-      "classification": "gated"
+      "name": "webhook_subscription_delete"
     },
     {
-      "name": "webhook_subscription_list",
+      "classification": "required",
       "description": "List webhook subscriptions",
-      "classification": "required"
+      "name": "webhook_subscription_list"
     },
     {
-      "name": "webhook_subscription_create",
+      "classification": "required",
       "description": "Create a webhook subscription with notification URL and event filter",
-      "classification": "required"
+      "name": "webhook_subscription_create"
     },
     {
-      "name": "webhook_event_types",
+      "classification": "required",
       "description": "Enumerate event types the provider can emit (drives Stallari dispatch wiring per DD-159)",
-      "classification": "required"
+      "name": "webhook_event_types"
     },
     {
-      "name": "webhook_verify",
+      "classification": "required",
       "description": "Verify signature on a received webhook payload; returns {verified: bool, event: ParsedEvent}. Provider-specific extras passed via params object (Square requires notification_url; Stripe requires timestamp).",
-      "classification": "required"
+      "name": "webhook_verify"
     }
-  ]
+  ],
+  "properties": {
+    "name": {
+      "const": "payments-v1"
+    },
+    "service": {
+      "const": "payments"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "payments-v1",
+  "type": "object"
 }

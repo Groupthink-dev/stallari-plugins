@@ -1,0 +1,95 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/object-storage-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Object storage service contract v1 — 15 operations for S3-compatible blob storage. Targets AWS S3, Cloudflare R2, Backblaze B2, MinIO, DigitalOcean Spaces. Buckets contain immutable objects keyed by string; supports multipart upload, presigned URLs, and metadata.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List buckets accessible to the credentials",
+      "name": "bucket_list"
+    },
+    {
+      "classification": "required",
+      "description": "List objects in a bucket with optional prefix and delimiter",
+      "name": "object_list"
+    },
+    {
+      "classification": "required",
+      "description": "Retrieve an object's contents",
+      "name": "object_get"
+    },
+    {
+      "classification": "required",
+      "description": "Upload an object (small or multipart)",
+      "name": "object_put"
+    },
+    {
+      "classification": "required",
+      "description": "Delete an object (destructive, requires confirmation)",
+      "name": "object_delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "Get a bucket's configuration (region, lifecycle, CORS, encryption)",
+      "name": "bucket_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "Retrieve object metadata without downloading the body",
+      "name": "object_head"
+    },
+    {
+      "classification": "recommended",
+      "description": "Copy an object within or across buckets",
+      "name": "object_copy"
+    },
+    {
+      "classification": "recommended",
+      "description": "Generate a time-limited presigned URL for object_get",
+      "name": "presign_get"
+    },
+    {
+      "classification": "optional",
+      "description": "Generate a time-limited presigned URL for object_put",
+      "name": "presign_put"
+    },
+    {
+      "classification": "optional",
+      "description": "Update an object's user-defined metadata or content-type",
+      "name": "object_set_metadata"
+    },
+    {
+      "classification": "optional",
+      "description": "Delete multiple objects in a single operation (destructive, requires confirmation)",
+      "name": "object_bulk_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a new bucket",
+      "name": "bucket_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete an empty bucket (destructive, requires confirmation)",
+      "name": "bucket_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Upload many objects in a single batch operation",
+      "name": "object_bulk_put"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "object-storage-v1"
+    },
+    "service": {
+      "const": "object_storage"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "object-storage-v1",
+  "type": "object"
+}

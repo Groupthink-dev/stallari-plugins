@@ -1,7 +1,7 @@
 {
-  "$id": "https://stallari.app/schemas/contracts/dns-v1.json",
+  "$id": "https://stallari.app/schemas/contracts/protective-dns-v1.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "DNS filtering and privacy service contract v1 — 22 operations for profile-based DNS policy management, content filtering, service routing, custom rules, and device endpoint management. Designed for Control-D, NextDNS, AdGuard, and similar DNS filtering services.",
+  "description": "Protective DNS service contract v1 — 22 operations for profile-based DNS policy management, content filtering, service routing, custom rules, and device endpoint management. Designed for Control-D, NextDNS, AdGuard, and similar DNS filtering / managed-resolver services. Distinct from dns-authoritative-v1 (zone + record management).",
   "operations": [
     {
       "classification": "required",
@@ -121,15 +121,15 @@
   ],
   "properties": {
     "name": {
-      "const": "dns-v1"
+      "const": "protective-dns-v1"
     },
     "service": {
-      "const": "dns"
+      "const": "protective_dns"
     },
     "version": {
       "const": 1
     }
   },
-  "title": "dns-v1",
+  "title": "protective-dns-v1",
   "type": "object"
 }

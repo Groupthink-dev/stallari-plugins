@@ -1,0 +1,90 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/functions-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Functions / FaaS service contract v1 — 14 operations for edge-compute and FaaS platforms (Cloudflare Workers, AWS Lambda, Vercel Functions, Deno Deploy). v1 covers code deployment, secrets, schedules, versions, logs, and test invocation. Bindings (KV, R2, D1, queues) are out of scope and deferred to a future bindings-v1.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List deployed scripts/functions in the account",
+      "name": "script_list"
+    },
+    {
+      "classification": "required",
+      "description": "Get details for a single script (entry point, runtime, last deployed)",
+      "name": "script_get"
+    },
+    {
+      "classification": "required",
+      "description": "Deploy a new version of a script (upload bundled code)",
+      "name": "script_deploy"
+    },
+    {
+      "classification": "required",
+      "description": "List cron triggers / schedules attached to a script",
+      "name": "schedule_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "Delete a script (destructive, requires confirmation)",
+      "name": "script_delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "List secret names bound to a script (values not returned)",
+      "name": "secret_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "Replace cron triggers / schedules on a script",
+      "name": "schedule_set"
+    },
+    {
+      "classification": "recommended",
+      "description": "List historical versions of a script",
+      "name": "version_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Open a live log tail stream for a script",
+      "name": "tail"
+    },
+    {
+      "classification": "optional",
+      "description": "Fetch a recent buffered log slice for a script",
+      "name": "recent_logs"
+    },
+    {
+      "classification": "optional",
+      "description": "Create or update a script secret",
+      "name": "secret_put"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete a script secret (destructive, requires confirmation)",
+      "name": "secret_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Roll a script back to a previous version (destructive, requires confirmation)",
+      "name": "version_rollback"
+    },
+    {
+      "classification": "gated",
+      "description": "Test-invoke a script with a request payload (test only — production traffic uses native triggers)",
+      "name": "invoke"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "functions-v1"
+    },
+    "service": {
+      "const": "functions"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "functions-v1",
+  "type": "object"
+}

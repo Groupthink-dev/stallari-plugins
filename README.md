@@ -37,7 +37,12 @@ Plugins implement versioned **service contracts** — abstract interfaces that l
 | `billing-v1` | 28 | paddle-billing-blade-mcp |
 | `accounting-v1` | 39 | xero-blade-mcp |
 | `ecommerce-v1` | 40 | shopify-blade-mcp |
-| `drive-v1` | — | onedrive-blade-mcp |
+| `file-storage-v1` | 14 | onedrive-blade-mcp |
+| `protective-dns-v1` | 22 | controld-blade-mcp, adguard-home-mcp |
+| `dns-authoritative-v1` | 13 | cloudflare-blade-mcp, vultr-blade-mcp |
+| `kv-v1` | 7 | cloudflare-blade-mcp |
+| `functions-v1` | 14 | cloudflare-blade-mcp |
+| `object-storage-v1` | 15 | cloudflare-blade-mcp |
 | `notifications-v1` | — | resend-blade-mcp |
 
 ## Trust Tiers

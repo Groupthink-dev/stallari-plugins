@@ -1,0 +1,85 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/dns-authoritative-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Authoritative DNS service contract v1 — 13 operations for managing zones and records on authoritative DNS providers (Cloudflare DNS, Route53, Vultr DNS, DigitalOcean DNS). Supports record types: A, AAAA, CNAME, TXT, MX, NS, SRV, CAA, SOA (read-only), PTR. Distinct from protective-dns-v1 which targets DNS filtering / managed resolvers.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List DNS records on a zone with filters for name, type, and content",
+      "name": "record_list"
+    },
+    {
+      "classification": "required",
+      "description": "Create a DNS record (A, AAAA, CNAME, TXT, MX, NS, SRV, CAA, PTR)",
+      "name": "record_create"
+    },
+    {
+      "classification": "required",
+      "description": "Update an existing DNS record",
+      "name": "record_update"
+    },
+    {
+      "classification": "required",
+      "description": "Delete a DNS record (destructive, requires confirmation)",
+      "name": "record_delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "Retrieve a single DNS record by ID",
+      "name": "record_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "List authoritative DNS zones for the account",
+      "name": "zone_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "Get details for a single zone (nameservers, status, plan, account)",
+      "name": "zone_get"
+    },
+    {
+      "classification": "optional",
+      "description": "Create multiple DNS records in a single operation",
+      "name": "record_bulk_create"
+    },
+    {
+      "classification": "optional",
+      "description": "Update multiple DNS records in a single operation",
+      "name": "record_bulk_update"
+    },
+    {
+      "classification": "optional",
+      "description": "Check whether a domain is available for registration",
+      "name": "domain_check_availability"
+    },
+    {
+      "classification": "gated",
+      "description": "Set custom nameservers on a zone (destructive, requires confirmation)",
+      "name": "nameserver_set"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a new authoritative DNS zone",
+      "name": "zone_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete a DNS zone and all its records (destructive, requires confirmation)",
+      "name": "zone_delete"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "dns-authoritative-v1"
+    },
+    "service": {
+      "const": "dns"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "dns-authoritative-v1",
+  "type": "object"
+}

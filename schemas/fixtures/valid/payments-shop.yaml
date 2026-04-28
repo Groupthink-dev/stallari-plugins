@@ -1,0 +1,91 @@
+pack: "1.6"
+name: payments-shop
+version: "1.0.0"
+description: Small-merchant POS + online-shop pack — daily reconciliation, refund triage, low-stock alerts, dispute response. First exercise of payments-v1 (DD-179).
+author:
+  name: Stallari Pack Authors
+license: Apache-2.0
+
+min_stallari: "0.73"
+
+requires:
+  services:
+    - service: payments
+      operations: [payment_list, refund_list, order_list, dispute_list, customer_get]
+    - service: vault
+      operations: [read, search, create, append]
+  capabilities: []
+
+recommends:
+  services:
+    - service: payments
+      operations: [refund_create, order_get, catalog_list, inventory_count]
+    - service: notifications
+    - service: tasks
+      operations: [create]
+
+data:
+  reads: [payments, vault]
+  writes: [vault, tasks, notifications]
+  stores: nothing
+  phones_home: false
+
+agents:
+  reconciler:
+    role: operator
+    prompt: |
+      You reconcile yesterday's payments against the merchant's expected
+      takings. You list payments by location, summarise totals by tender
+      type and status, and flag any payment whose status is not COMPLETED
+      after 24 hours. You never touch refunds or orders directly.
+    model_preference: [anthropic, xai]
+
+  refund_triager:
+    role: specialist
+    prompt: |
+      You triage incoming refund requests. You fetch the original payment,
+      verify the refund window has not lapsed, and either issue the refund
+      (when policy permits and the user has confirmed) or open a task for
+      human review. You never refund without explicit confirm.
+
+  dispute_watcher:
+    role: specialist
+    prompt: |
+      You poll dispute_list daily. For each new dispute you create a
+      vault note summarising the chargeback reason, evidence due date,
+      and a link to the original payment. You never respond to disputes
+      directly — that is a human decision.
+
+skills:
+  - name: daily-reconcile
+    agent: reconciler
+    description: Reconcile yesterday's payments and write a digest to the vault.
+    trigger:
+      schedule: "0 7 * * *"
+    prompt: |
+      List yesterday's payments via payment_list. Group by location and tender
+      type. Compute totals, count COMPLETED vs other statuses. Flag any
+      payment older than 24 hours that is not COMPLETED. Write the digest
+      to the vault under finance/reconciliation/{date}.md.
+
+  - name: triage-refund
+    agent: refund_triager
+    description: Triage an inbound refund request from the vault inbox.
+    prompt: |
+      Read the refund request from the vault inbox. Look up the original
+      payment via payment_get. Check the refund window has not lapsed.
+      If policy permits and the user has confirmed in the request, call
+      refund_create with confirm=true. Otherwise create a task for human
+      review.
+
+  - name: watch-disputes
+    agent: dispute_watcher
+    description: Poll for new disputes and file vault notes.
+    trigger:
+      schedule: "0 8 * * *"
+    prompt: |
+      Call dispute_list with status=NEW. For each dispute, fetch the
+      original payment via payment_get, then write a vault note at
+      finance/disputes/{dispute_id}.md summarising the chargeback reason,
+      evidence due date, and a link back to the payment. Never respond
+      to the dispute directly.

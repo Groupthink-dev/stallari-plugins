@@ -1,0 +1,90 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/file-storage-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "File storage service contract v1 — 14 operations for hierarchical, file-oriented cloud storage. Targets OneDrive, Google Drive, Dropbox, Box, iCloud Drive, SharePoint document libraries. Folder/file model with metadata, share links, and incremental change feeds. Distinct from object-storage-v1 (S3-style flat blobs).",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List files and folders at a path",
+      "name": "list"
+    },
+    {
+      "classification": "required",
+      "description": "Read file contents",
+      "name": "read"
+    },
+    {
+      "classification": "required",
+      "description": "Create or overwrite a file with new contents",
+      "name": "write"
+    },
+    {
+      "classification": "required",
+      "description": "Delete a file (destructive, requires confirmation)",
+      "name": "delete"
+    },
+    {
+      "classification": "recommended",
+      "description": "Retrieve file or folder metadata (size, dates, MIME, parent path)",
+      "name": "get_metadata"
+    },
+    {
+      "classification": "recommended",
+      "description": "Create a new folder",
+      "name": "folder_create"
+    },
+    {
+      "classification": "recommended",
+      "description": "Move or rename a file or folder",
+      "name": "move"
+    },
+    {
+      "classification": "recommended",
+      "description": "Copy a file or folder to a new path",
+      "name": "copy"
+    },
+    {
+      "classification": "optional",
+      "description": "Search files by name or content",
+      "name": "search"
+    },
+    {
+      "classification": "optional",
+      "description": "Append content to an existing file (where supported)",
+      "name": "append"
+    },
+    {
+      "classification": "optional",
+      "description": "Incremental change feed since a previous sync token",
+      "name": "changes_since"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete a folder and its contents (destructive, requires confirmation)",
+      "name": "folder_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a sharing link with scoped permissions",
+      "name": "share_link_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Revoke an existing sharing link (destructive, requires confirmation)",
+      "name": "share_link_delete"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "file-storage-v1"
+    },
+    "service": {
+      "const": "file_storage"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "file-storage-v1",
+  "type": "object"
+}
