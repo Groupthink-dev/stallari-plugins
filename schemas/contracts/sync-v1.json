@@ -1,0 +1,85 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/sync-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Peer-to-peer file sync (Syncthing-shaped). Distinct from file-storage-v1 (centralised cloud object store) — sync-v1 is symmetric mesh sync between paired devices. First implementer: syncthing-blade-mcp.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "List all configured sync folders (id, label, path, type, paused state)",
+      "name": "folder_list"
+    },
+    {
+      "classification": "required",
+      "description": "Get current sync state for a folder (idle/scanning/syncing, completion %, errors, needed bytes)",
+      "name": "folder_status"
+    },
+    {
+      "classification": "required",
+      "description": "List all paired devices (id, name, addresses, connected state, last seen)",
+      "name": "device_list"
+    },
+    {
+      "classification": "recommended",
+      "description": "Get full configuration for a single folder (devices, ignore patterns, versioning)",
+      "name": "folder_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "Get full configuration for a single device",
+      "name": "device_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "Pause sync activity for a folder (configuration retained)",
+      "name": "folder_pause"
+    },
+    {
+      "classification": "recommended",
+      "description": "Resume sync activity for a previously paused folder",
+      "name": "folder_resume"
+    },
+    {
+      "classification": "optional",
+      "description": "Trigger an immediate rescan of a folder",
+      "name": "folder_scan"
+    },
+    {
+      "classification": "optional",
+      "description": "Read the ignore patterns (.stignore) for a folder",
+      "name": "ignore_patterns_get"
+    },
+    {
+      "classification": "gated",
+      "description": "Add a new sync folder",
+      "name": "folder_add"
+    },
+    {
+      "classification": "gated",
+      "description": "Remove a sync folder from the configuration (does not delete files on disk)",
+      "name": "folder_remove"
+    },
+    {
+      "classification": "gated",
+      "description": "Pair a new device with this node",
+      "name": "device_add"
+    },
+    {
+      "classification": "gated",
+      "description": "Unpair a device, revoking its access to shared folders",
+      "name": "device_remove"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "sync-v1"
+    },
+    "service": {
+      "const": "sync"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "sync-v1",
+  "type": "object"
+}

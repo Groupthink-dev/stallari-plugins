@@ -50,6 +50,14 @@
       ]
     },
     {
+      "contract": "notifications-push-v1",
+      "description": "Wire-level push transport — APNS, ntfy, OneSignal, Pushover. Distinct from notifications-v1 (in-app/operator notification semantics).",
+      "service": "notifications_push",
+      "tags": [
+        "communications"
+      ]
+    },
+    {
       "contract": "social-v1",
       "description": "Social network posting / reading (Mastodon, Bluesky, etc.).",
       "service": "social",
@@ -80,6 +88,15 @@
       "service": "filesystem",
       "tags": [
         "storage"
+      ]
+    },
+    {
+      "contract": "sync-v1",
+      "description": "Peer-to-peer file sync (Syncthing-shaped). Distinct from file-storage-v1 — symmetric mesh sync between paired devices.",
+      "service": "sync",
+      "tags": [
+        "storage",
+        "infrastructure"
       ]
     },
     {
@@ -291,6 +308,14 @@
         "media",
         "entertainment",
         "home"
+      ]
+    },
+    {
+      "contract": "travel-v1",
+      "description": "Travel search + booking — air, hotel, car (Sabre, Amadeus, Travelport).",
+      "service": "travel",
+      "tags": [
+        "travel"
       ]
     },
     {

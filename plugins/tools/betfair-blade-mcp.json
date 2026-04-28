@@ -136,20 +136,6 @@
     "product": "Betfair Exchange",
     "blurb": "Full Betfair Exchange access — markets, prices, orders, account. Certificate auth with weight-aware rate limiting. 22 tools, full betting-exchange-v1 contract.",
     "help_text": "Register a Betfair API application at developer.betfair.com. Generate a self-signed certificate and link it to your account. Certificate auth avoids interactive login.",
-    "help_links": [
-      {
-        "label": "Betfair API Getting Started",
-        "url": "https://developer.betfair.com/en/get-started/"
-      },
-      {
-        "label": "Certificate Login Guide",
-        "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+(bot)+login"
-      },
-      {
-        "label": "API Reference",
-        "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Betting+API"
-      }
-    ],
     "fields": [
       {
         "key": "BETFAIR_APP_KEY",
@@ -164,14 +150,16 @@
         "label": "Username",
         "secret": false,
         "required": true,
-        "placeholder": "Betfair account username"
+        "placeholder": "Betfair account username",
+        "help": "Betfair account username (the same one you sign into the website with)."
       },
       {
         "key": "BETFAIR_PASSWORD",
         "label": "Password",
         "secret": true,
         "required": true,
-        "placeholder": "Betfair account password"
+        "placeholder": "Betfair account password",
+        "help": "Betfair account password."
       },
       {
         "key": "BETFAIR_CERT_PATH",
@@ -214,6 +202,20 @@
       "Betfair account with API access enabled",
       "Betfair API application key (from developer.betfair.com)",
       "Self-signed client certificate linked to account"
+    ],
+    "help": [
+      {
+        "label": "Betfair API Getting Started",
+        "url": "https://developer.betfair.com/en/get-started/"
+      },
+      {
+        "label": "Certificate Login Guide",
+        "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Non-Interactive+(bot)+login"
+      },
+      {
+        "label": "API Reference",
+        "url": "https://docs.developer.betfair.com/display/1smk3cen4v3lu3yomq5qye0ni/Betting+API"
+      }
     ]
   },
   "services": {

@@ -49,7 +49,7 @@
       "endpoint": "https://api.todoist.com/rest/v2/projects",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Todoist Developer Settings",
         "url": "https://app.todoist.com/app/settings/integrations/developer"

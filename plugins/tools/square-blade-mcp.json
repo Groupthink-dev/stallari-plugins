@@ -10,7 +10,10 @@
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "beta",
-  "contract": ["payments-v1", "billing-v1"],
+  "contract": [
+    "payments-v1",
+    "billing-v1"
+  ],
   "repository": "https://github.com/Groupthink-dev/square-blade-mcp",
   "install": {
     "runtime": "uv",
@@ -72,7 +75,7 @@
     "prerequisites": [
       "Square account (sandbox or production)"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Square Developer Docs",
         "url": "https://developer.squareup.com/docs"
@@ -81,7 +84,8 @@
         "label": "Create Access Token",
         "url": "https://developer.squareup.com/apps"
       }
-    ]
+    ],
+    "blurb": "Square Payments + Billing API operations — payments, refunds, customers, cards, locations, orders, catalog, inventory, disputes, webhooks (payments-v1) and subscriptions, plans, invoices (billing-v1). PCI-safe card output, write-gated, confirm-gated for destructive ops."
   },
   "highlights": [
     {
@@ -133,7 +137,9 @@
       "type": "workflow",
       "target": "square-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["payments"],
+      "shared_services": [
+        "payments"
+      ],
       "label": "Investigate a customer payment dispute",
       "body": "Look up the disputed payment, fetch the related customer profile and order, review past payments by this customer to assess their history, and gather the evidence the agent will need to respond to the dispute."
     },
@@ -141,7 +147,9 @@
       "type": "workflow",
       "target": "square-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["payments"],
+      "shared_services": [
+        "payments"
+      ],
       "label": "Process a partial refund",
       "body": "Fetch the original payment, calculate the refund amount, create the refund with an appropriate reason, and verify the customer is notified by inspecting recent webhooks."
     },
@@ -149,7 +157,9 @@
       "type": "workflow",
       "target": "square-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["payments"],
+      "shared_services": [
+        "payments"
+      ],
       "label": "Audit recent inventory changes for a location",
       "body": "List catalog items for the location, query inventory counts, identify items with low stock or unexpected drops, and surface the affected SKUs for restock."
     },
@@ -157,7 +167,9 @@
       "type": "workflow",
       "target": "square-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["billing"],
+      "shared_services": [
+        "billing"
+      ],
       "label": "Onboard a new monthly subscriber",
       "body": "Create a customer profile, save their card on file, then start a Square subscription against an existing plan variation. Confirm the first invoice is in DRAFT and ready to send."
     },
@@ -165,7 +177,9 @@
       "type": "workflow",
       "target": "square-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["billing"],
+      "shared_services": [
+        "billing"
+      ],
       "label": "Pause and later resume a subscription",
       "body": "Look up the subscription's current state, pause it (with confirm), then later resume it. Verify the pending pause/resume actions appear on the subscription record."
     }

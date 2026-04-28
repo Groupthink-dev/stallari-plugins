@@ -83,16 +83,6 @@
     "product": "Tesla (via Tessie)",
     "blurb": "Monitor and control your Tesla vehicles through the Tessie API. Check state, battery, and driving history. Issue commands for locks, charging, climate, sentry mode, and more — all with per-invocation safety confirmation.",
     "help_text": "You need a Tessie account with an active subscription and at least one Tesla vehicle linked. Generate an API key at dash.tessie.com > Settings > Developer.\n\nTessie handles Tesla OAuth, vehicle wake-up, and the vehicle security protocol on your behalf. No Tesla Developer account registration or public key hosting is required.\n\nThe API key grants access to all vehicles on your Tessie account. There is no per-vehicle scoping — treat the key as a credential for your entire fleet.",
-    "help_links": [
-      {
-        "label": "Get API Key",
-        "url": "https://dash.tessie.com/settings/api"
-      },
-      {
-        "label": "Tessie API Reference",
-        "url": "https://developer.tessie.com"
-      }
-    ],
     "fields": [
       {
         "key": "TESSIE_API_KEY",
@@ -111,6 +101,16 @@
     "prerequisites": [
       "Tessie account with active subscription",
       "At least one Tesla vehicle linked in Tessie"
+    ],
+    "help": [
+      {
+        "label": "Get API Key",
+        "url": "https://dash.tessie.com/settings/api"
+      },
+      {
+        "label": "Tessie API Reference",
+        "url": "https://developer.tessie.com"
+      }
     ]
   },
   "scenarios": [

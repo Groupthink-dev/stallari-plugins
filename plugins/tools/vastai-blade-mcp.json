@@ -92,7 +92,12 @@
       "endpoint": "https://console.vast.ai/api/v0/users/current/",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "prerequisites": [
+      "Vast.ai account",
+      "API key",
+      "Node.js 20+ runtime"
+    ],
+    "help": [
       {
         "label": "Get API Key",
         "url": "https://cloud.vast.ai/cli/"
@@ -105,11 +110,6 @@
         "label": "GPU Marketplace",
         "url": "https://cloud.vast.ai"
       }
-    ],
-    "prerequisites": [
-      "Vast.ai account",
-      "API key",
-      "Node.js 20+ runtime"
     ]
   },
   "scenarios": [

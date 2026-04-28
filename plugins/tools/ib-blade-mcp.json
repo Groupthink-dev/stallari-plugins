@@ -55,20 +55,6 @@
     "product": "Interactive Brokers",
     "blurb": "Portfolio monitoring, market data, and order management via the IB Client Portal Gateway. 21 tools, triple order safety, token-efficient output.",
     "help_text": "Download and run the IB Client Portal Gateway, then authenticate by opening its URL in a browser. This MCP connects to the already-authenticated gateway — your IB credentials never touch the MCP process.",
-    "help_links": [
-      {
-        "label": "Client Portal Gateway Setup",
-        "url": "https://www.interactivebrokers.com/en/trading/ib-api.php"
-      },
-      {
-        "label": "CP Gateway Documentation",
-        "url": "https://www.interactivebrokers.com/campus/ibkr-api-page/cpapi-v1/"
-      },
-      {
-        "label": "GitHub Repository",
-        "url": "https://github.com/Groupthink-dev/ib-blade-mcp"
-      }
-    ],
     "fields": [
       {
         "key": "IB_GATEWAY_URL",
@@ -111,6 +97,20 @@
       "Interactive Brokers account",
       "IB Client Portal Gateway running and authenticated",
       "Python 3.12+"
+    ],
+    "help": [
+      {
+        "label": "Client Portal Gateway Setup",
+        "url": "https://www.interactivebrokers.com/en/trading/ib-api.php"
+      },
+      {
+        "label": "CP Gateway Documentation",
+        "url": "https://www.interactivebrokers.com/campus/ibkr-api-page/cpapi-v1/"
+      },
+      {
+        "label": "GitHub Repository",
+        "url": "https://github.com/Groupthink-dev/ib-blade-mcp"
+      }
     ]
   },
   "services": {

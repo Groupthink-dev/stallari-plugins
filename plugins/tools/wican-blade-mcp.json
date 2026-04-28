@@ -114,20 +114,6 @@
     "product": "meatPi WiCAN Pro",
     "blurb": "Monitor any OBD-II vehicle in real time through a meatPi WiCAN Pro adapter. Reads standard engine and drivetrain data, diagnostic trouble codes, and — with DBC files — manufacturer-specific CAN bus data like door states, tyre pressures, and EV battery SoC. Connects over WiFi via MQTT — no Bluetooth pairing or serial drivers.",
     "help_text": "You need a meatPi WiCAN Pro plugged into your vehicle's OBD-II port and connected to your WiFi network. The WiCAN publishes vehicle data to an MQTT broker — this plugin subscribes to those topics.\n\nFirst-time setup:\n1. Plug the WiCAN into your vehicle's OBD-II port (usually under the dashboard, driver side)\n2. Connect to the WiCAN's setup WiFi hotspot and configure your home WiFi credentials\n3. Set the MQTT broker address to your local Mosquitto or Home Assistant broker\n4. Configure which OBD-II PIDs to poll in the WiCAN web interface\n\nFor manufacturer-specific data (doors, tyres, EV battery), download the appropriate DBC file from github.com/commaai/opendbc and set the WICAN_DBC_PATH.\n\nThe WiCAN Pro sleeps when the vehicle is off and reconnects automatically on ignition.",
-    "help_links": [
-      {
-        "label": "WiCAN Firmware Docs",
-        "url": "https://meatpihq.github.io/wican-fw/"
-      },
-      {
-        "label": "Buy WiCAN Pro",
-        "url": "https://www.meatpi.com/products/wican-pro"
-      },
-      {
-        "label": "opendbc CAN Databases",
-        "url": "https://github.com/commaai/opendbc"
-      }
-    ],
     "fields": [
       {
         "key": "MQTT_BROKER",
@@ -196,6 +182,20 @@
       "Vehicle with OBD-II port (1996+ US, 2001+ EU, 2005+ AU)",
       "WiFi coverage at the vehicle's parking location",
       "MQTT broker (Mosquitto, Home Assistant, or cloud)"
+    ],
+    "help": [
+      {
+        "label": "WiCAN Firmware Docs",
+        "url": "https://meatpihq.github.io/wican-fw/"
+      },
+      {
+        "label": "Buy WiCAN Pro",
+        "url": "https://www.meatpi.com/products/wican-pro"
+      },
+      {
+        "label": "opendbc CAN Databases",
+        "url": "https://github.com/commaai/opendbc"
+      }
     ]
   },
   "scenarios": [

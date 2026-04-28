@@ -10,7 +10,10 @@
   "tier": "certified",
   "author_type": "first-party",
   "readiness": "beta",
-  "contract": ["billing-v1", "payments-v1"],
+  "contract": [
+    "billing-v1",
+    "payments-v1"
+  ],
   "not_supported": [
     "payment_cancel",
     "payment_complete",
@@ -72,7 +75,7 @@
     "prerequisites": [
       "Paddle account (sandbox or production)"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Paddle Developer Tools",
         "url": "https://sandbox-vendors.paddle.com/authentication"
@@ -81,7 +84,8 @@
         "label": "API Authentication Guide",
         "url": "https://developer.paddle.com/concepts/about/authentication"
       }
-    ]
+    ],
+    "blurb": "Paddle Billing API operations — billing-v1 (subscription billing, products, prices) + payments-v1 (transactions as one-time payments, adjustments as refunds). Token-efficient with pipe-delimited output, field selection, and human-readable money formatting."
   },
   "highlights": [
     {

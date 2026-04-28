@@ -63,7 +63,7 @@
       "endpoint": "/v1/health",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "ntfy Documentation",
         "url": "https://docs.ntfy.sh/"

@@ -64,32 +64,34 @@
     "product": "Tailscale",
     "blurb": "Full Tailscale management with ~15 tools — devices, ACLs, DNS, keys, and network config. For comprehensive configuration management.",
     "help_text": "Enter your Tailscale API key and tailnet name. This MCP provides full management capability including ACL editing and DNS configuration changes.",
-    "help_links": [
-      {
-        "label": "GitHub",
-        "url": "https://github.com/HexSleeves/tailscale-mcp"
-      }
-    ],
     "fields": [
       {
         "key": "TAILSCALE_API_KEY",
         "label": "API Key",
         "secret": true,
         "placeholder": "tskey-api-...",
-        "required": true
+        "required": true,
+        "help": "Generate at login.tailscale.com/admin/settings/keys → Generate API key."
       },
       {
         "key": "TAILSCALE_TAILNET",
         "label": "Tailnet",
         "secret": false,
         "placeholder": "example.com",
-        "required": true
+        "required": true,
+        "help": "Your tailnet name from login.tailscale.com/admin/settings/general (e.g. example.com or tail-scale.ts.net)."
       }
     ],
     "prerequisites": [
       "Tailscale account",
       "API access token",
       "Node.js runtime"
+    ],
+    "help": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/HexSleeves/tailscale-mcp"
+      }
     ]
   },
   "conformance": {

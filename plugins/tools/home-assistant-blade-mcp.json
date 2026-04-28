@@ -117,7 +117,7 @@
       "endpoint": "{HA_URL}/api/",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Creating Access Tokens",
         "url": "https://www.home-assistant.io/docs/authentication/#your-account-profile"

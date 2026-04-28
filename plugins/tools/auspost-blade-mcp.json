@@ -186,7 +186,7 @@
       "auth_style": "header",
       "auth_header": "AUTH-KEY"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Get a free API key",
         "url": "https://developers.auspost.com.au"

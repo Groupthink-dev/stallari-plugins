@@ -86,23 +86,14 @@
     "product": "Tailscale",
     "blurb": "Monitor your Tailscale tailnet — device health, ACL policies, DNS configuration, auth key hygiene, user management, and configuration audit logs.",
     "help_text": "Generate an API access token in the Tailscale admin console (Settings > Keys). The tailnet is auto-detected from your token — no additional configuration needed.",
-    "help_links": [
-      {
-        "label": "Tailscale Admin Console",
-        "url": "https://login.tailscale.com/admin/settings/keys"
-      },
-      {
-        "label": "API Documentation",
-        "url": "https://tailscale.com/api"
-      }
-    ],
     "fields": [
       {
         "key": "TAILSCALE_API_KEY",
         "label": "API Key",
         "secret": true,
         "placeholder": "tskey-api-...",
-        "required": true
+        "required": true,
+        "help": "Generate at login.tailscale.com/admin/settings/keys → Generate API key."
       },
       {
         "key": "TAILSCALE_WRITE_ENABLED",
@@ -120,6 +111,16 @@
     "prerequisites": [
       "Tailscale account",
       "API access token (Settings > Keys in admin console)"
+    ],
+    "help": [
+      {
+        "label": "Tailscale Admin Console",
+        "url": "https://login.tailscale.com/admin/settings/keys"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://tailscale.com/api"
+      }
     ]
   },
   "scenarios": [

@@ -57,14 +57,22 @@
     "blurb": "Search Expedia's travel inventory — hotels, flights, activities, and cars. No credentials required for basic search.",
     "help_text": "Install and run with npx. No API keys required for basic recommendations.",
     "help_url": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp",
-    "fields": []
+    "fields": [],
+    "help": [
+      {
+        "label": "Expedia documentation",
+        "url": "https://github.com/ExpediaGroup/expedia-travel-recommendations-mcp"
+      }
+    ]
   },
   "scenarios": [
     {
       "type": "workflow",
       "target": "expedia-travel-mcp",
       "target_type": "plugin",
-      "shared_services": ["travel"],
+      "shared_services": [
+        "travel"
+      ],
       "label": "Explore vacation destinations",
       "body": "Search for hotels in Bali for a week-long trip, find popular activities and tours nearby, and compare flight options from your departure city."
     }

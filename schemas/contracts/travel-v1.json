@@ -1,0 +1,65 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/travel-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Travel search and booking — air, hotel, car. Read operations cover search and trip retrieval; write operations (booking, cancellation) are gated. First implementers: sabre-blade-mcp, amadeus-blade-mcp.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Search for available flights given origin, destination, dates, passenger count, and cabin class",
+      "name": "air_search"
+    },
+    {
+      "classification": "required",
+      "description": "Retrieve a previously booked trip / itinerary by reference (PNR, booking id)",
+      "name": "trip_get"
+    },
+    {
+      "classification": "recommended",
+      "description": "Search for available hotel rooms given location, dates, and guest count",
+      "name": "hotel_search"
+    },
+    {
+      "classification": "recommended",
+      "description": "Search for available rental cars given pickup / dropoff location and dates",
+      "name": "car_search"
+    },
+    {
+      "classification": "recommended",
+      "description": "List trips / itineraries booked under the account",
+      "name": "trip_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Retrieve fare rules and fare components for an offered air itinerary (refundability, change fees)",
+      "name": "fare_rules"
+    },
+    {
+      "classification": "optional",
+      "description": "Retrieve seat map / availability for a given air segment",
+      "name": "seat_map"
+    },
+    {
+      "classification": "gated",
+      "description": "Confirm a booking (air, hotel, or car) — issues tickets / vouchers and charges payment",
+      "name": "booking"
+    },
+    {
+      "classification": "gated",
+      "description": "Cancel a confirmed booking — may incur fees per fare rules",
+      "name": "trip_cancel"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "travel-v1"
+    },
+    "service": {
+      "const": "travel"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "travel-v1",
+  "type": "object"
+}

@@ -95,7 +95,14 @@
     "prerequisites": [
       "Google Cloud project with Gmail API enabled",
       "OAuth 2.0 credentials (Desktop app) downloaded to ~/.gmail-blade/credentials.json"
-    ]
+    ],
+    "help": [
+      {
+        "label": "Google OAuth documentation",
+        "url": "https://console.cloud.google.com/apis/credentials"
+      }
+    ],
+    "blurb": "Gmail email operations via Google API — search, read, send, threads, labels, drafts, filters. Gemini-powered classification and summarisation."
   },
   "scenarios": [
     {

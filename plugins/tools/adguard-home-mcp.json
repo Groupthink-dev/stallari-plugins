@@ -124,7 +124,7 @@
       "endpoint": "{ADGUARD_URL}/control/status",
       "auth_style": "basic"
     },
-    "help_links": [
+    "help": [
       {
         "label": "AdGuard Home Setup",
         "url": "https://adguard.com/adguard-home/getting-started.html"

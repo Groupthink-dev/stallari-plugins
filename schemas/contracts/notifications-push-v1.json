@@ -1,0 +1,70 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/notifications-push-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Wire-level push notification transport — APNS, ntfy, OneSignal, Pushover. Distinct from notifications-v1 (in-app/operator notification semantics). First implementer: ntfy-blade-mcp.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Publish a message to a topic / channel for delivery to subscribed devices",
+      "name": "topic_publish"
+    },
+    {
+      "classification": "required",
+      "description": "Register a device token (APNS / FCM / web push) for push delivery",
+      "name": "device_register"
+    },
+    {
+      "classification": "required",
+      "description": "Get delivery status / outcome for a previously sent message (id, deduped, failed, delivered)",
+      "name": "delivery_status"
+    },
+    {
+      "classification": "recommended",
+      "description": "Subscribe a registered device to a topic",
+      "name": "topic_subscribe"
+    },
+    {
+      "classification": "recommended",
+      "description": "List topics the account / device may publish to or is subscribed to",
+      "name": "topic_list"
+    },
+    {
+      "classification": "optional",
+      "description": "List registered devices for the account",
+      "name": "device_list"
+    },
+    {
+      "classification": "optional",
+      "description": "Retrieve recent published messages for a topic (where the transport retains them)",
+      "name": "message_history"
+    },
+    {
+      "classification": "gated",
+      "description": "Create a new topic / channel",
+      "name": "topic_create"
+    },
+    {
+      "classification": "gated",
+      "description": "Delete a topic / channel and its retained messages",
+      "name": "topic_delete"
+    },
+    {
+      "classification": "gated",
+      "description": "Revoke a device token so it can no longer receive pushes",
+      "name": "device_revoke"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "notifications-push-v1"
+    },
+    "service": {
+      "const": "notifications_push"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "notifications-push-v1",
+  "type": "object"
+}

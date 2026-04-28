@@ -90,16 +90,6 @@
     "product": "Starlink Dish",
     "blurb": "Monitor and control your Starlink dish over the local network. Real-time connectivity, alerts, obstruction mapping, and throughput history. No cloud API or credentials required.",
     "help_text": "Your device must be on the same network as the Starlink dish (connected via Starlink router or Ethernet Adapter). The dish is auto-discovered at 192.168.100.1:9200.\n\nIf using a third-party router in bypass mode (e.g. UniFi UCG/UDM), the dish management subnet (192.168.100.0/24) is not automatically routable from your LAN. Add a static route: Destination 192.168.100.0/24, Next Hop = WAN interface (Starlink-facing port). Some firmware versions also require a secondary IP on the WAN interface in the 192.168.100.0/24 range (e.g. 192.168.100.2/24). Once routed, both gRPC (port 9200) and the dish web UI (port 80) become reachable.\n\nFor remote or headless sites, run the MCP server on any host that can reach 192.168.100.1 — a local machine, a container on a NAS, or any device on the Starlink-connected network.",
-    "help_links": [
-      {
-        "label": "Starlink Network Setup",
-        "url": "https://support.starlink.com/topic?category=6"
-      },
-      {
-        "label": "Bypass Mode / Third-Party Router",
-        "url": "https://support.starlink.com/topic?category=19"
-      }
-    ],
     "fields": [
       {
         "key": "STARLINK_DISH_ADDRESS",
@@ -125,6 +115,16 @@
     "prerequisites": [
       "Starlink dish on local network",
       "Route to 192.168.100.1 (automatic with Starlink router)"
+    ],
+    "help": [
+      {
+        "label": "Starlink Network Setup",
+        "url": "https://support.starlink.com/topic?category=6"
+      },
+      {
+        "label": "Bypass Mode / Third-Party Router",
+        "url": "https://support.starlink.com/topic?category=19"
+      }
     ]
   },
   "scenarios": [

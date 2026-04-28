@@ -53,7 +53,7 @@
       "Square account (sandbox or production)",
       "Node.js 18+"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Square MCP Server",
         "url": "https://github.com/square/square-mcp-server"
@@ -62,7 +62,8 @@
         "label": "Square Developer Docs",
         "url": "https://developer.squareup.com/docs"
       }
-    ]
+    ],
+    "blurb": "Square's official MCP server. Single meta-tool (`make_request`) covering the full Square REST surface — Payments, Customers, Orders, Catalog, Inventory, Disputes, Bookings, Loyalty, Gift Cards, Team. Breadth at the cost of token efficiency."
   },
   "highlights": [
     {

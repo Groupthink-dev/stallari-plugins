@@ -89,16 +89,6 @@
     "product": "OpenXBL",
     "blurb": "Xbox Live data via the OpenXBL proxy — no OAuth, just an API key. Covers profiles, achievements, and presence. For full Xbox Live access (SmartGlass, messaging, clips), use xboxlive-blade-mcp instead.",
     "help_text": "Register at xbl.io, verify your Xbox account, and copy your API key from the dashboard. Free tier includes limited requests; paid plans scale.",
-    "help_links": [
-      {
-        "label": "OpenXBL Registration",
-        "url": "https://xbl.io"
-      },
-      {
-        "label": "OpenXBL API Documentation",
-        "url": "https://xbl.io/api"
-      }
-    ],
     "fields": [
       {
         "key": "OPENXBL_API_KEY",
@@ -113,7 +103,17 @@
       "endpoint": "https://xbl.io/api/v2/account",
       "auth_style": "header",
       "auth_header": "X-Authorization"
-    }
+    },
+    "help": [
+      {
+        "label": "OpenXBL Registration",
+        "url": "https://xbl.io"
+      },
+      {
+        "label": "OpenXBL API Documentation",
+        "url": "https://xbl.io/api"
+      }
+    ]
   },
   "services": {
     "gaming": {

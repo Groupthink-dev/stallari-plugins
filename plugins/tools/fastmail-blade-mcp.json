@@ -86,7 +86,14 @@
     "test": {
       "endpoint": "https://api.fastmail.com/.well-known/jmap",
       "auth_style": "bearer"
-    }
+    },
+    "help": [
+      {
+        "label": "API Token documentation",
+        "url": "https://app.fastmail.com/settings/security/tokens"
+      }
+    ],
+    "blurb": "Fastmail email operations via JMAP — search, read, send, manage, masked email, push notifications"
   },
   "scenarios": [
     {

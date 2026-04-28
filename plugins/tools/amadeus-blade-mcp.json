@@ -92,20 +92,6 @@
     "product": "Amadeus Travel APIs",
     "blurb": "Search flights across 500+ airlines, find hotel offers, check flight status, predict delays, and discover cheapest travel dates. Powered by the Amadeus GDS — one of the world's largest travel data platforms. Free tier available.",
     "help_text": "Register at developers.amadeus.com to get your API key and secret. No payment or approval needed for the test environment.\n\nThe test environment provides realistic data for a subset of routes and dates. If a search returns no results, try major city pairs (LHR-JFK, SYD-LAX, CDG-NRT) with dates 2-4 weeks out.\n\nTo use the full production dataset (500+ airlines, global coverage), set AMADEUS_PRODUCTION=true. Production requires signing the Amadeus ToS and providing billing details — you get the same free monthly quota, with pay-per-call overage at ~EUR 0.01-0.04 per call.",
-    "help_links": [
-      {
-        "label": "Register for API Key",
-        "url": "https://developers.amadeus.com/register"
-      },
-      {
-        "label": "API Documentation",
-        "url": "https://developers.amadeus.com/self-service/apis-docs"
-      },
-      {
-        "label": "Test Data Coverage",
-        "url": "https://developers.amadeus.com/self-service/collection"
-      }
-    ],
     "fields": [
       {
         "key": "AMADEUS_CLIENT_ID",
@@ -138,6 +124,20 @@
     "prerequisites": [
       "Amadeus developer account (free registration)",
       "API key and secret from developer dashboard"
+    ],
+    "help": [
+      {
+        "label": "Register for API Key",
+        "url": "https://developers.amadeus.com/register"
+      },
+      {
+        "label": "API Documentation",
+        "url": "https://developers.amadeus.com/self-service/apis-docs"
+      },
+      {
+        "label": "Test Data Coverage",
+        "url": "https://developers.amadeus.com/self-service/collection"
+      }
     ]
   },
   "scenarios": [

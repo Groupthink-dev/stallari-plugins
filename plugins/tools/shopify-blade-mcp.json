@@ -56,7 +56,14 @@
     "prerequisites": [
       "Shopify store (development or production)",
       "Custom app with Admin API access scopes configured"
-    ]
+    ],
+    "help": [
+      {
+        "label": "Admin API Token documentation",
+        "url": "https://shopify.dev/docs/apps/auth/admin-app-access-tokens"
+      }
+    ],
+    "blurb": "Shopify Admin API operations via GraphQL — products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, analytics"
   },
   "highlights": [
     {

@@ -10,7 +10,10 @@
   "tier": "community",
   "author_type": "community",
   "readiness": "beta",
-  "contract": ["virtualisation-v1", "serverless-v1"],
+  "contract": [
+    "virtualisation-v1",
+    "serverless-v1"
+  ],
   "contract_notes": "Pod operations map to virtualisation-v1. Serverless endpoint/job/template/volume operations map to serverless-v1. Dual-contract plugin.",
   "homepage": "https://github.com/runpod/runpod-mcp",
   "repository": "https://github.com/runpod/runpod-mcp",
@@ -89,7 +92,12 @@
       "endpoint": "https://api.runpod.io/graphql",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "prerequisites": [
+      "RunPod account",
+      "API key",
+      "Node.js 18+ runtime"
+    ],
+    "help": [
       {
         "label": "Create API Key",
         "url": "https://www.runpod.io/console/user/settings"
@@ -102,11 +110,6 @@
         "label": "GPU Pricing",
         "url": "https://www.runpod.io/pricing"
       }
-    ],
-    "prerequisites": [
-      "RunPod account",
-      "API key",
-      "Node.js 18+ runtime"
     ]
   },
   "scenarios": [
@@ -114,7 +117,9 @@
       "type": "workflow",
       "target": "runpod-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualisation"],
+      "shared_services": [
+        "virtualisation"
+      ],
       "label": "Deploy an inference endpoint",
       "body": "List available GPU types, create a serverless endpoint with a container image, submit a test job via runsync, and verify the response."
     },
@@ -122,7 +127,9 @@
       "type": "workflow",
       "target": "runpod-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualisation"],
+      "shared_services": [
+        "virtualisation"
+      ],
       "label": "Spin up a GPU pod for development",
       "body": "Browse GPU availability, create a pod with SSH access and a network volume for persistent storage, then connect."
     },
@@ -130,7 +137,9 @@
       "type": "workflow",
       "target": "runpod-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualisation"],
+      "shared_services": [
+        "virtualisation"
+      ],
       "label": "Cost audit — list all active resources",
       "body": "List all pods and endpoints, check their GPU types and hourly rates, identify idle resources, and stop or delete anything not in use."
     }

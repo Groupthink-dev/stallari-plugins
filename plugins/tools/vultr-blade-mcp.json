@@ -95,7 +95,12 @@
       "endpoint": "https://api.vultr.com/v2/account",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "prerequisites": [
+      "Vultr account",
+      "API key",
+      "Node.js 20+ runtime"
+    ],
+    "help": [
       {
         "label": "Create API Key",
         "url": "https://my.vultr.com/settings/#settingsapi"
@@ -108,11 +113,6 @@
         "label": "GPU Pricing",
         "url": "https://www.vultr.com/pricing/#cloud-gpu"
       }
-    ],
-    "prerequisites": [
-      "Vultr account",
-      "API key",
-      "Node.js 20+ runtime"
     ]
   },
   "scenarios": [

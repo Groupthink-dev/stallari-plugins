@@ -78,7 +78,38 @@
     "product": "Ubiquiti UniFi",
     "blurb": "Full UniFi network management with 161 tools — devices, clients, networks, firewall, VPN, system config. For comprehensive configuration management.",
     "help_text": "Enter your UniFi controller credentials. This MCP provides full management capability including network creation, VLAN configuration, and system settings.",
-    "help_links": [
+    "fields": [
+      {
+        "key": "UNIFI_HOST",
+        "label": "Controller Host",
+        "secret": false,
+        "placeholder": "192.168.1.1",
+        "required": true,
+        "help": "IP or hostname of the UniFi controller (UDM, UDM-Pro, Cloud Key, or self-hosted Network app)."
+      },
+      {
+        "key": "UNIFI_USERNAME",
+        "label": "Username",
+        "secret": false,
+        "placeholder": "admin",
+        "required": true,
+        "help": "Local controller account username — not a UI.com SSO account."
+      },
+      {
+        "key": "UNIFI_PASSWORD",
+        "label": "Password",
+        "secret": true,
+        "placeholder": "Controller password",
+        "required": true,
+        "help": "Password for the local controller account."
+      }
+    ],
+    "prerequisites": [
+      "UniFi controller (UDM, UDR, Cloud Key, or self-hosted)",
+      "Local admin account on the controller",
+      "Node.js runtime"
+    ],
+    "help": [
       {
         "label": "GitHub",
         "url": "https://github.com/sirkirby/unifi-mcp"
@@ -87,34 +118,6 @@
         "label": "npm",
         "url": "https://www.npmjs.com/package/unifi-mcp"
       }
-    ],
-    "fields": [
-      {
-        "key": "UNIFI_HOST",
-        "label": "Controller Host",
-        "secret": false,
-        "placeholder": "192.168.1.1",
-        "required": true
-      },
-      {
-        "key": "UNIFI_USERNAME",
-        "label": "Username",
-        "secret": false,
-        "placeholder": "admin",
-        "required": true
-      },
-      {
-        "key": "UNIFI_PASSWORD",
-        "label": "Password",
-        "secret": true,
-        "placeholder": "Controller password",
-        "required": true
-      }
-    ],
-    "prerequisites": [
-      "UniFi controller (UDM, UDR, Cloud Key, or self-hosted)",
-      "Local admin account on the controller",
-      "Node.js runtime"
     ]
   },
   "conformance": {

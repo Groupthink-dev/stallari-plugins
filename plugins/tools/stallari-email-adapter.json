@@ -1,6 +1,8 @@
 {
   "name": "stallari-email-adapter",
-  "aliases": ["sidereal-email-adapter"],
+  "aliases": [
+    "sidereal-email-adapter"
+  ],
   "title": "Email Adapter",
   "description": "Domain adapter for email — canonical email_* tools with per-provider transforms (Fastmail, Gmail)",
   "version": "0.1.0",
@@ -17,7 +19,8 @@
     "package": "stallari-email-adapter"
   },
   "setup": {
-    "auth_model": "none"
+    "auth_model": "none",
+    "blurb": "Domain adapter for email — canonical email_* tools with per-provider transforms (Fastmail, Gmail)"
   },
   "conformance": {
     "required": "3/3",

@@ -49,7 +49,7 @@
       "macOS 13 (Ventura) or later",
       "Reminders permission for terminal (auto-prompted on first use)"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "macOS Privacy & Security settings",
         "url": "https://support.apple.com/guide/mac-help/change-privacy-security-settings-on-mac-mchl211c911f/mac"

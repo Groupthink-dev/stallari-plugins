@@ -70,12 +70,6 @@
     "product": "Starlink Enterprise",
     "blurb": "Manage a fleet of Starlink terminals via the Enterprise cloud API. View terminal status, telemetry, service lines, data usage, and availability.",
     "help_text": "Log in to the Starlink Enterprise portal to generate OAuth2 API credentials. This plugin does NOT work with residential/consumer Starlink accounts.",
-    "help_links": [
-      {
-        "label": "Starlink Enterprise Portal",
-        "url": "https://www.starlink.com/business"
-      }
-    ],
     "fields": [
       {
         "key": "STARLINK_CLIENT_ID",
@@ -83,7 +77,8 @@
         "type": "string",
         "secret": false,
         "placeholder": "your-client-id",
-        "required": true
+        "required": true,
+        "help": "OAuth client ID from the Starlink Enterprise portal → API → Clients."
       },
       {
         "key": "STARLINK_CLIENT_SECRET",
@@ -91,7 +86,8 @@
         "type": "string",
         "secret": true,
         "placeholder": "your-client-secret",
-        "required": true
+        "required": true,
+        "help": "OAuth client secret paired with the client ID. Generated once at client creation time."
       },
       {
         "key": "STARLINK_ACCOUNT_NUMBER",
@@ -99,7 +95,8 @@
         "type": "string",
         "secret": false,
         "placeholder": "ACC-XXXXXX",
-        "required": true
+        "required": true,
+        "help": "Enterprise account number (ACC-XXXXXX) shown in the Starlink admin UI account header."
       }
     ],
     "test": {
@@ -109,6 +106,12 @@
     "prerequisites": [
       "Starlink Enterprise account",
       "OAuth2 API credentials from Enterprise portal"
+    ],
+    "help": [
+      {
+        "label": "Starlink Enterprise Portal",
+        "url": "https://www.starlink.com/business"
+      }
     ]
   },
   "scenarios": [

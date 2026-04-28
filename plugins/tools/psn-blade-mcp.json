@@ -37,20 +37,6 @@
     "product": "PlayStation Network",
     "blurb": "Connect to PlayStation Network for trophy tracking, game library, friends, and messaging. Uses unofficial PSN API.",
     "help_text": "Log in at store.playstation.com, then visit ca.account.sony.com/api/v1/ssocookie to obtain your NPSSO token. Use a dedicated PSN account — excessive API use may trigger account restrictions.",
-    "help_links": [
-      {
-        "label": "NPSSO Token Guide",
-        "url": "https://github.com/isFakeAccount/psnawp?tab=readme-ov-file#authentication"
-      },
-      {
-        "label": "PSN API Documentation",
-        "url": "https://andshrew.github.io/PlayStation-Trophies/"
-      },
-      {
-        "label": "PSNAWP Library",
-        "url": "https://psnawp.readthedocs.io/"
-      }
-    ],
     "fields": [
       {
         "key": "PSN_NPSSO",
@@ -81,6 +67,20 @@
       "A PlayStation Network account (dedicated API account recommended)",
       "Log in at store.playstation.com in a browser",
       "Visit ca.account.sony.com/api/v1/ssocookie to obtain your NPSSO token"
+    ],
+    "help": [
+      {
+        "label": "NPSSO Token Guide",
+        "url": "https://github.com/isFakeAccount/psnawp?tab=readme-ov-file#authentication"
+      },
+      {
+        "label": "PSN API Documentation",
+        "url": "https://andshrew.github.io/PlayStation-Trophies/"
+      },
+      {
+        "label": "PSNAWP Library",
+        "url": "https://psnawp.readthedocs.io/"
+      }
     ]
   },
   "highlights": [

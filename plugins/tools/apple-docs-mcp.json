@@ -70,7 +70,7 @@
     "product": "Apple Developer Docs",
     "blurb": "Apple Developer Documentation, WWDC sessions, API reference, and sample code. No credentials needed.",
     "help_text": "No configuration required. All queries use public Apple Developer APIs. Install and use immediately.",
-    "help_links": [
+    "help": [
       {
         "label": "Apple Developer Documentation",
         "url": "https://developer.apple.com/documentation/"
@@ -98,7 +98,9 @@
       "type": "workflow",
       "target": "apple-docs-mcp",
       "target_type": "plugin",
-      "shared_services": ["documentation"],
+      "shared_services": [
+        "documentation"
+      ],
       "label": "Research a SwiftUI API for implementation",
       "body": "Search for the SwiftUI API, get its full documentation, check platform compatibility across iOS/macOS/visionOS, then find sample code demonstrating its usage."
     },
@@ -106,7 +108,9 @@
       "type": "workflow",
       "target": "apple-docs-mcp",
       "target_type": "plugin",
-      "shared_services": ["documentation"],
+      "shared_services": [
+        "documentation"
+      ],
       "label": "WWDC session deep-dive",
       "body": "Browse WWDC topics, find sessions on a framework, get code examples from the session, then discover related sessions to build a learning path."
     },
@@ -114,7 +118,9 @@
       "type": "companion",
       "target": "mcp-nixos",
       "target_type": "plugin",
-      "shared_services": ["documentation"],
+      "shared_services": [
+        "documentation"
+      ],
       "label": "Cross-platform development reference",
       "body": "Look up Apple framework APIs for the iOS/macOS side, then search NixOS options and packages for the server-side infrastructure supporting the app."
     }
@@ -128,7 +134,9 @@
   "certification": {
     "status": "pending",
     "stability": "stable",
-    "platform_tested": ["macos-arm64"],
+    "platform_tested": [
+      "macos-arm64"
+    ],
     "checklist": {
       "tools_enumerate": true,
       "tools_callable": true,

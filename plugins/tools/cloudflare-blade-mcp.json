@@ -127,7 +127,7 @@
       "endpoint": "https://api.cloudflare.com/client/v4/user/tokens/verify",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Create API Token",
         "url": "https://dash.cloudflare.com/profile/api-tokens"

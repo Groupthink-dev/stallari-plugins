@@ -70,7 +70,7 @@
     "product": "NixOS Reference",
     "blurb": "NixOS ecosystem search — packages, options, flakes, and version history. No credentials needed.",
     "help_text": "No configuration required. All queries use public NixOS APIs. Install and use immediately.",
-    "help_links": [
+    "help": [
       {
         "label": "NixOS Package Search",
         "url": "https://search.nixos.org"
@@ -98,7 +98,9 @@
       "type": "companion",
       "target": "vultr-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["virtualisation"],
+      "shared_services": [
+        "virtualisation"
+      ],
       "label": "Provision a NixOS VM on Vultr",
       "body": "Search for NixOS packages needed for the server role, look up configuration options, then use vultr-blade-mcp to provision a VM with cloud-init that bootstraps NixOS with the discovered configuration."
     },
@@ -106,7 +108,9 @@
       "type": "companion",
       "target": "cloudflare-blade-mcp",
       "target_type": "plugin",
-      "shared_services": ["dns"],
+      "shared_services": [
+        "dns"
+      ],
       "label": "Configure a NixOS service with DNS",
       "body": "Look up NixOS service options (e.g. services.nginx, services.ntfy-sh), check the package version history for stability, then configure DNS records via Cloudflare for the new service endpoint."
     },
@@ -128,7 +132,9 @@
   "certification": {
     "status": "pending",
     "stability": "stable",
-    "platform_tested": ["macos-arm64"],
+    "platform_tested": [
+      "macos-arm64"
+    ],
     "checklist": {
       "tools_enumerate": true,
       "tools_callable": true,

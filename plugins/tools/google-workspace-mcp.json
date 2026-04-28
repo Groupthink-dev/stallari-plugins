@@ -74,7 +74,14 @@
     "prerequisites": [
       "Google Cloud project with Gmail API enabled",
       "OAuth 2.0 credentials (Desktop app type)"
-    ]
+    ],
+    "help": [
+      {
+        "label": "Google OAuth documentation",
+        "url": "https://console.cloud.google.com/apis/library/gmail.googleapis.com"
+      }
+    ],
+    "blurb": "Google Workspace email via Gmail API — search, read, send, labels, threads"
   },
   "scenarios": [
     {

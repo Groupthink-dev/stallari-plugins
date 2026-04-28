@@ -36,20 +36,6 @@
     "product": "Steam",
     "blurb": "Steam gaming platform — library stats, achievements, friends, store data, and market prices.",
     "help_text": "Get a Steam Web API key at steamcommunity.com/dev/apikey (requires a Steam account with purchase history). Find your Steam64 ID at steamid.io.",
-    "help_links": [
-      {
-        "label": "Get Steam API Key",
-        "url": "https://steamcommunity.com/dev/apikey"
-      },
-      {
-        "label": "Steam Web API Documentation",
-        "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API"
-      },
-      {
-        "label": "Find Your Steam ID",
-        "url": "https://steamid.io"
-      }
-    ],
     "fields": [
       {
         "key": "STEAM_API_KEY",
@@ -74,6 +60,20 @@
     },
     "prerequisites": [
       "Steam account with at least one purchase"
+    ],
+    "help": [
+      {
+        "label": "Get Steam API Key",
+        "url": "https://steamcommunity.com/dev/apikey"
+      },
+      {
+        "label": "Steam Web API Documentation",
+        "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API"
+      },
+      {
+        "label": "Find Your Steam ID",
+        "url": "https://steamid.io"
+      }
     ]
   },
   "services": {

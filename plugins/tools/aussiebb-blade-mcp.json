@@ -90,30 +90,22 @@
     "product": "Aussie Broadband",
     "blurb": "Monitor your Aussie Broadband services — usage, outages, billing, support tickets, and NBN line diagnostics. Multi-account support for household and business.",
     "help_text": "Enter your MyAussie portal credentials. These are the same email and password you use to log in at my.aussiebroadband.com.au. MFA may be prompted on first connection.",
-    "help_links": [
-      {
-        "label": "MyAussie Portal",
-        "url": "https://my.aussiebroadband.com.au"
-      },
-      {
-        "label": "Aussie Broadband Plans",
-        "url": "https://www.aussiebroadband.com.au/nbn-plans/"
-      }
-    ],
     "fields": [
       {
         "key": "ABB_USERNAME",
         "label": "Email",
         "secret": false,
         "placeholder": "your.email@example.com",
-        "required": true
+        "required": true,
+        "help": "Email address you log into MyAussie with."
       },
       {
         "key": "ABB_PASSWORD",
         "label": "Password",
         "secret": true,
         "placeholder": "MyAussie password",
-        "required": true
+        "required": true,
+        "help": "MyAussie account password (stored locally; never sent to a third party)."
       },
       {
         "key": "ABB_DIAGNOSTICS_ENABLED",
@@ -131,6 +123,16 @@
     "prerequisites": [
       "Aussie Broadband account (any plan)",
       "MyAussie portal access (email + password)"
+    ],
+    "help": [
+      {
+        "label": "MyAussie Portal",
+        "url": "https://my.aussiebroadband.com.au"
+      },
+      {
+        "label": "Aussie Broadband Plans",
+        "url": "https://www.aussiebroadband.com.au/nbn-plans/"
+      }
     ]
   },
   "scenarios": [

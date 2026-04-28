@@ -143,7 +143,7 @@
       "Device Access Console registration ($5 USD one-time fee)",
       "OAuth 2.0 credentials (Web application type) with redirect URI configured"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Device Access Console",
         "url": "https://console.nest.google.com/device-access"
@@ -156,7 +156,8 @@
         "label": "GCP Console",
         "url": "https://console.cloud.google.com/"
       }
-    ]
+    ],
+    "blurb": "Google Home / Nest device control via SDM API — thermostats, cameras, doorbells, event streams"
   },
   "scenarios": [
     {

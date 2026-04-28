@@ -107,7 +107,14 @@
     ],
     "prerequisites": [
       "Google Cloud project with YouTube Data API v3 enabled"
-    ]
+    ],
+    "help": [
+      {
+        "label": "API Key documentation",
+        "url": "https://console.cloud.google.com/apis/library/youtube.googleapis.com"
+      }
+    ],
+    "blurb": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3"
   },
   "certification": {
     "status": "pending",

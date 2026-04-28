@@ -1,6 +1,8 @@
 {
   "name": "stallari-blade-mcp",
-  "aliases": ["sidereal-blade-mcp"],
+  "aliases": [
+    "sidereal-blade-mcp"
+  ],
   "title": "Stallari Vault",
   "description": "Obsidian vault operations via Swift MCP — read, write, search, properties, graph analysis, lens semantic tools",
   "version": "0.5.0",
@@ -22,7 +24,8 @@
     "complexity": "trivial",
     "icon": "doc.text.magnifyingglass",
     "product": "Obsidian Vault",
-    "help_text": "No credentials required. Stallari Blade connects directly to your local Obsidian vault via the filesystem. Ensure the vault path is configured in Stallari settings."
+    "help_text": "No credentials required. Stallari Blade connects directly to your local Obsidian vault via the filesystem. Ensure the vault path is configured in Stallari settings.",
+    "blurb": "Obsidian vault operations via Swift MCP — read, write, search, properties, graph analysis, lens semantic tools"
   },
   "conformance": {
     "required": "8/8",

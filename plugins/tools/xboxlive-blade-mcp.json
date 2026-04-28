@@ -122,20 +122,6 @@
     "product": "Xbox Live",
     "blurb": "Full Xbox Live access — profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, and messaging. 22 tools, 17/17 gaming-v1 contract coverage.",
     "help_text": "Register an Azure app at portal.azure.com with Xbox Live API scope, then run 'xboxlive-blade-mcp auth' for one-time browser login. Tokens auto-refresh after initial setup.",
-    "help_links": [
-      {
-        "label": "Azure App Registration",
-        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps"
-      },
-      {
-        "label": "Xbox Live API Guide",
-        "url": "https://github.com/OpenXbox/xbox-webapi-python#authentication"
-      },
-      {
-        "label": "Setup Instructions",
-        "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp#quick-start"
-      }
-    ],
     "fields": [
       {
         "key": "XBOX_CLIENT_ID",
@@ -178,7 +164,21 @@
         "Xboxlive.offline_access"
       ],
       "setup_url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps"
-    }
+    },
+    "help": [
+      {
+        "label": "Azure App Registration",
+        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps"
+      },
+      {
+        "label": "Xbox Live API Guide",
+        "url": "https://github.com/OpenXbox/xbox-webapi-python#authentication"
+      },
+      {
+        "label": "Setup Instructions",
+        "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp#quick-start"
+      }
+    ]
   },
   "services": {
     "gaming": {

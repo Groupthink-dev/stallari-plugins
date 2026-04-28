@@ -99,7 +99,7 @@
       "endpoint": "{HA_URL}/api/",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Home Assistant Authentication",
         "url": "https://developers.home-assistant.io/docs/auth_api/"

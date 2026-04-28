@@ -109,37 +109,30 @@
     "product": "Ubiquiti UniFi",
     "blurb": "Monitor your UniFi network — device health, connected clients, firewall policies, traffic routes, and DPI restrictions. Multi-controller support for home and office.",
     "help_text": "Enter your UniFi controller credentials. These are the local admin username and password for your UDM, UDR, or Cloud Key. For 2FA-enabled accounts, provide the TOTP secret (base32).",
-    "help_links": [
-      {
-        "label": "UniFi OS Console",
-        "url": "https://unifi.ui.com"
-      },
-      {
-        "label": "Ubiquiti Community",
-        "url": "https://community.ui.com"
-      }
-    ],
     "fields": [
       {
         "key": "UNIFI_HOST",
         "label": "Controller Host",
         "secret": false,
         "placeholder": "192.168.1.1",
-        "required": true
+        "required": true,
+        "help": "IP or hostname of the UniFi controller (UDM, UDM-Pro, Cloud Key, or self-hosted Network app)."
       },
       {
         "key": "UNIFI_USERNAME",
         "label": "Username",
         "secret": false,
         "placeholder": "admin",
-        "required": true
+        "required": true,
+        "help": "Local controller account username — not a UI.com SSO account."
       },
       {
         "key": "UNIFI_PASSWORD",
         "label": "Password",
         "secret": true,
         "placeholder": "Controller password",
-        "required": true
+        "required": true,
+        "help": "Password for the local controller account."
       },
       {
         "key": "UNIFI_VERIFY_SSL",
@@ -165,6 +158,16 @@
     "prerequisites": [
       "UniFi controller (UDM, UDR, Cloud Key, or self-hosted)",
       "Local admin account on the controller"
+    ],
+    "help": [
+      {
+        "label": "UniFi OS Console",
+        "url": "https://unifi.ui.com"
+      },
+      {
+        "label": "Ubiquiti Community",
+        "url": "https://community.ui.com"
+      }
     ]
   },
   "scenarios": [

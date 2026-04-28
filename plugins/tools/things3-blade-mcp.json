@@ -27,7 +27,7 @@
       "macOS with Things 3 installed",
       "AppleScript permission for terminal (auto-prompted on first use)"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Things 3 URL Scheme",
         "url": "https://culturedcode.com/things/support/articles/2803573/"

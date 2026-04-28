@@ -89,7 +89,8 @@
       "Azure AD app registration with Microsoft Graph API permissions",
       "API permissions: Files.ReadWrite.All, Sites.ReadWrite.All"
     ],
-    "help_links": [
+    "setup_guide": "guides/onedrive-setup.md",
+    "help": [
       {
         "label": "Azure App Registrations",
         "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
@@ -98,8 +99,7 @@
         "label": "OneDrive API Reference",
         "url": "https://learn.microsoft.com/en-us/onedrive/developer/rest-api/"
       }
-    ],
-    "setup_guide": "guides/onedrive-setup.md"
+    ]
   },
   "highlights": [
     {

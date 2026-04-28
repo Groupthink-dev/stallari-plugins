@@ -58,7 +58,7 @@
       "Full Disk Access granted to terminal emulator",
       "Messages app configured with iMessage or SMS Relay"
     ],
-    "help_links": [
+    "help": [
       {
         "label": "Granting Full Disk Access",
         "url": "https://support.apple.com/guide/mac-help/allow-access-to-files-in-security-privacy-mchld5a35146/mac"

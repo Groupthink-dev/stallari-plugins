@@ -48,7 +48,7 @@
       "endpoint": "https://api.resend.com/domains",
       "auth_style": "bearer"
     },
-    "help_links": [
+    "help": [
       {
         "label": "Resend API Keys",
         "url": "https://resend.com/api-keys"
