@@ -9,6 +9,7 @@ import {
   pluginToCatalogEntry,
   packToCatalogEntry,
   buildServices,
+  validatePluginUX,
 } from "./build-catalog.js";
 
 // ---------------------------------------------------------------------------
@@ -464,5 +465,84 @@ describe("computeCanonicalDigest", () => {
     assert.ok(entry.integrity);
     assert.ok(entry.integrity.sha256);
     assert.equal(entry.integrity.sha256.length, 64);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// validatePluginUX
+// ---------------------------------------------------------------------------
+
+describe("validatePluginUX", () => {
+  it("returns no warnings for a complete setup block", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test thing",
+        help: [{ label: "Get key", url: "https://example.com" }],
+        test: { endpoint: "https://api.example.com/health" },
+        fields: [
+          { key: "API_KEY", required: true, help: "Create at example.com" },
+        ],
+      },
+    };
+    assert.deepEqual(validatePluginUX(raw), []);
+  });
+
+  it("warns on missing setup block when env vars are declared", () => {
+    const raw = { name: "test-mcp", env: [{ name: "FOO", required: true }] };
+    const warnings = validatePluginUX(raw);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /missing setup block/);
+  });
+
+  it("returns no warnings for a manifest with no env and no setup", () => {
+    const raw = { name: "test-mcp" };
+    assert.deepEqual(validatePluginUX(raw), []);
+  });
+
+  it("warns on missing test.endpoint", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        help: [{ label: "Docs", url: "https://example.com" }],
+        fields: [{ key: "X", required: true, help: "h" }],
+      },
+    };
+    const warnings = validatePluginUX(raw);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /test\.endpoint missing/);
+  });
+
+  it("warns on required field missing per-field help", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        help: [{ label: "Docs", url: "https://example.com" }],
+        test: { endpoint: "https://api.example.com" },
+        fields: [
+          { key: "API_KEY", required: true },
+          { key: "TIMEOUT", required: false },
+        ],
+      },
+    };
+    const warnings = validatePluginUX(raw);
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /API_KEY/);
+    assert.doesNotMatch(warnings[0], /TIMEOUT/);
+  });
+
+  it("accepts setup.links as an alias for setup.help", () => {
+    const raw = {
+      name: "test-mcp",
+      setup: {
+        blurb: "Test",
+        links: [{ label: "Docs", url: "https://example.com" }],
+        test: { endpoint: "https://api.example.com" },
+        fields: [{ key: "X", required: true, help: "h" }],
+      },
+    };
+    assert.deepEqual(validatePluginUX(raw), []);
   });
 });

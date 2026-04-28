@@ -121,6 +121,53 @@ function computeCanonicalDigest(pack) {
   return createHash("sha256").update(content, "utf8").digest("hex");
 }
 
+/**
+ * Check setup-block quality for a plugin manifest. Returns a list of
+ * human-readable warnings (empty = clean). The fields below are not
+ * formally required by the schema, but their absence breaks install-time
+ * UX in the marketplace dialog (no test endpoint = silent failure mode;
+ * no help links = user has nowhere to go to obtain credentials; no
+ * per-field help = empty input boxes).
+ *
+ * Soft warnings only by default. Set STRICT_UX=1 to escalate to build
+ * failure once the catalog is fully backfilled.
+ */
+function validatePluginUX(raw) {
+  const warnings = [];
+  const setup = raw.setup;
+
+  if (!setup) {
+    if (Array.isArray(raw.env) && raw.env.length > 0) {
+      warnings.push("missing setup block (manifest has env vars but no install-dialog metadata)");
+    }
+    return warnings;
+  }
+
+  if (!setup.blurb || typeof setup.blurb !== "string" || setup.blurb.trim().length === 0) {
+    warnings.push("setup.blurb missing or empty");
+  }
+
+  const helpLinks = Array.isArray(setup.help) ? setup.help : (Array.isArray(setup.links) ? setup.links : null);
+  if (!helpLinks || helpLinks.length === 0) {
+    warnings.push("setup.help (help links) missing or empty — user has no path to obtain credentials");
+  }
+
+  if (!setup.test || typeof setup.test !== "object" || !setup.test.endpoint) {
+    warnings.push("setup.test.endpoint missing — install dialog cannot verify credentials live");
+  }
+
+  if (Array.isArray(setup.fields)) {
+    const missingHelp = setup.fields
+      .filter((f) => f && f.required && (!f.help || typeof f.help !== "string" || f.help.trim().length === 0))
+      .map((f) => f.key || "<unknown>");
+    if (missingHelp.length > 0) {
+      warnings.push(`setup.fields[].help missing on required fields: ${missingHelp.join(", ")}`);
+    }
+  }
+
+  return warnings;
+}
+
 /** Convert a raw plugin JSON to a CatalogEntry */
 function pluginToCatalogEntry(raw) {
   const contracts = raw.contract
@@ -491,11 +538,16 @@ async function main() {
   pluginFiles.sort();
 
   const entries = [];
+  const uxWarnings = []; // [{ name, warnings: [] }]
 
   // Plugins
   for (const file of pluginFiles) {
     const raw = JSON.parse(await readFile(join(TOOLS_DIR, file), "utf-8"));
     if (raw.hidden) continue;
+    const warnings = validatePluginUX(raw);
+    if (warnings.length > 0) {
+      uxWarnings.push({ name: raw.name || file, warnings });
+    }
     entries.push(pluginToCatalogEntry(raw));
   }
 
@@ -612,6 +664,22 @@ async function main() {
   if (packCount > 0) {
     console.log(`Output: dist/packs/ (${packCount} pack manifests)`);
   }
+
+  // Manifest UX quality report — install-dialog completeness across plugins
+  if (uxWarnings.length > 0) {
+    const strict = process.env.STRICT_UX === "1";
+    const label = strict ? "ERROR" : "WARN";
+    console.log("");
+    console.log(`Manifest UX ${label} — ${uxWarnings.length}/${pluginCount} plugin(s) with install-dialog gaps:`);
+    for (const { name, warnings } of uxWarnings) {
+      console.log(`  ${name}:`);
+      for (const w of warnings) console.log(`    - ${w}`);
+    }
+    if (strict) {
+      console.error(`\nSTRICT_UX=1: failing build on ${uxWarnings.length} manifest UX gap(s).`);
+      process.exit(1);
+    }
+  }
 }
 
 export {
@@ -624,6 +692,7 @@ export {
   packToCatalogEntry,
   buildServices,
   buildScenarios,
+  validatePluginUX,
 };
 
 // Run main() only when executed directly (not imported as a module)
