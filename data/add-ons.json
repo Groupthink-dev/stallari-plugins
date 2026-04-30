@@ -1,0 +1,69 @@
+[
+  {
+    "id": "lm-studio",
+    "name": "LM Studio",
+    "description": "Local inference server — OpenAI-compatible API on localhost. Runs MLX/GGUF models on Apple Silicon and other GPUs.",
+    "category": "inference",
+    "runtime": "macOS app",
+    "install_method": "download",
+    "homepage": "https://lmstudio.ai/",
+    "data_tiers": ["local-llm"]
+  },
+  {
+    "id": "lm-link",
+    "name": "LM Link",
+    "description": "Remote LM Studio access via Tailscale HTTPS. Lets the harness reach an LM Studio instance hosted on another machine.",
+    "category": "inference",
+    "runtime": "harness-bundled",
+    "install_method": "config",
+    "data_tiers": ["local-llm", "fleet"]
+  },
+  {
+    "id": "claude-code",
+    "name": "Claude Code",
+    "description": "MCP tool provider — exposes Stallari vault, graph, and lens tools to the Claude Code CLI.",
+    "category": "runtime",
+    "runtime": "cli",
+    "install_method": "homebrew",
+    "homepage": "https://www.anthropic.com/claude-code",
+    "data_tiers": ["cloud-llm"]
+  },
+  {
+    "id": "claude-desktop",
+    "name": "Claude Desktop",
+    "description": "Interactive Claude runtime for manual sessions. Stallari registers as an MCP server inside Claude Desktop.",
+    "category": "runtime",
+    "runtime": "macOS app",
+    "install_method": "download",
+    "homepage": "https://claude.ai/download",
+    "data_tiers": ["cloud-llm"]
+  },
+  {
+    "id": "ntfy-server",
+    "name": "ntfy server",
+    "description": "Self-hosted ntfy push server for harness notifications. Family-org tenancy uses a Stallari-hosted instance; personal users may point at any ntfy endpoint.",
+    "category": "utility",
+    "runtime": "container",
+    "install_method": "docker",
+    "homepage": "https://ntfy.sh/",
+    "data_tiers": ["local-data", "fleet"]
+  },
+  {
+    "id": "gpu-worker",
+    "name": "Stallari GPU worker",
+    "description": "Cross-platform GPU compute worker (Plane 11). Runs on Linux, NixOS, Windows, or OCI; the harness routes inference jobs to it over the fleet mesh.",
+    "category": "inference",
+    "runtime": "binary",
+    "install_method": "release",
+    "data_tiers": ["local-llm", "fleet"]
+  },
+  {
+    "id": "mlx-services",
+    "name": "MLX add-on services",
+    "description": "Background MLX-Swift services that load and serve quantised models on-device. Bundled with the harness; appears as an add-on so users can see runtime status.",
+    "category": "inference",
+    "runtime": "harness-bundled",
+    "install_method": "bundled",
+    "data_tiers": ["local-llm"]
+  }
+]

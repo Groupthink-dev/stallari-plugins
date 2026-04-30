@@ -603,6 +603,25 @@ async function main() {
   // Copy static data files (models.json)
   await copyFile(join(DATA_DIR, "models.json"), join(DIST_DIR, "models.json"));
 
+  // Build add-ons.json — DD-189 §E5 add-on registry consumed by /api/v1/add-ons.
+  // Source is data/add-ons.json (an array of AddOnEntry-shaped records); build
+  // wraps it in the same meta envelope used by catalog.json.
+  const addOnsRaw = JSON.parse(
+    await readFile(join(DATA_DIR, "add-ons.json"), "utf-8"),
+  );
+  const addOnsResponse = {
+    meta: {
+      version: "1.0.0",
+      generated: now,
+      total: addOnsRaw.length,
+    },
+    data: addOnsRaw,
+  };
+  await writeFile(
+    join(DIST_DIR, "add-ons.json"),
+    JSON.stringify(addOnsResponse, null, 2) + "\n",
+  );
+
   // Build pack-details.json — skill/agent/workflow summaries for web marketplace
   const packDetails = {};
   for (const { manifest } of packs) {
@@ -675,6 +694,7 @@ async function main() {
     `Built catalog: ${pluginCount} plugins + ${packCount} packs = ${entries.length} entries, ${services.length} services`,
   );
   console.log("Output: dist/catalog.json, dist/services.json");
+  console.log(`Output: dist/add-ons.json (${addOnsRaw.length} add-ons)`);
   if (packCount > 0) {
     console.log(`Output: dist/packs/ (${packCount} pack manifests)`);
   }
