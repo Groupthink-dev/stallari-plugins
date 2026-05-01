@@ -3,7 +3,7 @@ name: stallari-core
 aliases: [sidereal-core]
 title: "Stallari Core"
 featured: false
-version: "3.4.0"
+version: "3.5.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, registry management,
@@ -484,6 +484,7 @@ skills:
     description: Monitor TCC privacy grant changes
     tier: standard
     category: review
+    requires_capabilities: [shell]
     services_used:
       - service: vault
         operations: [read, create]
@@ -497,6 +498,9 @@ skills:
     prompt: |
       Check TCC privacy grants for unexpected changes since last run. Alert on
       new grants to unsigned or ad-hoc binaries. Compare against known-good baseline.
+      Use the sandboxed shell (DD-188 L2 RestrictedShell) to read
+      ~/Library/Application\ Support/com.apple.TCC/TCC.db via
+      `sqlite3 -readonly`.
 
   - name: credential-expiry-watch
     agent: secops-operator
@@ -522,6 +526,7 @@ skills:
     description: Scan for unexpected network listeners
     tier: standard
     category: review
+    requires_capabilities: [shell]
     services_used:
       - service: vault
         operations: [read, create]
@@ -534,7 +539,9 @@ skills:
       escalation_tier: standard
     prompt: |
       Scan for unexpected network listeners and open ports. Compare against
-      known services. Alert on unrecognised listeners.
+      known services. Alert on unrecognised listeners. Use the sandboxed
+      shell (DD-188 L2 RestrictedShell) to run `lsof -iTCP -sTCP:LISTEN -nP`,
+      `netstat -an`, and `pfctl -sr` (read-only).
 
   - name: security-correlation
     agent: secops-operator
@@ -623,6 +630,7 @@ skills:
     tier: reasoning
     fallback_tier: standard
     category: review
+    requires_capabilities: [shell]
     services_used:
       - service: vault
         operations: [read, create]
@@ -631,7 +639,9 @@ skills:
       on_demand: true
     graph: react
     prompt: |
-      Audit MCP server fleet health and lifecycle:
+      Audit MCP server fleet health and lifecycle. Use the sandboxed shell
+      (DD-188 L2 RestrictedShell) to run `ps`, `lsof -p <pid>`, and read
+      launchd state for MCP-related agents.
 
       1. **Process health** — check MCP server processes for orphans, resource
          leaks, restart loops, and servers exceeding resource budgets.
