@@ -2,7 +2,7 @@ pack: "1.8"
 name: product-operations-starter
 title: "Product Operations Starter"
 featured: false
-version: "1.2.0"
+version: "1.2.1"
 description: >-
   Starter pack for running product operations with Stallari — release
   announcements, customer onboarding, subscription monitoring, MRR digest,
@@ -205,7 +205,7 @@ skills:
          other than explicit `y`.
       6. On approval, call {{transactional-email.send}}.
       7. Archive to vault at:
-         `spaces/Personal/Areas/Product/releases/YYYY-MM-DD-<version>.md`
+         `<vault>/Product/releases/YYYY-MM-DD-<version>.md`
          Frontmatter: `kind: release-announcement, version, audience_size,
          sent_at, llm_generated: true, publish: false`
          Body: the sent email markdown.
@@ -251,7 +251,7 @@ skills:
          {{transactional-email.create_contact}} with the full email.
       6. Call {{transactional-email.send}}.
       7. Archive to vault at:
-         `spaces/Personal/Areas/Product/customers/<hashed_email>.md`
+         `<vault>/Product/customers/<hashed_email>.md`
          Frontmatter: `kind: customer-welcome, hashed_email,
          signup_source, sent_at, llm_generated: true, publish: false`
          The full email may appear in the body since the note carries
@@ -292,7 +292,7 @@ skills:
       4. Format as a markdown table:
          Status | Count | MRR contribution
       5. Archive to vault at:
-         `spaces/Personal/Areas/Product/dashboards/YYYY-MM-DD-subs.md`
+         `<vault>/Product/dashboards/YYYY-MM-DD-subs.md`
          Frontmatter: `kind: subscription-dashboard, mrr, churn_rate,
          trial_count, past_due_count, llm_generated: true, publish: false`
       6. Return a one-paragraph summary suitable for inline display.
@@ -327,7 +327,7 @@ skills:
          past-due count, churn rate (trailing 7d).
       3. Search the vault for the prior week's `weekly-mrr-digest` archive
          (if any) at
-         `spaces/Personal/Areas/Product/dashboards/weekly-mrr-*.md`.
+         `<vault>/Product/dashboards/weekly-mrr-*.md`.
          Compare current MRR vs prior MRR. Compute delta, percent change,
          direction (rising/flat/falling).
       4. Compose a one-paragraph narrative: current MRR, delta vs last
@@ -335,7 +335,7 @@ skills:
          upgrades). Critique for completeness, accuracy, trend clarity.
          Refine.
       5. Archive to vault at:
-         `spaces/Personal/Areas/Product/dashboards/weekly-mrr-YYYY-WNN.md`
+         `<vault>/Product/dashboards/weekly-mrr-YYYY-WNN.md`
          Frontmatter: `kind: weekly-mrr-digest, mrr, mrr_delta,
          direction, llm_generated: true, publish: false`
       6. Emit notification envelope (digest priority — batched):
