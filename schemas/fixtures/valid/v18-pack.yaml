@@ -1,0 +1,65 @@
+# DD-214 — exercises every v1.8 schema addition: tier-named graph_config,
+# expanded graph enum (gate/critique-refine/plan-execute), briefing block,
+# pack-scoped guardrail ids. Notification_* envelope fields are runtime-only,
+# not in the manifest, so not exercised here.
+pack: "1.8"
+name: v18-fixture
+version: "1.0.0"
+description: Fixture exercising every v1.8 schema addition (DD-214 Phase 0a).
+
+author:
+  name: Stallari
+
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+
+skills:
+  - name: classifier
+    description: Gate-graph classifier with tier-named routing.
+    graph: gate
+    graph_config:
+      classify_tier: fast
+      escalation_tier: reasoning
+      routes:
+        urgent: handle_urgent
+        routine: handle_routine
+    prompt: |
+      Classify the input and route via the gate.
+
+  - name: digest
+    description: Critique-refine digest with briefing-card declaration.
+    graph: critique-refine
+    graph_config:
+      critique_criteria: [completeness, accuracy, tone]
+      max_critique_rounds: 2
+    briefing:
+      card_id: v18-fixture-digest
+      refresh_interval: 6h
+      priority: 5
+      dismissal: per-day
+    prompt: |
+      Produce a daily digest, then critique-refine for two rounds.
+
+  - name: high-blast-writer
+    description: Plan-execute graph for high-blast-radius writes.
+    graph: plan-execute
+    prompt: |
+      Plan the change, then execute.
+
+guardrails:
+  version: "1.0.0"
+  reviewed: "2026-05-02"
+  rules:
+    - id: data-001
+      category: data-handling
+      severity: high
+      scope: [community, verified]
+      added: "2026-05-02"
+    - id: prompt-001
+      category: prompt-hygiene
+      severity: critical
+      scope: [community]
+      added: "2026-05-02"

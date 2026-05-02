@@ -135,6 +135,42 @@
           "description": "Agent name that executes this skill (key in agents dict).",
           "type": "string"
         },
+        "briefing": {
+          "additionalProperties": false,
+          "description": "Declares this skill as a Today briefing-card provider (v1.8, DD-211). The harness's BriefingRegistry surfaces the skill's most-recent output as a card on Today. Skills typically declaring this: digest, audit, summary, status.",
+          "properties": {
+            "card_id": {
+              "description": "Briefing card identifier on the Today surface (DD-211). Convention: <pack>-<short> for cross-pack uniqueness (e.g. home-maintenance-monthly-audit).",
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "type": "string"
+            },
+            "dismissal": {
+              "description": "Dismissal scope (DD-211 Q3). per-day = resets midnight (digests). per-version = don't re-show same alert; do show new ones. sticky = until user unpins (pinned cards). none = situational awareness, not items to action (status cards). When omitted, the harness infers from card type.",
+              "enum": [
+                "per-day",
+                "per-version",
+                "sticky",
+                "none"
+              ],
+              "type": "string"
+            },
+            "priority": {
+              "default": 5,
+              "description": "Initial card pin priority — lower numbers float higher in the Today stack (DD-211). User-reorderable at runtime.",
+              "maximum": 9,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "refresh_interval": {
+              "description": "ISO-8601 duration or shorthand (1h, 6h, 1d) controlling background refresh cadence (DD-211). Defaults: 6h for digests, 1h for status cards, on-demand only for inbox-status-style cards.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "card_id"
+          ],
+          "type": "object"
+        },
         "category": {
           "description": "Skill category — what role this skill plays in the workflow (v1.2).",
           "enum": [
@@ -162,21 +198,33 @@
         },
         "graph": {
           "default": "react-extract",
-          "description": "Execution graph topology (v1.6, DD119/DD123/DD126). react-extract = ReAct + JSON extraction (default). react = lightweight, no extraction. react-verify = ReAct + deterministic verification + refinement. cascade = classify → react → escalate (tiered cost).",
+          "description": "Execution graph topology (v1.6 base + v1.8 expansion, DD119/DD123/DD126/DD214). react-extract = ReAct + JSON extraction (default). react = lightweight, no extraction. react-verify = ReAct + deterministic verification + refinement. cascade = classify → react → escalate (tiered cost). gate = classifier-then-route (v1.8). critique-refine = author + critic loop, used for digests/summaries (v1.8). plan-execute = explicit plan step before execution, used for high-blast-radius writes (v1.8).",
           "enum": [
             "react-extract",
             "react",
             "react-verify",
-            "cascade"
+            "cascade",
+            "gate",
+            "critique-refine",
+            "plan-execute"
           ],
           "type": "string"
         },
         "graph_config": {
           "additionalProperties": false,
-          "description": "Graph-specific configuration (v1.6, DD126). Used with cascade graphs for multi-tier model routing.",
+          "description": "Graph-specific configuration (v1.6, DD126). Used with cascade/gate graphs for multi-tier routing. Tier-named fields (v1.8) preferred over model-pinned fields — model-pinned couples the pack to a specific provider SKU and prevents local-LLM dispatch (DD214).",
           "properties": {
             "classify_model": {
-              "description": "Model identifier for the classify tier (e.g. claude-haiku-4-5-20251001).",
+              "description": "DEPRECATED in v1.8 — use classify_tier instead. Model identifier for the classify tier (e.g. claude-haiku-4-5-20251001). Pinning a model SKU prevents local-LLM dispatch and couples the pack to a specific provider; tier-based routing is portable.",
+              "type": "string"
+            },
+            "classify_tier": {
+              "description": "Tier name for the classify stage (v1.8, DD214). Preferred over classify_model — the router resolves tier → model per provider, so packs stay portable across cloud and local backends.",
+              "enum": [
+                "fast",
+                "standard",
+                "reasoning"
+              ],
               "type": "string"
             },
             "confidence_threshold": {
@@ -186,9 +234,39 @@
               "minimum": 0,
               "type": "number"
             },
+            "critique_criteria": {
+              "description": "Critique-refine criteria the critic evaluates against (v1.8). Examples: completeness, accuracy, tone, actionability.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
             "escalation_model": {
-              "description": "Model identifier for escalation when the react tier exhausts its budget.",
+              "description": "DEPRECATED in v1.8 — use escalation_tier instead. Model identifier for escalation when the react tier exhausts its budget.",
               "type": "string"
+            },
+            "escalation_tier": {
+              "description": "Tier name for escalation when the primary stage exhausts its budget (v1.8, DD214). Preferred over escalation_model.",
+              "enum": [
+                "fast",
+                "standard",
+                "reasoning"
+              ],
+              "type": "string"
+            },
+            "max_critique_rounds": {
+              "default": 2,
+              "description": "Maximum critic→refine cycles before forced acceptance (v1.8).",
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "routes": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "Gate graph routing table (v1.8). Maps classifier output labels to downstream sub-skill names.",
+              "type": "object"
             }
           },
           "type": "object"
@@ -255,6 +333,25 @@
         "trigger": {
           "$ref": "#/$defs/trigger"
         },
+        "tunable_size_budget": {
+          "default": 2000,
+          "description": "Maximum total character length of substituted tunable values per dispatch (v1.10, DD184). Defaults to 2000. Skills with large enum_array or string_array tunables can raise this; harness enforces and falls back to defaults on overrun with a user-visible warning.",
+          "maximum": 16384,
+          "minimum": 256,
+          "type": "integer"
+        },
+        "tunables": {
+          "description": "Pack-authored typed tunables exposed to users (v1.10, DD184). Each entry declares a key, type, constraints, default, and description. Skill body references via {{tunable.key}} substitution. Override files at agent-harness/skills/overrides/{pack}/{skill}.md set per-user values.",
+          "items": {
+            "$ref": "#/$defs/tunable"
+          },
+          "type": "array"
+        },
+        "tunables_require_review": {
+          "default": false,
+          "description": "When true, override values for this skill must be human-reviewed before use (v1.10, DD184). Set on security-sensitive skills (anything touching cidr_array, exec, or external write surfaces). Validation failures fail closed instead of falling back to defaults.",
+          "type": "boolean"
+        },
         "webhook_name": {
           "description": "Name of the webhook that triggers this skill (v1.4, DD113). Links to a webhooks[] entry name or a HooksConfig webhook name.",
           "type": "string"
@@ -289,6 +386,82 @@
           "description": "Webhook-triggered execution (v1.4, DD113)."
         }
       },
+      "type": "object"
+    },
+    "tunable": {
+      "additionalProperties": false,
+      "properties": {
+        "advanced": {
+          "default": false,
+          "description": "When true, GUI surfaces hide this tunable behind an Advanced disclosure. Use for tunables most users should not touch.",
+          "type": "boolean"
+        },
+        "default": {
+          "description": "Default value used when no override is present, when override fails validation, or when override exceeds tunable_size_budget."
+        },
+        "description": {
+          "description": "One-line user-facing description shown in the Stallari Home Skills tab and Obsidian skill-tuner plugin.",
+          "maxLength": 300,
+          "type": "string"
+        },
+        "key": {
+          "description": "Tunable identifier (snake_case). Referenced in skill body as {{tunable.key}}. Must be unique within the skill.",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        },
+        "max": {
+          "description": "Maximum value (int, float).",
+          "type": "number"
+        },
+        "max_items": {
+          "description": "Maximum array length (string_array, enum_array, effort_ref_array, cidr_array).",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_length": {
+          "description": "Maximum string length (string).",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "min": {
+          "description": "Minimum value (int, float).",
+          "type": "number"
+        },
+        "pattern": {
+          "description": "Regex pattern (string). ECMA 262 syntax.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Closed type vocabulary. int/float take min/max; string takes pattern/max_length; enum/enum_array take values; string_array/enum_array take max_items; effort_ref_array is Bases-backed (vault wikilinks); cidr_array is IP-family-aware; duration is ISO-8601; bool is true/false.",
+          "enum": [
+            "int",
+            "float",
+            "string",
+            "enum",
+            "string_array",
+            "enum_array",
+            "effort_ref_array",
+            "cidr_array",
+            "duration",
+            "bool"
+          ],
+          "type": "string"
+        },
+        "values": {
+          "description": "Allowed values (enum, enum_array).",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "key",
+        "type",
+        "default",
+        "description"
+      ],
       "type": "object"
     },
     "userInput": {
@@ -414,7 +587,7 @@
   "$id": "https://stallari.app/schemas/stallari-pack.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6/v1.7/v1.8/v1.9 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146, DD152, DD163).",
+  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v1.0/v1.1/v1.2/v1.3/v1.4/v1.5/v1.6/v1.7/v1.8/v1.9/v1.10 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146, DD152, DD163, DD184, DD-214). v1.8 (DD-214): briefing: skill block, tier-named graph_config fields, full graph enum (gate/critique-refine/plan-execute), pack-scoped guardrail-ID semantics, runtime notification_* result-envelope fields routed by harness to stallari/{pack}/{category} via supervised ntfy add-on (DD-191).",
   "properties": {
     "access": {
       "default": "public",
@@ -584,6 +757,7 @@
                 "type": "string"
               },
               "id": {
+                "description": "Rule identifier, pack-scoped (v1.8 clarification, DD-214). The same id (e.g. data-001) inside two different packs does NOT collide — the registry namespaces by pack at display time. No <pack>- prefix needed; keep ids short and copy-paste-friendly.",
                 "pattern": "^[a-z]+-\\d{3}$",
                 "type": "string"
               },
@@ -723,7 +897,8 @@
         "1.6",
         "1.7",
         "1.8",
-        "1.9"
+        "1.9",
+        "1.10"
       ],
       "type": "string"
     },

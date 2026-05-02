@@ -1,0 +1,23 @@
+# expected-error: missing-required-field
+# Tunable is missing the required `default` field.
+pack: "1.10"
+name: missing-tunable-default
+version: "1.0.0"
+description: Pack declaring a tunable without a default value.
+author:
+  name: Test
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+skills:
+  - name: bad-skill
+    description: Skill with tunable missing default.
+    prompt: ok
+    tunables:
+      - key: missing_default
+        type: int
+        min: 0
+        max: 10
+        description: No default provided.

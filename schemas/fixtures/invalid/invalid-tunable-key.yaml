@@ -1,0 +1,24 @@
+# expected-error: invalid-tunable-key
+# Tunable key "Bad-Key" does not match the snake_case pattern.
+pack: "1.10"
+name: bad-tunable-key
+version: "1.0.0"
+description: Pack declaring a tunable with a non-snake_case key.
+author:
+  name: Test
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+skills:
+  - name: bad-skill
+    description: Skill with invalid tunable key.
+    prompt: ok
+    tunables:
+      - key: Bad-Key
+        type: int
+        min: 0
+        max: 10
+        default: 5
+        description: A bad key.

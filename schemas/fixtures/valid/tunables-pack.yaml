@@ -1,0 +1,91 @@
+# Reference fixture: pack with skills declaring DD-184 typed tunables (v1.10).
+# Exercises every type in the closed vocabulary, plus tunables_require_review
+# and tunable_size_budget overrides.
+pack: "1.10"
+name: tunables-fixture
+version: "1.0.0"
+description: Reference fixture exercising the DD-184 typed-tunables schema.
+
+author:
+  name: Stallari
+
+data:
+  reads: [vault]
+  writes: []
+  stores: nothing
+  phones_home: false
+
+skills:
+  - name: digest-with-tunables
+    description: Digest skill exercising int, float, enum, string_array, effort_ref_array, duration, bool tunables.
+    prompt: |
+      Build a digest of the last {{tunable.lookback_days}} days, sorted {{tunable.calendar_sort}}.
+      Limit to {{tunable.recent_limit}} items. Include efforts: {{tunable.effort_allowlist}}.
+    tunables:
+      - key: recent_limit
+        type: int
+        min: 5
+        max: 100
+        default: 20
+        description: Maximum number of calendar entries to include in the digest.
+      - key: temperature_floor
+        type: float
+        min: 0
+        max: 1
+        default: 0.2
+        description: Minimum sampling temperature for the LLM call.
+      - key: calendar_sort
+        type: enum
+        values: [created_desc, modified_desc, name_asc]
+        default: created_desc
+        description: Sort order for the calendar folder listing.
+      - key: lookback_days
+        type: int
+        min: 1
+        max: 30
+        default: 7
+        description: How many days of history to include.
+      - key: effort_allowlist
+        type: effort_ref_array
+        max_items: 20
+        default: []
+        description: Restrict digest to these efforts (Bases-backed picker in the GUI).
+      - key: include_tags
+        type: string_array
+        max_items: 50
+        default: []
+        description: Free-form tag allowlist applied after effort filtering.
+      - key: priority_categories
+        type: enum_array
+        values: [urgent, important, routine, deferred]
+        max_items: 4
+        default: [urgent, important]
+        description: Categories to highlight in the digest summary.
+      - key: digest_window
+        type: duration
+        default: PT24H
+        description: Rolling time window for the digest body.
+      - key: include_archived
+        type: bool
+        default: false
+        description: Include notes from zz Notes(archive)/.
+        advanced: true
+
+  - name: firewall-rule-pusher
+    description: Security-sensitive skill — overrides require human review.
+    prompt: |
+      Push allowlist {{tunable.allowed_cidrs}} with {{tunable.match_pattern}}.
+    tunables_require_review: true
+    tunable_size_budget: 4000
+    tunables:
+      - key: allowed_cidrs
+        type: cidr_array
+        max_items: 32
+        default: []
+        description: Allowlisted CIDR blocks. Mixed v4/v6 permitted.
+      - key: match_pattern
+        type: string
+        pattern: "^[A-Za-z0-9_.-]+$"
+        max_length: 128
+        default: "default"
+        description: Hostname match pattern for the rule.

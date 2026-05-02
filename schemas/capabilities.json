@@ -12,7 +12,8 @@
     "streaming",
     "jsonMode",
     "parallelTools",
-    "multiAgent"
+    "multiAgent",
+    "shell"
   ],
   "deployments": [
     "cloud_only",
@@ -39,7 +40,7 @@
       ]
     },
     "capability": {
-      "description": "A feature a model backend can advertise. Skills declare which capabilities they require; the resolver filters candidate backends to those that advertise all required capabilities.",
+      "description": "A feature a skill requires. Two axes coexist under the single `requires_capabilities:` field — model-backend capabilities (filtered by the routing resolver) and runtime resources (filtered by the harness when assembling the tool surface). The resolver only consults backend capabilities; the harness only consults runtime resources.",
       "values": [
         {
           "description": "Stepwise / chain-of-thought style generation, supports complex tool orchestration.",
@@ -72,6 +73,10 @@
         {
           "description": "Designed for sub-agent / coordinator patterns (Anthropic's Managed Agents, MCP sub-sessions).",
           "name": "multiAgent"
+        },
+        {
+          "description": "Runtime resource — declares the skill needs the harness-mediated sandboxed shell (DD-188 L2 RestrictedShell). Skills that omit this cannot see or invoke any shell-class tool. Sub-scopes `shell:read` and `shell:write` are reserved for future use.",
+          "name": "shell"
         }
       ]
     },

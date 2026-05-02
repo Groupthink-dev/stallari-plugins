@@ -1,0 +1,22 @@
+# expected-error: unknown-tunable-type
+# Tunable type "regex" is not in the closed vocabulary.
+pack: "1.10"
+name: bad-tunable-type
+version: "1.0.0"
+description: Pack declaring a tunable with an unknown type.
+author:
+  name: Test
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+skills:
+  - name: bad-skill
+    description: Skill with invalid tunable type.
+    prompt: ok
+    tunables:
+      - key: pattern_thing
+        type: regex
+        default: ".*"
+        description: Pattern matcher.

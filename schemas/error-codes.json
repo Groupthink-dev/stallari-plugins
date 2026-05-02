@@ -119,6 +119,26 @@
     {
       "code": "seal-payload-mismatch",
       "description": "A sealed pack's HMAC does not match the cleartext payload."
+    },
+    {
+      "code": "unknown-tunable-type",
+      "description": "A tunable's type field is not in the closed type vocabulary."
+    },
+    {
+      "code": "duplicate-tunable-key",
+      "description": "Two tunables on the same skill share a key."
+    },
+    {
+      "code": "tunable-constraint-mismatch",
+      "description": "A tunable carries constraints incompatible with its declared type (e.g. min on a string, values on an int)."
+    },
+    {
+      "code": "tunable-banned-token",
+      "description": "A tunable default, description, or skill prompt_delta contains a banned token (e.g. {{tool., <tool_use>, system_prompt:)."
+    },
+    {
+      "code": "invalid-tunable-key",
+      "description": "A tunable key does not match the snake_case pattern."
     }
   ]
 }
