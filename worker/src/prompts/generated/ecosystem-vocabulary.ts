@@ -22,7 +22,7 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 - **stallari-core** v3.5.0 [calendar, email, tasks, vault]: Core platform operators and infrastructure health — PKM, comms, scheduling, security auditing, flee… (27 skills, 6 agents, free)
 
 **Open (forkable):**
-- **business-ops** v1.0.0 [accounting, billing, vault]: Multi-service business operations automation — subscription revenue tracking, double-entry accounti… (14 skills, 1 agents, free)
+- **business-ops** v1.1.0 [accounting, billing, vault]: Multi-service business operations automation — subscription revenue tracking, double-entry accounti… (16 skills, 1 agents, free)
 - **Declarative Infrastructure** v0.3.0 [documentation, overlay-network, virtualisation]: Provision and manage GPU cloud compute instances declaratively. Stands up stallari-gpu-worker nodes… (8 skills, 4 agents, free)
 - **gaming-lounge** v1.0.0 [gaming, notifications]: Cross-platform gaming presence — friends online, achievement progress, game libraries, and session … (5 skills, 1 agents, free)
 - **home-maintenance** v1.2.0 [tasks, vault]: Property maintenance logger — drop a photo, voice memo, or text note into an ingest folder to class… (5 skills, 2 agents, free)
