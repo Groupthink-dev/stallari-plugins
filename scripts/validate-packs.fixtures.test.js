@@ -47,6 +47,11 @@ const SKIPPED_CODES = new Set([
   // Contract-name pattern enforcement lives in registry-infra's validate.ts,
   // not in this plugins-side hand-rolled validator.
   "invalid-contract-name",
+  // Tunable-shape enforcement (DD-184, pack-spec 2.3.0+) lives in the
+  // pack-spec JSON Schema (AJV), not this hand-rolled marketplace validator.
+  // The "pack-spec fixture corpus — valid" suite covers AJV-level validation.
+  "invalid-tunable-key",
+  "unknown-tunable-type",
 ]);
 
 // Fixtures from pack-spec that exercise pack-spec features but do not satisfy
