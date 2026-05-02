@@ -29,7 +29,7 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 - **meeting-intelligence** v1.0.0 [calendar, notifications, vault]: Privacy-first meeting processing — on-device transcription via mlx-whisper, attendee extraction mat… (4 skills, 1 agents, free)
 - **network-observatory** v1.1.0 [isp, leo-modem, network, overlay-network, protective_dns, vault]: Cross-layer network monitoring and diagnosis — ISP accounts, DNS filtering, local infrastructure, o… (7 skills, 1 agents, free)
 - **product-operations-starter** v1.2.0 [billing, transactional-email, vault]: Starter pack for running product operations with Stallari — release announcements, customer onboard… (6 skills, 2 agents, free)
-- **saas-revenue-ops** v1.0.0 [billing, ecommerce, notifications, transactional-email]: End-to-end SaaS and e-commerce revenue operations — subscription billing, storefront orders, and tr… (5 skills, 1 agents, free)
+- **saas-revenue-ops** v1.1.0 [billing, ecommerce, transactional-email, vault]: End-to-end SaaS and e-commerce revenue operations — subscription billing, storefront orders, and tr… (7 skills, 1 agents, free)
 - **speculator** v1.0.0 [betting-exchange, brokerage, notifications, prediction-market]: Cross-market speculation and analysis — Betfair exchange odds, Polymarket prediction prices, and In… (5 skills, 1 agents, free)
 - **stallari-hearth** v1.2.0 [home, vault]: Smart home intelligence for Stallari — site status monitoring, device inventory tracking, daily hom… (5 skills, 1 agents, free)
 `;
