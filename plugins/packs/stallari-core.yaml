@@ -3,7 +3,7 @@ name: stallari-core
 aliases: [sidereal-core]
 title: "Stallari Core"
 featured: false
-version: "3.5.0"
+version: "3.6.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, registry management,
@@ -17,7 +17,7 @@ visibility: open
 tier: certified
 pricing: null
 bundled: true
-tagline: "Six operators, 28 skills — the platform foundation bundled with every install"
+tagline: "Six operators, 31 skills — the platform foundation bundled with every install"
 
 readme:
   format: markdown
@@ -43,6 +43,12 @@ readme:
     - **decompose-inbox** — break text blobs into discrete vault artefacts
     - **morning-sweep** — interactive triage across all sources with
       human approval
+    - **wiki-maintain-enrich** — auto-enrich newly-filed notes with
+      bidirectional entity backlinks (DD-194)
+    - **wiki-maintain-query** — answer questions by retrieving and
+      synthesising vault passages with citations (DD-194)
+    - **wiki-maintain-lint** — weekly vault health pass surfacing stale
+      cards, orphans, dormant efforts, and contradictions (DD-194)
 
     ### Communications (comms-operator)
     - **email-triage** — scan inbox for messages relevant to active
@@ -87,7 +93,7 @@ highlights:
   - icon: "\U0001F916"
     text: "6 operator agents — PKM, comms, scheduling, security, fleet, and notifications"
   - icon: "\U0001F9E9"
-    text: "28 skills spanning vault ops, email triage, calendar, secops, fleet health, registry, and delivery"
+    text: "31 skills spanning vault ops, knowledge-base wiki-maintain trio, email triage, calendar, secops, fleet health, registry, and delivery"
   - icon: "\U0001F4E6"
     text: "Bundled — ships with every Stallari installation, zero configuration needed"
   - icon: "\U0001F6E1\uFE0F"
@@ -383,6 +389,154 @@ skills:
       3. For relevant messages: create handoff note in +/handoff/
       4. For urgent items: create Things task
       5. Report: total scanned per provider, relevant found, handoffs created
+
+  # --- Knowledge base — wiki-maintain trio (pkm-operator, DD-194) ---
+
+  - name: wiki-maintain-enrich
+    agent: pkm-operator
+    description: Auto-enrich newly-filed vault notes with bidirectional entity backlinks
+    tier: standard  # entity extraction + name resolution; templated graph mutation
+    category: transform
+    services_used:
+      - service: vault
+        operations: [read, search, lens_fts, append, create]
+    trigger:
+      watch: ["+/ingest", "+/triage", "+/handoff"]
+    graph: react-extract  # tool-loop ending in a structured per-card backlink list
+    prompt: |
+      After a new note is filed in the vault, enrich the vault graph: extract
+      entity mentions (people, organisations, efforts), resolve each to a
+      vault card, apply the privacy gate, and write a dated back-reference
+      line to each matched card. Update the knowledge index and log; index
+      the new note in Lens.
+
+      This is the **compounding step** of the wiki-maintenance layer — each
+      ingest deposits cross-references that accumulate into a navigable
+      knowledge graph over time.
+
+      Steps:
+      1. Read the newly-filed note via {{vault.read}}.
+      2. Extract entity candidates with type (person | organisation | effort)
+         and confidence score (0.0–1.0). Boost confidence on full proper
+         names, wikilink form, and matches against vault entities. Penalise
+         pronouns and partial mentions.
+      3. For each candidate above the configured threshold, resolve to a
+         vault card via {{vault.search}} or {{vault.lens_fts}}.
+      4. Apply privacy gate — never write back-references to cards that
+         carry `publish: false` AND the source note carries `publish: true`,
+         or vice-versa.
+      5. Append a dated back-reference line to each matched card via
+         {{vault.append}}. Format: `- <date> · [[source-note-path]] —
+         <one-line context>`.
+      6. Update `atlas/utilities/knowledge-index.md` (entity → ref count)
+         and `atlas/utilities/knowledge-log.md` (run summary).
+      7. Index the source note in Lens.
+      8. Report: candidates found, matched, written, skipped (per gate).
+
+  - name: wiki-maintain-query
+    agent: pkm-operator
+    description: Answer a question by retrieving + synthesising vault passages with citations
+    tier: standard  # retrieval-augmented synthesis; no novel reasoning beyond grounding
+    category: report
+    services_used:
+      - service: vault
+        operations: [read, search, lens_fts, lens_recall, create, append]
+    trigger:
+      on_demand: true
+    graph: react-verify  # tool-loop with confidence + citation-grounding self-check
+    inputs:
+      - key: question
+        type: string
+        label: Question
+        description: "The question to answer from the knowledge base"
+        required: true
+      - key: context_path
+        type: string
+        label: Scope (optional)
+        description: "Vault path or effort note to scope the search to. Omit for vault-wide."
+        required: false
+    prompt: |
+      Answer a question by synthesising from the knowledge base. Select the
+      most relevant vault passages, synthesise a grounded answer with
+      wikilink citations, and optionally file the synthesis as a new note.
+
+      This is the **query step** of the wiki layer — it makes accumulated
+      enrichment accessible on demand.
+
+      Steps:
+      1. Parse the question. If `{{config.context_path}}` is set, scope all
+         retrieval to passages within that path; otherwise search vault-wide.
+      2. Retrieve candidate passages via {{vault.lens_recall}} (top-k
+         passages by semantic similarity) and {{vault.lens_fts}} (top-k by
+         keyword). Merge + deduplicate.
+      3. Read each candidate passage via {{vault.read}} for full context.
+      4. Synthesise a grounded answer. Every claim must cite at least one
+         retrieved passage by wikilink. If no passage supports a claim,
+         either drop the claim or mark it as inference.
+      5. Self-check: re-read the answer; for each citation, verify the
+         cited passage actually supports the claim. Drop or rephrase any
+         unsupported claim.
+      6. If answer length and citation count exceed configured thresholds,
+         file as a synthesis note at `atlas/synthesis/YYYY-MM-DD-<slug>.md`
+         with `kind: synthesis, llm_generated: true, publish: false`
+         frontmatter, and append a back-reference line to each cited source
+         per the wiki-maintain-enrich convention.
+      7. Return the answer with inline citations for the Ask bar to render.
+
+  - name: wiki-maintain-lint
+    agent: pkm-operator
+    description: Weekly vault health pass — stale cards, orphans, dormant efforts, contradictions
+    tier: standard
+    category: report
+    services_used:
+      - service: vault
+        operations: [read, search, query_properties, lens_fts, create]
+    trigger:
+      schedule: "0 3 * * 0"
+    briefing:
+      card_id: stallari-core-wiki-lint
+      refresh_interval: 7d
+      priority: 6
+      dismissal: per-version
+    prompt: |
+      Run a weekly vault health pass: find stale entity cards, orphaned
+      notes, dormant efforts, and contradiction candidates. Write a lint
+      report and emit a notification summary.
+
+      This is the **maintenance step** of the wiki layer — it surfaces
+      decay that compounding enrichment cannot detect.
+
+      Steps:
+      1. Stale cards: query for entity cards whose `last_interaction`
+         frontmatter is older than {{config.stale_card_days}} days, OR
+         where the card body has no inbound back-references logged in the
+         past {{config.stale_card_days}} days.
+      2. Orphans: find notes with zero inbound wikilinks AND zero outbound
+         wikilinks (truly disconnected from the graph).
+      3. Dormant efforts: query for notes with `kind: effort` and
+         `status: on` whose body has not been modified in the past
+         {{config.dormant_effort_days}} days. Record a recommendation that
+         the human dispatch a `wiki-maintain-query` for the effort path.
+         Do **not** auto-dispatch.
+      4. Synthesis contradictions: scan recent synthesis notes; for each,
+         check whether any cited source has been substantively modified
+         since the synthesis was written. Flag as contradiction candidate
+         if so.
+      5. Write the report to `atlas/utilities/knowledge-lint/YYYY-WW.md`
+         with sections: Stale cards · Orphans · Dormant efforts · Synthesis
+         contradictions. Frontmatter `kind: knowledge-lint,
+         llm_generated: true, publish: false`.
+      6. Emit a notification envelope (counts only — full identifiers stay
+         in the vault note):
+         ```json
+         {
+           "notification_title": "Knowledge lint — week <WW>",
+           "notification_body": "<N stale> · <N orphans> · <N dormant> · <N contradiction>",
+           "notification_priority": 1,
+           "notification_category": "digest"
+         }
+         ```
+      7. Return the report summary for the briefing card.
 
   # --- Scheduling operations (scheduling-operator) ---
 
@@ -881,3 +1035,31 @@ workflows:
         after: [email-triage]
       - skill: daily-digest
         after: [email-triage, process-inbox]
+
+# ── Pack-level config ──────────────────────────────────────────────
+# Tunables for the wiki-maintain trio (DD-194, added v3.6.0).
+
+config:
+  user_inputs:
+    - key: stale_card_days
+      type: int
+      label: Stale-card threshold (days)
+      description: >
+        wiki-maintain-lint flags entity cards as stale when last_interaction
+        (or last inbound back-reference) is older than this many days.
+      default: 90
+      min: 7
+      max: 730
+      required: false
+
+    - key: dormant_effort_days
+      type: int
+      label: Dormant-effort threshold (days)
+      description: >
+        wiki-maintain-lint flags efforts with status=on as dormant when their
+        body has not been modified within this many days. Recommends a
+        targeted wiki-maintain-query dispatch (does not auto-fire).
+      default: 30
+      min: 7
+      max: 365
+      required: false
