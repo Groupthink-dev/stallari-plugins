@@ -31,7 +31,7 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 - **product-operations-starter** v1.2.0 [billing, transactional-email, vault]: Starter pack for running product operations with Stallari — release announcements, customer onboard… (6 skills, 2 agents, free)
 - **saas-revenue-ops** v1.0.0 [billing, ecommerce, notifications, transactional-email]: End-to-end SaaS and e-commerce revenue operations — subscription billing, storefront orders, and tr… (5 skills, 1 agents, free)
 - **speculator** v1.0.0 [betting-exchange, brokerage, notifications, prediction-market]: Cross-market speculation and analysis — Betfair exchange odds, Polymarket prediction prices, and In… (5 skills, 1 agents, free)
-- **stallari-hearth** v1.1.0 [home, vault]: Smart home intelligence for Stallari — site status monitoring, device inventory tracking, and scene… (3 skills, 1 agents, free)
+- **stallari-hearth** v1.2.0 [home, vault]: Smart home intelligence for Stallari — site status monitoring, device inventory tracking, daily hom… (5 skills, 1 agents, free)
 `;
 
 export const AGENT_NAMES = ["digital-assistant", "pkm-operator", "comms-operator", "scheduling-operator", "secops-operator", "fleet-operator", "home-operator", "bizops-operator"] as const;
