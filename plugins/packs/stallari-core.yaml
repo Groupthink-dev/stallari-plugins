@@ -3,7 +3,7 @@ name: stallari-core
 aliases: [sidereal-core]
 title: "Stallari Core"
 featured: false
-version: "3.8.0"
+version: "3.8.1"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, registry management,
@@ -17,7 +17,7 @@ visibility: open
 tier: certified
 pricing: null
 bundled: true
-tagline: "Ten operators, 31 skills — the platform foundation bundled with every install"
+tagline: "Ten operators, 35 skills — the platform foundation bundled with every install"
 # v3.6.0 said 31 skills (off by one — actual count was 30); v3.7.0 makes 31 the truthful number with the wiki-maintain-distil addition (DD-218). Closes DD-214-followups row #9.
 # v3.8.0 (DD-222 Phase C) — palette expansion 6→10 operators: home-operator, bizops-operator, review-operator, memory-operator added. Personas only; bootstrap skills follow in 3.8.1 (DD-222 Phase D).
 
@@ -1175,6 +1175,140 @@ skills:
       1. Confirm pack name with the user
       2. DELETE /registry/packs/{name} on the local daemon
       3. Report: pack name, removal status
+
+  # DD-222 Phase D — bootstrap skills for the four operators added in 3.8.0.
+  # Each demonstrates the operator's persona and exercises its primary
+  # service-contract footprint. Additional skills follow in subsequent
+  # pack-spec releases as concrete needs emerge.
+
+  - name: home-state-summary
+    agent: home-operator
+    description: Narrate current Home Assistant device state, anomalies, and recent automation fires
+    tier: standard
+    category: report
+    services_used:
+      - service: home
+        operations: [read]
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      Produce a narrative summary of the home's current state via Home Assistant.
+
+      Steps:
+      1. Query Home Assistant for current entity states (lights, climate,
+         sensors, locks, presence detectors).
+      2. Identify anomalies: lights on in unoccupied rooms, climate set
+         outside target band, doors/windows reporting open, batteries low.
+      3. List recent automation fires (last 12h) with outcome.
+      4. Write a narrative to spaces/Family Living/Areas/<area>/home-state-{date}.md
+         with sections: At a glance, Anomalies, Recent automations, Suggested
+         attention.
+      5. Read-only — never invoke services to change physical state. If you
+         identify a desirable change (e.g. arm an alarm), surface it as a
+         suggestion in the note for human action.
+
+  - name: expense-triage
+    agent: bizops-operator
+    description: Classify expense receipts and bill notifications by category and cost centre
+    tier: fast
+    category: triage
+    services_used:
+      - service: vault
+        operations: [read, search, append]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      Triage expense receipts and bill notifications captured in the inbox.
+
+      Steps:
+      1. Search +/ingest/ and +/triage/ for items with money-related domains:
+         personal-services, trustee-corporate, funds-investment, family,
+         home, school-education, or any property-* domain.
+      2. For each item, extract amount, currency, vendor, date, and any
+         visible cost centre signal (entity name, payment account).
+      3. Classify cost centre by domain: family expenses → Family Living;
+         entity-billed → Family Office; school fees → school-education.
+      4. Append a structured triage line to spaces/Family Office/Areas/
+         Funds Management/expense-triage-{YYYY-WW}.md:
+         | date | vendor | amount | classified-domain | confidence | source-note |
+      5. Always cite the source note. Decline classification rather than
+         guess when the entity-billed signal is ambiguous; flag the item
+         with low confidence and continue.
+
+  - name: pr-review-summary
+    agent: review-operator
+    description: Review a pull request diff with risk callouts and missing-coverage flags
+    tier: reasoning
+    category: review
+    services_used:
+      - service: vault
+        operations: [read, create]
+    trigger:
+      on_demand: true
+    graph: react
+    prompt: |
+      Review a pull request diff. The PR target (repo + number, or local diff
+      file path) is supplied in the dispatch arguments.
+
+      Steps:
+      1. Fetch the diff and PR metadata (title, description, branch, files
+         changed, commit messages).
+      2. For each file in the diff, identify concrete issues with
+         file:line citations. Prioritise:
+           - Logic errors and untested edge cases
+           - Security implications (input validation, auth, secrets)
+           - API/contract drift not reflected in tests or docs
+           - Naming and intent mismatch (function does what its name does not say)
+         Skip stylistic nitpicks unless they have functional impact.
+      3. Identify what is NOT in the diff that should be: missing tests for
+         new behaviour, missing docs for new public API, missing changelog
+         entry for behavioural changes.
+      4. Write the review to atlas/utilities/agent-ledgers/detail/PR-<repo>-<n>.md:
+         a one-paragraph summary, then a Findings section with file:line
+         entries, then a Missing-coverage section, then an Affirmative section
+         stating what was checked and is correct.
+      5. If you find nothing wrong, say so explicitly with the list of what
+         you checked. "Looks good" is not a review.
+
+  - name: lens-strengthen-metrics-review
+    agent: memory-operator
+    description: Weekly narrative over DD-206 lens_strengthen_metrics with retention trends and tuning candidates
+    tier: reasoning
+    category: report
+    services_used:
+      - service: vault
+        operations: [read, search, create]
+    trigger:
+      schedule: "0 9 * * MON"
+      on_demand: true
+    graph: react
+    prompt: |
+      Narrate the past week of lens_strengthen_metrics from DD-206 telemetry.
+
+      Steps:
+      1. Read the most recent week of hourly lens_strengthen_metrics entries.
+         Acceptable sources: a vault telemetry note, a CSV at a known path,
+         or the daemon's lens metrics endpoint when available.
+      2. Compute week-on-week deltas for: items strengthened, items decayed,
+         associations created, associations pruned, average decay tier shift.
+      3. Write a narrative to spaces/Systems/Areas/Augmented Intelligence/
+         memory-review-{YYYY-WW}.md with sections: Trends, Domain coverage
+         (per-domain density), Tuning candidates (cite the metric driving
+         each), Open questions for human review.
+      4. NEVER recommend deleting memory directly. Tuning candidates are
+         framed as "propose retirement of items meeting <criterion> after
+         <soak window>" — staged, reversible, with audit trail.
+      5. Domain isolation: if cross-domain density is asymmetric in a way
+         that suggests bleed-through, surface it as an open question, not
+         as a corrective action.
+
+      Insufficient metrics: if fewer than 7 daily metric points are
+      available, write a brief note saying so and listing what was found.
+      Do not narrate trends that don't have a baseline.
 
 guardrails:
   version: "1.0.0"
