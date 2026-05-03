@@ -3,7 +3,7 @@ name: stallari-core
 aliases: [sidereal-core]
 title: "Stallari Core"
 featured: false
-version: "3.6.0"
+version: "3.7.0"
 description: >-
   Core platform operators and infrastructure health — PKM, comms, scheduling,
   security auditing, fleet monitoring, notification delivery, registry management,
@@ -18,6 +18,7 @@ tier: certified
 pricing: null
 bundled: true
 tagline: "Six operators, 31 skills — the platform foundation bundled with every install"
+# v3.6.0 said 31 skills (off by one — actual count was 30); v3.7.0 makes 31 the truthful number with the wiki-maintain-distil addition (DD-218). Closes DD-214-followups row #9.
 
 readme:
   format: markdown
@@ -49,6 +50,9 @@ readme:
       synthesising vault passages with citations (DD-194)
     - **wiki-maintain-lint** — weekly vault health pass surfacing stale
       cards, orphans, dormant efforts, and contradictions (DD-194)
+    - **wiki-maintain-distil** — bootstrap entity structure across legacy
+      PKM corpora (sources/articles, Evernote imports, web-clip
+      collections); HITL via per-batch handoff notes (DD-218)
 
     ### Communications (comms-operator)
     - **email-triage** — scan inbox for messages relevant to active
@@ -93,7 +97,7 @@ highlights:
   - icon: "\U0001F916"
     text: "6 operator agents — PKM, comms, scheduling, security, fleet, and notifications"
   - icon: "\U0001F9E9"
-    text: "31 skills spanning vault ops, knowledge-base wiki-maintain trio, email triage, calendar, secops, fleet health, registry, and delivery"
+    text: "31 skills spanning vault ops, knowledge-base wiki-maintain quartet (enrich/query/lint/distil), email triage, calendar, secops, fleet health, registry, and delivery"
   - icon: "\U0001F4E6"
     text: "Bundled — ships with every Stallari installation, zero configuration needed"
   - icon: "\U0001F6E1\uFE0F"
@@ -537,6 +541,170 @@ skills:
          }
          ```
       7. Return the report summary for the briefing card.
+
+  - name: wiki-maintain-distil
+    agent: pkm-operator
+    description: Bootstrap entity structure across a legacy PKM corpus — propose stub cards via per-batch handoff notes (HITL plan-execute, two-mode loop)
+    tier: reasoning  # entity disambiguation across messy legacy text
+    category: ingest
+    services_used:
+      - service: vault
+        operations: [read, search, files, lens_fts, lens_remember, create, append, property_set]
+    trigger:
+      on_demand: true
+    inputs:
+      - key: target_path
+        type: string
+        label: Corpus folder
+        description: >
+          Vault path to the corpus to distil (recursive). Examples:
+          atlas/source/articles, +/notes/legacy-import,
+          spaces/Personal/Areas/Reading. For non-vault corpora
+          (~/Documents/Articles/, Evernote exports, downloaded paper
+          collections), drop the files into +/ingest/ first and let
+          process-inbox file them, then run distil with target_path
+          pointing at wherever they landed.
+        required: true
+      - key: entity_types
+        type: enum_array
+        values: [person, organisation, place, topic, effort]
+        default: [person, organisation]
+        label: Entity types to extract
+        description: >
+          Default `[person, organisation]` (highest signal classes).
+          Add `place`, `topic`, or `effort` opt-in per corpus — `topic`
+          stays opt-in always (every article has 5; topic cards become
+          ontology, not entities). The dropped-by-type counts in the
+          batch report tell you what the corpus actually contains.
+        required: false
+      - key: confidence_threshold
+        type: float
+        default: 0.7
+        min: 0.5
+        max: 0.95
+        label: Confidence threshold
+        description: >
+          Candidates below this are dropped silently. 0.7 is a
+          conservative default; lower if too few candidates surface;
+          higher if too many low-signal items reach the handoff.
+        required: false
+      - key: max_proposals_per_batch
+        type: int
+        default: 20
+        min: 5
+        max: 50
+        label: Candidates per batch
+        description: >
+          Cap on candidates per handoff note — prevents review fatigue
+          on large corpora. A 200-candidate corpus chunks into ~10
+          batches of 20.
+        required: false
+      - key: existing_card_search_root
+        type: string
+        default: atlas/
+        label: Existing-card search root
+        description: >
+          Where to look for already-existing cards before proposing a
+          new one. Defaults to atlas/ (covers atlas/people/,
+          atlas/people/public/, atlas/orgs/). Family-card paths under
+          spaces/People/family/ are always checked regardless and
+          default to `merge` (never auto-create new family cards).
+        required: false
+    graph: plan-execute  # high-blast-radius — creates new vault cards via per-batch handoff
+    briefing:
+      card_id: stallari-core-wiki-distil
+      refresh_interval: 7d
+      priority: 7
+      dismissal: per-version
+    prompt: |
+      Bootstrap entity structure across a legacy PKM corpus.
+
+      v1 surface: per-batch handoff notes in `+/handoff/` (DD-218 v1;
+      migrates to the generalised Classifications page when DD-224 Phase
+      C lands). Two-mode loop — Propose emits a batch + returns; Execute
+      reads a marked-up handoff + writes vault cards.
+
+      Recommended onboarding (for non-vault corpora):
+      distil only operates on vault paths. If your corpus lives outside
+      the vault — `~/Documents/Articles/`, an Evernote export, a
+      downloaded paper collection — first drop the files into `+/ingest/`
+      and let process-inbox file each item (typically as
+      `kind: source/article` or whatever the inbox classifier picks).
+      Then run distil with `target_path` pointing at wherever
+      process-inbox filed them.
+
+      Steps:
+      1. Pre-flight: agentic-timestamp; resolve {{config.target_path}};
+         load progress.json (or initialise); load name_alias_map.
+      2. Mode dispatch: if any unprocessed handoff exists at
+         `+/handoff/distil-<slug>-batch*-*.md` with frontmatter
+         `status: awaiting-review`, run Execute mode on it; else run
+         Propose mode.
+
+      Propose mode:
+      3. Walk {{config.target_path}} files alphabetically by full vault
+         path starting at `last_offset`; cap at
+         {{config.max_proposals_per_batch}} candidates.
+      4. For each source file: read body via {{vault.read}}; LLM extracts
+         entity candidates (name + type + confidence + source-paragraph)
+         where type is in {{config.entity_types}}.
+      5. Drop candidates below {{config.confidence_threshold}};
+         record dropped-by-type counts.
+      6. For each surviving candidate (confidence-descending):
+         a. Check `name_alias_map` first — if present,
+            default_decision: merge with the aliased path.
+         b. Else existing-card check via {{vault.lens_fts}} across
+            {{config.existing_card_search_root}} + the closed list of
+            person-card paths from vault-reference.md §1a.
+         c. Match in `spaces/People/family/` → ALWAYS default merge.
+         d. Else: match → default merge; high-confidence + no match →
+            default accept; mid-confidence + no match → default review.
+      7. Write handoff note to
+         `+/handoff/distil-<slug>-batch<N>-<date>.md` with frontmatter
+         `kind: distil-handoff, status: awaiting-review, ...` and a
+         Markdown table (one row per candidate; `Decision` column
+         pre-populated with `Default` so an unchanged file = "all
+         defaults apply").
+      8. Write distillation report to
+         `atlas/utilities/knowledge-distil/<slug>-<date>.md` (4 body
+         sections including dropped-by-type counts).
+      9. Update progress.json (advance `last_offset`, increment
+         `batch_n`).
+      10. Emit notification envelope:
+          ```json
+          {
+            "notification_title": "Distil batch <N> ready — <slug>",
+            "notification_body": "<N> candidates · <K> accept · <M> merge · <P> review · dropped: place X, topic Y",
+            "notification_priority": 3,
+            "notification_category": "task"
+          }
+          ```
+
+      Execute mode:
+      11. Read the handoff note; parse the Markdown table.
+      12. For each row's `Decision`:
+          - `accept`: create stub card at proposed path with frontmatter
+            (`kind: person|organisation, llm_generated: true,
+            distil_source, distil_batch`); append back-references to
+            sources and to the new card per enrich convention.
+          - `reject`: append `<slug> · <name> · <type>` to
+            `atlas/utilities/knowledge-distil-rejects.md`.
+          - `merge with [[<path>]]`: append source mentions to the
+            existing card; update `name_alias_map[<row_name>] = <path>`.
+          - `rename to <new>`: same as accept but at the renamed path;
+            update `name_alias_map[<row_name>] = <renamed_path>`.
+          - `defer` or empty or `review`: leave row as-is; row stays in
+            the handoff for next batch.
+      13. Privacy gate: never wikilink across mismatched `publish:`
+          boundaries (matches enrich convention).
+      14. Update handoff frontmatter: `status: processed`,
+          `processed_at: <iso>`. Update the matching distillation
+          report's `## Decisions executed` section.
+      15. Index new cards in Lens via {{vault.lens_remember}}.
+      16. Update progress.json counts; persist `name_alias_map`.
+      17. Emit execute notification (counts of accepted/merged/rejected/
+          renamed/deferred).
+      18. Re-enter Propose mode (Step 3) to emit the next batch.
 
   # --- Scheduling operations (scheduling-operator) ---
 
