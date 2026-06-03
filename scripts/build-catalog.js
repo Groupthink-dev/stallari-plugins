@@ -561,6 +561,11 @@ function packToCatalogEntry(pack) {
     organization: pack.organization || null,
     // v1.9: content integrity hash (DD163)
     integrity: { sha256: computeCanonicalDigest(pack) },
+    // DD-350 Phase C: source provenance (commit pin) for runtime tarball
+    // install. Without this the harness falls back to integrity.sha256 as a
+    // commit stand-in and fetches a non-existent integrity-hash-keyed R2 key
+    // → sidecar-missing on every runtime pack install.
+    source: pack.source || null,
   };
 }
 
