@@ -6,7 +6,8 @@
  *
  * Reads:   schemas/contracts/*.json
  *          data/agents.yaml
- *          plugins/packs/*.yaml
+ *          canonical stallari-packs/packs/<slug>/ (via lib/canonical-packs.js,
+ *          DD-346 Phase E single-source — pinned by PACKS_SHA)
  * Writes:  worker/src/prompts/generated/service-vocabulary.ts
  *          worker/src/prompts/generated/ecosystem-vocabulary.ts
  *          worker/src/prompts/generated/declared-services.ts
@@ -15,15 +16,14 @@
  * Usage: node scripts/build-forge-context.js
  */
 
-import { readdir, readFile, mkdir, writeFile, stat } from "node:fs/promises";
+import { readdir, readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parse as parseYAML } from "yaml";
+import { loadCanonicalPacks } from "./lib/canonical-packs.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const CONTRACTS_DIR = join(ROOT, "schemas", "contracts");
 const AGENTS_FILE = join(ROOT, "data", "agents.yaml");
-const PACKS_DIR = join(ROOT, "plugins", "packs");
-const PRIVATE_PACKS_DIR = process.env.PRIVATE_PACKS_DIR || null;
 const WORKER_GEN_DIR = join(ROOT, "worker", "src", "prompts", "generated");
 const SCRIPTS_GEN_DIR = join(ROOT, "scripts", "generated");
 
@@ -172,62 +172,6 @@ async function loadAgents() {
   }
 }
 
-async function loadPacksFromDir(dir) {
-  const packs = [];
-  try {
-    const files = await readdir(dir);
-    for (const file of files.sort()) {
-      if (!file.endsWith(".yaml") && !file.endsWith(".yml")) continue;
-      const raw = await readFile(join(dir, file), "utf-8");
-      const doc = parseYAML(raw);
-      if (!doc?.pack || !doc?.name) continue;
-
-      packs.push(packDocToEntry(doc));
-    }
-  } catch {
-    // Directory not readable — skip silently
-  }
-  return packs;
-}
-
-/**
- * Read pre-sealed pack artifacts from a directory structured as:
- *   {dir}/{slug}/{version}/manifest.json
- *
- * Sealed manifests have prompts replaced with "[sealed]" but all metadata
- * (name, description, skills list, services, etc.) is preserved.
- */
-async function loadSealedPacksFromDir(dir) {
-  const packs = [];
-  try {
-    const slugs = await readdir(dir);
-    for (const slug of slugs.sort()) {
-      const slugDir = join(dir, slug);
-      const slugStat = await stat(slugDir).catch(() => null);
-      if (!slugStat?.isDirectory()) continue;
-
-      const versions = await readdir(slugDir);
-      for (const version of versions.sort()) {
-        const packDir = join(slugDir, version);
-        const versionStat = await stat(packDir).catch(() => null);
-        if (!versionStat?.isDirectory()) continue;
-
-        try {
-          const raw = await readFile(join(packDir, "manifest.json"), "utf-8");
-          const doc = JSON.parse(raw);
-          if (!doc?.name) continue;
-          packs.push(packDocToEntry(doc));
-        } catch {
-          continue;
-        }
-      }
-    }
-  } catch {
-    // Directory not readable — skip silently
-  }
-  return packs;
-}
-
 /** Extract a forge-vocabulary pack entry from a pack document (YAML or sealed manifest). */
 function packDocToEntry(doc) {
   const skills = Array.isArray(doc.skills) ? doc.skills : [];
@@ -255,15 +199,9 @@ function packDocToEntry(doc) {
 }
 
 async function loadPacks() {
-  const packs = await loadPacksFromDir(PACKS_DIR);
-  if (PRIVATE_PACKS_DIR) {
-    const sealedPacks = await loadSealedPacksFromDir(PRIVATE_PACKS_DIR);
-    if (sealedPacks.length > 0) {
-      console.log(`  Loaded ${sealedPacks.length} pre-sealed pack(s) from PRIVATE_PACKS_DIR`);
-    }
-    packs.push(...sealedPacks);
-  }
-  return packs;
+  // DD-346 Phase E: single-sourced from canonical stallari-packs at the pin.
+  const packs = await loadCanonicalPacks(ROOT);
+  return packs.map(({ manifest }) => packDocToEntry(manifest));
 }
 
 /** Extract service names from a pack manifest (requires or recommends). */

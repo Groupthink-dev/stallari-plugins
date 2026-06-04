@@ -1,8 +1,12 @@
 .PHONY: sync-pack-spec validate validate-packs scan-packs validate-all validate-manifests build-api generate contracts test clean
 
-# Optional: path to sealed pack YAMLs (private repo).
-# Set PRIVATE_PACKS_DIR to include sealed packs in the build.
-# Example: PRIVATE_PACKS_DIR=../stallari-packs-private/packs make build-api
+# DD-346 Phase E — single-source pack content.
+# The catalog is a projection of canonical stallari-packs at the SHA pinned in
+# ./PACKS_SHA. STALLARI_PACKS_DIR points at the checkout (default ../stallari-packs);
+# STRICT_PACKS_PIN=1 hard-fails the build if the checkout HEAD != PACKS_SHA.
+# Sealed packs (e.g. stallari-private-cloud) now live inside stallari-packs too,
+# so PRIVATE_PACKS_DIR is no longer consumed by the build (kept for back-compat).
+STALLARI_PACKS_DIR ?= ../stallari-packs
 PRIVATE_PACKS_DIR ?=
 
 # Sibling path to the pack-spec source of truth.
@@ -46,7 +50,7 @@ validate:
 
 # Generate context files from service contracts.
 generate:
-	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/build-forge-context.js
+	@STALLARI_PACKS_DIR=$(STALLARI_PACKS_DIR) STRICT_PACKS_PIN=$(STRICT_PACKS_PIN) node scripts/build-forge-context.js
 
 # Validate all pack YAML manifests against Pack Spec.
 # Requires: node >= 22, npm ci (for yaml parser)
@@ -92,7 +96,7 @@ contracts:
 # Build catalog from plugins/ and packs/.
 # Requires: node >= 22, npm ci (for yaml parser)
 build-api: sync-pack-spec generate
-	@PRIVATE_PACKS_DIR=$(PRIVATE_PACKS_DIR) node scripts/build-catalog.js
+	@STALLARI_PACKS_DIR=$(STALLARI_PACKS_DIR) STRICT_PACKS_PIN=$(STRICT_PACKS_PIN) node scripts/build-catalog.js
 
 # Run build-script tests (node:test). Sync first so the fixture corpus
 # runner has access to pack-spec's valid/invalid YAML fixtures.

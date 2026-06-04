@@ -1,24 +1,26 @@
 #!/usr/bin/env node
 /**
- * Build catalog — transforms plugins/*.json and packs/*.yaml into the
- * CatalogResponse format expected by the Stallari app's RegistryClient.
+ * Build catalog — transforms plugins/tools/*.json + canonical stallari-packs
+ * into the CatalogResponse format expected by the Stallari app's RegistryClient.
  *
- * Reads:  plugins/tools/*.json, plugins/packs/*.yaml
- * Writes: dist/catalog.json, dist/services.json, dist/packs/<slug>/<version>/manifest.json
+ * Reads:  plugins/tools/*.json (tool/MCP catalog), and — via lib/canonical-packs.js
+ *         — <STALLARI_PACKS_DIR|../stallari-packs>/packs/<slug>/ at the SHA pinned
+ *         in PACKS_SHA (DD-346 Phase E single-source; the former inlined
+ *         plugins/packs/*.yaml copies are retired).
+ * Writes: dist/catalog.json, dist/services.json, dist/pack-details.json,
+ *         dist/packs/<slug>/<version>/manifest.json
  *
- * Usage: node scripts/build-catalog.js
+ * Usage: node scripts/build-catalog.js   (set STRICT_PACKS_PIN=1 to hard-fail on pin drift)
  */
 
 import { createHash } from "node:crypto";
-import { readdir, readFile, mkdir, writeFile, copyFile, stat } from "node:fs/promises";
-import { join, resolve, basename, extname } from "node:path";
-import { parse as parseYaml } from "yaml";
+import { readdir, readFile, mkdir, writeFile, copyFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import { loadCanonicalPacks } from "./lib/canonical-packs.js";
 const ROOT = resolve(import.meta.dirname, "..");
 const TOOLS_DIR = join(ROOT, "plugins", "tools");
-const PACKS_DIR = join(ROOT, "plugins", "packs");
-const PRIVATE_PACKS_DIR = process.env.PRIVATE_PACKS_DIR || null;
 const DATA_DIR = join(ROOT, "data");
 const DIST_DIR = join(ROOT, "dist");
 
@@ -497,7 +499,11 @@ function packToCatalogEntry(pack) {
   ).length;
 
   const packTier = pack.tier || "community";
-  const { author_type, readiness } = resolveCertification({ ...pack, tier: packTier });
+  const { author_type, readiness: derivedReadiness } = resolveCertification({ ...pack, tier: packTier });
+  // DD-346 Phase E: respect canonical's explicitly-declared two-axis readiness
+  // (e.g. `readiness: alpha` on stub packs, `beta` on in-flight packs). The
+  // tier-derived fallback only applies when the pack omits `readiness:`.
+  const readiness = pack.readiness || derivedReadiness;
 
   return {
     name: pack.name,
@@ -684,98 +690,6 @@ function buildServices(entries) {
   );
 }
 
-/** Read YAML files from a single directory, returning parsed packs */
-async function loadPacksFromDir(dir) {
-  let files;
-  try {
-    files = (await readdir(dir)).filter(
-      (f) => f.endsWith(".yaml") || f.endsWith(".yml"),
-    );
-  } catch {
-    return [];
-  }
-
-  files.sort();
-  const packs = [];
-
-  for (const file of files) {
-    const content = await readFile(join(dir, file), "utf-8");
-    const pack = parseYaml(content);
-
-    if (!pack.pack || !pack.name || !pack.version || !pack.skills) {
-      console.warn(
-        `  ⚠ Skipping ${file}: missing required fields (pack, name, version, skills)`,
-      );
-      continue;
-    }
-
-    packs.push({ manifest: pack, filename: file, sealed: false });
-  }
-
-  return packs;
-}
-
-/**
- * Read pre-sealed pack artifacts from a directory structured as:
- *   {dir}/{slug}/{version}/manifest.json
- *
- * Sealing happens client-side — the registry receives pre-sealed artifacts.
- * This function reads the sealed manifests for catalog entry generation.
- */
-async function loadSealedPacksFromDir(dir) {
-  let slugs;
-  try {
-    slugs = await readdir(dir);
-  } catch {
-    return [];
-  }
-
-  const packs = [];
-
-  for (const slug of slugs.sort()) {
-    const slugDir = join(dir, slug);
-    const slugStat = await stat(slugDir).catch(() => null);
-    if (!slugStat?.isDirectory()) continue;
-
-    const versions = await readdir(slugDir);
-    for (const version of versions.sort()) {
-      const packDir = join(slugDir, version);
-      const versionStat = await stat(packDir).catch(() => null);
-      if (!versionStat?.isDirectory()) continue;
-
-      const manifestPath = join(packDir, "manifest.json");
-      let manifest;
-      try {
-        manifest = JSON.parse(await readFile(manifestPath, "utf-8"));
-      } catch {
-        continue;
-      }
-
-      if (!manifest.name || !manifest.version) {
-        console.warn(`  ⚠ Skipping ${slug}/${version}: missing name or version`);
-        continue;
-      }
-
-      packs.push({ manifest, filename: null, sealed: true, sourceDir: packDir });
-    }
-  }
-
-  return packs;
-}
-
-/** Read and validate packs from primary dir + optional PRIVATE_PACKS_DIR */
-async function loadPacks() {
-  const packs = await loadPacksFromDir(PACKS_DIR);
-  if (PRIVATE_PACKS_DIR) {
-    const sealedPacks = await loadSealedPacksFromDir(PRIVATE_PACKS_DIR);
-    if (sealedPacks.length > 0) {
-      console.log(`  Loaded ${sealedPacks.length} pre-sealed pack(s) from PRIVATE_PACKS_DIR`);
-    }
-    packs.push(...sealedPacks);
-  }
-  return packs;
-}
-
 async function main() {
   // Read all plugin JSON files
   const pluginFiles = (await readdir(TOOLS_DIR)).filter((f) =>
@@ -834,8 +748,8 @@ async function main() {
     entries.push(pluginToCatalogEntry(raw));
   }
 
-  // Packs
-  const packs = await loadPacks();
+  // Packs — single-sourced from canonical stallari-packs at the pinned SHA.
+  const packs = await loadCanonicalPacks(ROOT);
   for (const { manifest } of packs) {
     entries.push(packToCatalogEntry(manifest));
   }
@@ -891,16 +805,18 @@ async function main() {
     JSON.stringify(addOnsResponse, null, 2) + "\n",
   );
 
-  // Build pack-details.json — skill/agent/workflow summaries for web marketplace
+  // Build pack-details.json — skill/agent/workflow summaries for web marketplace.
+  // Skills use the import-resolved display rows (name + description pulled from
+  // each SKILL.md frontmatter) so import-form packs surface real skill metadata.
   const packDetails = {};
-  for (const { manifest } of packs) {
+  for (const { manifest, displaySkills } of packs) {
     const agents = manifest.agents
       ? Object.entries(manifest.agents).map(([name, a]) => ({
           name,
           role: a.role,
         }))
       : [];
-    const skills = (manifest.skills || []).map((s) => ({
+    const skills = (displaySkills || []).map((s) => ({
       name: s.name,
       description: s.description,
       agent: s.agent || null,
@@ -932,14 +848,19 @@ async function main() {
   // Open packs: write manifest from YAML data.
   // Sealed packs: copy pre-sealed artifacts (manifest.json + payload.enc + seal-key.hex).
   // Sealing is a client-side operation — CI never encrypts.
-  for (const { manifest, sealed, sourceDir } of packs) {
+  for (const { manifest, sealed, sourceDir, sealedManifestFilename } of packs) {
     const slug = slugify(manifest.name);
     const packDir = join(DIST_DIR, "packs", slug, manifest.version);
     await mkdir(packDir, { recursive: true });
 
     if (sealed && sourceDir) {
-      // Copy pre-sealed artifacts as-is
-      await copyFile(join(sourceDir, "manifest.json"), join(packDir, "manifest.json"));
+      // Copy pre-sealed artifacts verbatim — re-stringifying the manifest would
+      // reorder keys and break seal_metadata.descriptor_hash. The canonical
+      // sealed manifest is the pack.yaml (JSON) in stallari-packs.
+      await copyFile(
+        join(sourceDir, sealedManifestFilename || "manifest.json"),
+        join(packDir, "manifest.json"),
+      );
       const sealFiles = ["payload.enc", "seal-key.hex", "inspection.json"];
       for (const f of sealFiles) {
         try {
