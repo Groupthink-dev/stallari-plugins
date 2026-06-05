@@ -9,7 +9,7 @@
   "icon": "/icons/tailscale-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "overlay-network-v1",
   "repository": "https://github.com/groupthink-dev/tailscale-blade-mcp",
   "multi_instance": true,

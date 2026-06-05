@@ -12,7 +12,7 @@
   "icon": "/icons/apple-mail-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "mail-v1",
   "repository": "https://github.com/Groupthink-dev/apple-mail-blade-mcp",
   "multi_instance": false,

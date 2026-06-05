@@ -9,7 +9,7 @@
   "icon": "/icons/fastmail-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "email-v1",
   "repository": "https://github.com/groupthink-dev/fastmail-blade-mcp",
   "highlights": [

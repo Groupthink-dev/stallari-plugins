@@ -9,7 +9,7 @@
   "icon": "/icons/aussiebb-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "isp-v1",
   "repository": "https://github.com/groupthink-dev/aussiebb-blade-mcp",
   "multi_instance": true,

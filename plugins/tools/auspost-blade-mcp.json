@@ -8,7 +8,7 @@
   "icon": "/icons/auspost-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "logistics-v1",
   "tagline": "Postage rates, parcel tracking, and shipping labels",
   "highlights": [

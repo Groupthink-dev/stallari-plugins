@@ -8,7 +8,7 @@
   "icon": "/icons/xero-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "accounting-v1",
   "tagline": "Xero accounting and AU payroll in your AI workflow",
   "highlights": [

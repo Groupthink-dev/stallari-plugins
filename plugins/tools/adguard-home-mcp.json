@@ -9,7 +9,7 @@
   "icon": "/icons/adguard-home-mcp.svg",
   "tier": "verified",
   "author_type": "community",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "protective-dns-v1",
   "homepage": "https://github.com/Samik081/mcp-adguard-home",
   "repository": "https://github.com/Samik081/mcp-adguard-home",

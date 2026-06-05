@@ -10,7 +10,7 @@
   "contract": "notifications-push-v1",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "repository": "https://github.com/groupthink-dev/ntfy-blade-mcp",
   "install": {
     "runtime": "uv",

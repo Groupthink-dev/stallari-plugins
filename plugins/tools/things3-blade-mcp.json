@@ -9,7 +9,7 @@
   "icon": "/icons/things3-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "tasks-v1",
   "repository": "https://github.com/groupthink-dev/things3-blade-mcp",
   "install": {

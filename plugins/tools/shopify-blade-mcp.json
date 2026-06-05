@@ -9,7 +9,7 @@
   "icon": "/icons/shopify-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "ecommerce-v1",
   "repository": "https://github.com/groupthink-dev/shopify-blade-mcp",
   "install": {

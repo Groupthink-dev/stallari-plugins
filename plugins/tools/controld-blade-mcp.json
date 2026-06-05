@@ -9,7 +9,7 @@
   "icon": "/icons/controld-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "protective-dns-v1",
   "homepage": "https://github.com/Groupthink-dev/controld-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/controld-blade-mcp",

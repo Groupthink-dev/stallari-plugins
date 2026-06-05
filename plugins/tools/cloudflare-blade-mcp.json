@@ -9,7 +9,7 @@
   "icon": "/icons/cloudflare-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": [
     "dns-authoritative-v1",
     "object-storage-v1",

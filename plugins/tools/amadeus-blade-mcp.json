@@ -9,7 +9,7 @@
   "icon": "/icons/amadeus-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "homepage": "https://github.com/Groupthink-dev/amadeus-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/amadeus-blade-mcp",
   "contract": "travel-v1",

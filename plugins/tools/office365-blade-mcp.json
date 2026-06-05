@@ -9,7 +9,7 @@
   "icon": "/icons/office365-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": [
     "email-v1",
     "calendar-v1",

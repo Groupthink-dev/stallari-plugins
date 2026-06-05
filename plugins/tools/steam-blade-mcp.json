@@ -9,7 +9,7 @@
   "icon": "/icons/steam-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "gaming-v1",
   "homepage": "https://github.com/Groupthink-dev/steam-blade-mcp",
   "repository": "https://github.com/Groupthink-dev/steam-blade-mcp",

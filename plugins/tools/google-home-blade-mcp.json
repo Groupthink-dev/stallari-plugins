@@ -9,7 +9,7 @@
   "icon": "/icons/google-home-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "home-v1",
   "repository": "https://github.com/groupthink-dev/google-home-blade-mcp",
   "highlights": [
