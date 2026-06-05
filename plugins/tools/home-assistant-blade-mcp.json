@@ -3,7 +3,7 @@
   "title": "Home Assistant",
   "description": "Home Assistant operations \u2014 entities, state, history, device control, automations, energy, multi-site management",
   "tagline": "Multi-site Home Assistant control with write gating",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/home-assistant-blade-mcp.svg",
