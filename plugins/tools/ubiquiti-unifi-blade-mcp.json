@@ -3,13 +3,13 @@
   "title": "Ubiquiti UniFi",
   "description": "Ubiquiti UniFi network monitoring and security — device health, client visibility, firewall policies, traffic routes, DPI restrictions, and port forwards",
   "tagline": "Monitor and secure your UniFi network — devices, clients, firewalls, and traffic",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/ubiquiti-unifi-blade-mcp.svg",
   "tier": "certified",
   "author_type": "first-party",
-  "readiness": "production",
+  "readiness": "beta",
   "contract": "network-v1",
   "repository": "https://github.com/groupthink-dev/ubiquiti-unifi-blade-mcp",
   "multi_instance": true,
@@ -57,7 +57,7 @@
       "url": "https://github.com/sirkirby/unifi-mcp"
     }
   ],
-  "readme": "### What it does\n\nGives your AI agent structured access to Ubiquiti UniFi network controllers. Monitor device health, track connected clients, inspect firewall policies, review traffic routes, and manage WLANs — all through 18 focused MCP tools with token-efficient output.\n\nBuilt on [aiounifi](https://github.com/Kane610/aiounifi) (MIT, powers the Home Assistant integration), which handles UniFi OS vs classic controller detection, cookie-based auth with CSRF tokens, and TOTP 2FA.\n\n### How it differs from other UniFi MCPs\n\n| | This plugin | sirkirby/unifi-mcp | enuno/unifi-mcp-server |\n|---|---|---|---|\n| Focus | Monitoring + security (18 tools) | Full management (161 tools) | Full management (74 tools) |\n| Design for | LLM agents (token-efficient) | Claude Code (lazy loading) | General MCP clients |\n| Multi-controller | Native (env var config) | Single controller | Multi-mode (local/cloud) |\n| Write safety | Dual-gated (env + confirm) | Preview-then-confirm | Permission model |\n| 2FA support | TOTP via aiounifi | TOTP support | API key option |\n| Output | Pipe-delimited, compact | Full JSON | Full JSON |\n\nUse this plugin for agent-driven monitoring and security visibility. Use sirkirby/unifi-mcp (available as community listing) when you need full network configuration management.\n\n### Multi-instance support\n\nDesigned for multi-instance deployment. Each instance authenticates independently with its own controller credentials. Use cases:\n\n- **Home + office** — separate UniFi controllers at different sites\n- **Property portfolio** — different networks at different addresses\n- **MSP** — manage multiple customer networks\n\nWithin a single instance, `UNIFI_CONTROLLERS=home,office` supports multiple controllers with independent sessions.\n\n### Token efficiency\n\nThe UniFi API returns verbose JSON with deeply nested objects. This plugin reformats everything into compact, pipe-delimited output:\n\n- Device listing: ~50 tokens per device (vs ~800 raw)\n- Client listing: ~40 tokens per client with signal, experience, blocked status\n- Firewall policies: ~30 tokens per policy\n\n### Safety model\n\nRead tools work immediately — devices, clients, firewall, traffic routes, DPI, port forwards.\n\nWrite operations require `UNIFI_WRITE_ENABLED=true` (environment variable, set in plugin config). Destructive operations additionally require `confirm=true` per-call:\n\n| Operation | Gate |\n|-----------|------|\n| Block client | write + confirm |\n| Unblock client | write |\n| Reconnect client | write |\n| Toggle WLAN | write |\n| Toggle traffic route | write |\n| Restart device | write + confirm |\n\n### Authentication\n\nUses UniFi controller local admin credentials (username + password). Supports both UniFi OS (port 443) and classic controllers (port 8443). TOTP 2FA supported via base32-encoded secret. SSL verification configurable (disabled by default for self-signed certificates common on UDM hardware).\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| unifi_info | read | Health check — controller version, hostname, device/client counts, write gate |\n| unifi_sites | read | List sites on the controller |\n| unifi_devices | read | APs, switches, gateways — model, state, clients, uptime, firmware |\n| unifi_device | read | Full detail — port table with PoE, firmware, upgrade status |\n| unifi_clients | read | Connected clients — name, IP, SSID, signal, experience, blocked |\n| unifi_client | read | Full detail — TX/RX, vendor (OUI), AP association |\n| unifi_wlans | read | WLANs — name, enabled/disabled, security, guest flag |\n| unifi_firewall | read | Firewall policies — name, action, enabled/disabled |\n| unifi_traffic_routes | read | Traffic routes — description, enabled/disabled, target |\n| unifi_traffic_rules | read | Traffic rules — description, action, enabled/disabled |\n| unifi_port_forwards | read | Port forwards — name, protocol, external → internal |\n| unifi_dpi | read | DPI restriction groups and apps |\n| unifi_block_client | gated | Block a client from the network (write + confirm) |\n| unifi_unblock_client | gated | Unblock a previously blocked client |\n| unifi_reconnect_client | gated | Force a wireless client to reconnect |\n| unifi_toggle_wlan | gated | Enable or disable an SSID |\n| unifi_toggle_traffic_route | gated | Enable or disable a traffic route |\n| unifi_restart_device | gated | Restart an AP, switch, or gateway (write + confirm) |",
+  "readme": "### What it does\n\nGives your AI agent structured access to Ubiquiti UniFi network controllers. Monitor device health, track connected clients, inspect firewall policies, review traffic routes, and manage WLANs — all through 18 focused MCP tools with token-efficient output.\n\nBuilt on [aiounifi](https://github.com/Kane610/aiounifi) (MIT, powers the Home Assistant integration), which handles UniFi OS vs classic controller detection, cookie-based auth with CSRF tokens, and TOTP 2FA.\n\n### How it differs from other UniFi MCPs\n\n| | This plugin | sirkirby/unifi-mcp | enuno/unifi-mcp-server |\n|---|---|---|---|\n| Focus | Monitoring + security (18 tools) | Full management (161 tools) | Full management (74 tools) |\n| Design for | LLM agents (token-efficient) | Claude Code (lazy loading) | General MCP clients |\n| Multi-controller | Native (env var config) | Single controller | Multi-mode (local/cloud) |\n| Write safety | Dual-gated (env + confirm) | Preview-then-confirm | Permission model |\n| 2FA support | TOTP via aiounifi | TOTP support | API key option |\n| Output | Pipe-delimited, compact | Full JSON | Full JSON |\n\nUse this plugin for agent-driven monitoring and security visibility. Use sirkirby/unifi-mcp (available as community listing) when you need full network configuration management.\n\n### Multi-instance support\n\nDesigned for multi-instance deployment. Each instance authenticates independently with its own controller credentials. Use cases:\n\n- **Home + office** — separate UniFi controllers at different sites\n- **Property portfolio** — different networks at different addresses\n- **MSP** — manage multiple customer networks\n\nWithin a single instance, `UNIFI_CONTROLLERS=home,office` supports multiple controllers with independent sessions.\n\n### Token efficiency\n\nThe UniFi API returns verbose JSON with deeply nested objects. This plugin reformats everything into compact, pipe-delimited output:\n\n- Device listing: ~50 tokens per device (vs ~800 raw)\n- Client listing: ~40 tokens per client with signal, experience, blocked status\n- Firewall policies: ~30 tokens per policy\n\n### Safety model\n\nRead tools work immediately — devices, clients, firewall, traffic routes, DPI, port forwards.\n\nWrite operations require `UNIFI_WRITE_ENABLED=true` (environment variable, set in plugin config). Destructive operations additionally require `confirm=true` per-call:\n\n| Operation | Gate |\n|-----------|------|\n| Block client | write + confirm |\n| Unblock client | write |\n| Reconnect client | write |\n| Toggle WLAN | write |\n| Toggle traffic route | write |\n| Restart device | write + confirm |\n\n### Authentication\n\nTwo auth modes map to two endpoint families. Provide at least one; provide both for full tool coverage.\n\n| Mode | Credential | Endpoint family | Tools reached | Notes |\n|---|---|---|---|---|\n| **API key** (recommended) | `UNIFI_API_KEY` | Integration API (`/proxy/network/integration/v1/…`) | Network/VLAN tools (`unifi_networks`, `unifi_network`, VLAN create) | Official, Ubiquiti-supported, stateless. Generate at Control Plane → Settings → Admins → API Key. |\n| **Session** | `UNIFI_USERNAME` + `UNIFI_PASSWORD` | Legacy controller API (`/api/s/…`) via aiounifi | Monitoring tools (devices, clients, WLANs, firewall, traffic rules/routes, port forwards, DPI, info, sites) | Unofficial private API. Local admin account only — **not** a UI.com SSO login. Cookie/CSRF session; TOTP 2FA via `UNIFI_TOTP_SECRET` (base32). |\n\n**API-key-only** is the simplest config and covers network configuration. Add username+password to also reach the monitoring tools — calling a session-only tool with just an API key returns a clear capability-gap error, not a crash. Supports both UniFi OS (port 443) and classic controllers (port 8443); SSL verification configurable (disabled by default for self-signed certs common on UDM hardware).\n\nThe tool reference below lists the session-auth monitoring tools. The network/VLAN tools reached by API-key mode are documented in the [repository README](https://github.com/groupthink-dev/ubiquiti-unifi-blade-mcp).\n\n### Tool reference\n\n| Tool | Type | What it does |\n|------|------|--------------|\n| unifi_info | read | Health check — controller version, hostname, device/client counts, write gate |\n| unifi_sites | read | List sites on the controller |\n| unifi_devices | read | APs, switches, gateways — model, state, clients, uptime, firmware |\n| unifi_device | read | Full detail — port table with PoE, firmware, upgrade status |\n| unifi_clients | read | Connected clients — name, IP, SSID, signal, experience, blocked |\n| unifi_client | read | Full detail — TX/RX, vendor (OUI), AP association |\n| unifi_wlans | read | WLANs — name, enabled/disabled, security, guest flag |\n| unifi_firewall | read | Firewall policies — name, action, enabled/disabled |\n| unifi_traffic_routes | read | Traffic routes — description, enabled/disabled, target |\n| unifi_traffic_rules | read | Traffic rules — description, action, enabled/disabled |\n| unifi_port_forwards | read | Port forwards — name, protocol, external → internal |\n| unifi_dpi | read | DPI restriction groups and apps |\n| unifi_block_client | gated | Block a client from the network (write + confirm) |\n| unifi_unblock_client | gated | Unblock a previously blocked client |\n| unifi_reconnect_client | gated | Force a wireless client to reconnect |\n| unifi_toggle_wlan | gated | Enable or disable an SSID |\n| unifi_toggle_traffic_route | gated | Enable or disable a traffic route |\n| unifi_restart_device | gated | Restart an AP, switch, or gateway (write + confirm) |",
   "install": {
     "runtime": "uv",
     "package": "ubiquiti-unifi-blade-mcp"
@@ -68,12 +68,17 @@
       "description": "UniFi controller IP or hostname"
     },
     {
+      "name": "UNIFI_API_KEY",
+      "description": "Integration API key (Control Plane → Settings → Admins → API Key). Drives the official stateless Integration API — network/VLAN tools. Use INSTEAD OF username+password, or alongside for full tool coverage.",
+      "secret": true
+    },
+    {
       "name": "UNIFI_USERNAME",
-      "description": "Controller admin username"
+      "description": "Controller admin username (session auth). Drives the legacy /api/s/ controller API — monitoring tools (devices, clients, firewall, WLANs). Pair with UNIFI_PASSWORD."
     },
     {
       "name": "UNIFI_PASSWORD",
-      "description": "Controller admin password",
+      "description": "Controller admin password (session auth — pairs with UNIFI_USERNAME)",
       "secret": true
     },
     {
@@ -108,7 +113,7 @@
     "icon": "wifi.router",
     "product": "Ubiquiti UniFi",
     "blurb": "Monitor your UniFi network — device health, connected clients, firewall policies, traffic routes, and DPI restrictions. Multi-controller support for home and office.",
-    "help_text": "Enter your UniFi controller credentials. These are the local admin username and password for your UDM, UDR, or Cloud Key. For 2FA-enabled accounts, provide the TOTP secret (base32).",
+    "help_text": "Two authentication modes — provide at least one (both for full tool coverage):\n\n• API key (recommended): an Integration API key from Control Plane → Settings → Admins → API Key. Drives the official, Ubiquiti-supported Integration API — the network/VLAN tools (unifi_networks, unifi_network). Stateless, no session.\n\n• Username + password: a LOCAL controller admin account (not a UI.com SSO login). Drives the legacy session API — the monitoring tools (devices, clients, firewall, WLANs, traffic rules/routes, port forwards, DPI, info). Add the TOTP secret if the account has 2FA.\n\nAPI-key-only is the simplest setup and covers network configuration; add username+password to also reach the monitoring tools.",
     "fields": [
       {
         "key": "UNIFI_HOST",
@@ -119,20 +124,36 @@
         "help": "IP or hostname of the UniFi controller (UDM, UDM-Pro, Cloud Key, or self-hosted Network app)."
       },
       {
+        "key": "UNIFI_API_KEY",
+        "label": "API Key",
+        "secret": true,
+        "placeholder": "Integration API key",
+        "required": false,
+        "help": "Integration API key (Control Plane → Settings → Admins → API Key). Unlocks the network/VLAN tools via the official stateless Integration API. Recommended — use alone, or alongside username+password for full coverage."
+      },
+      {
         "key": "UNIFI_USERNAME",
-        "label": "Username",
+        "label": "Username (session auth)",
         "secret": false,
         "placeholder": "admin",
-        "required": true,
-        "help": "Local controller account username — not a UI.com SSO account."
+        "required": false,
+        "help": "Local controller account username — not a UI.com SSO account. Required for the monitoring tools (devices, clients, firewall, WLANs). Pair with Password."
       },
       {
         "key": "UNIFI_PASSWORD",
-        "label": "Password",
+        "label": "Password (session auth)",
         "secret": true,
         "placeholder": "Controller password",
-        "required": true,
-        "help": "Password for the local controller account."
+        "required": false,
+        "help": "Password for the local controller account. Required (with Username) for the monitoring tools."
+      },
+      {
+        "key": "UNIFI_TOTP_SECRET",
+        "label": "TOTP secret (2FA, optional)",
+        "secret": true,
+        "placeholder": "base32 secret",
+        "required": false,
+        "help": "Base32-encoded TOTP secret — only if the session-auth account has 2FA enabled."
       },
       {
         "key": "UNIFI_VERIFY_SSL",
@@ -159,7 +180,7 @@
     },
     "prerequisites": [
       "UniFi controller (UDM, UDR, Cloud Key, or self-hosted)",
-      "Local admin account on the controller"
+      "An Integration API key (Settings → Admins → API Key) for network/VLAN tools, and/or a local admin account for the monitoring tools"
     ],
     "help": [
       {
