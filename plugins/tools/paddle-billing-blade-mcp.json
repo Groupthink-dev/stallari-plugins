@@ -3,7 +3,7 @@
   "title": "Paddle Billing",
   "description": "Paddle Billing API operations — billing-v1 (subscription billing, products, prices) + payments-v1 (transactions as one-time payments, adjustments as refunds). Token-efficient with pipe-delimited output, field selection, and human-readable money formatting.",
   "tagline": "Subscriptions, products, and revenue through Paddle",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/paddle-billing-blade-mcp.svg",
