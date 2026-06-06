@@ -193,6 +193,327 @@
       }
     ]
   },
+  "tools": [
+    {
+      "name": "unifi_controllers",
+      "description": "List the UniFi controllers (consoles) this server is configured for",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_info",
+      "description": "Health check: controller version, hostname, site, device count, client count, write gate",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_sites",
+      "description": "List sites on the controller",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_networks",
+      "description": "List networks/VLANs: name, VLAN id, enabled/disabled, purpose, subnet. Requires UNIFI_API_KEY",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_network",
+      "description": "Full detail for a single network/VLAN: VLAN id, subnet, gateway, purpose. Requires UNIFI_API_KEY",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_devices",
+      "description": "List all network devices (APs, switches, gateways) with status, model, clients, uptime, firmware",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_device",
+      "description": "Full detail for a single device: model, firmware, uptime, port table with PoE, client count",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_clients",
+      "description": "List connected clients: name, IP, SSID/wired, signal, experience score, blocked status",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_client",
+      "description": "Full detail for a single client: IP, network, SSID, signal, experience, TX/RX, vendor, AP",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_wlans",
+      "description": "List all WLANs (SSIDs): name, enabled/disabled, security type, guest flag",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_firewall",
+      "description": "Firewall policies: name, enabled/disabled, action, source/destination zones",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_traffic_routes",
+      "description": "Traffic routes: description, enabled/disabled, matching target",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_traffic_rules",
+      "description": "Traffic rules: description, enabled/disabled, action, matching target",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_port_forwards",
+      "description": "Port forwarding rules: name, enabled/disabled, protocol, external → internal mapping",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_dpi",
+      "description": "DPI restriction groups and apps: name, enabled/disabled",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_resource_list",
+      "description": "List items of an Integration-API resource (wifi, firewall_policies, acl_rules, dns_policies, vouchers, …)",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_resource_get",
+      "description": "Full detail for one Integration-API resource item. Requires UNIFI_API_KEY",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_block_client",
+      "description": "Block a client from the network. Requires UNIFI_WRITE_ENABLED=true and confirm=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_unblock_client",
+      "description": "Unblock a previously blocked client. Requires UNIFI_WRITE_ENABLED=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_reconnect_client",
+      "description": "Force a wireless client to reconnect. Requires UNIFI_WRITE_ENABLED=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_toggle_wlan",
+      "description": "Enable or disable a WLAN (SSID). Requires UNIFI_WRITE_ENABLED=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_toggle_traffic_route",
+      "description": "Enable or disable a traffic route. Requires UNIFI_WRITE_ENABLED=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_restart_device",
+      "description": "Restart a network device (AP, switch, gateway). Requires UNIFI_WRITE_ENABLED=true and confirm=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_create_network",
+      "description": "Create a network/VLAN. Requires UNIFI_API_KEY, UNIFI_WRITE_ENABLED=true and confirm=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_update_network",
+      "description": "Update a network/VLAN (only supplied fields, read-merge-write so omitted fields are preserved)",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_delete_network",
+      "description": "Delete a network/VLAN. Requires UNIFI_API_KEY, UNIFI_WRITE_ENABLED=true and confirm=true",
+      "risk_class": "high_risk",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_resource_create",
+      "description": "Create an Integration-API resource item from a raw body",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_resource_update",
+      "description": "Update (PUT) an Integration-API resource item. Requires UNIFI_API_KEY, UNIFI_WRITE_ENABLED=true, confirm=true",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    },
+    {
+      "name": "unifi_resource_delete",
+      "description": "Delete an Integration-API resource item. Requires UNIFI_API_KEY, UNIFI_WRITE_ENABLED=true, confirm=true",
+      "risk_class": "high_risk",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "minimal"
+      }
+    }
+  ],
   "scenarios": [
     {
       "type": "workflow",
