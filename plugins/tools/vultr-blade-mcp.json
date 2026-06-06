@@ -3,13 +3,13 @@
   "title": "Vultr GPU Cloud",
   "description": "Manage Vultr GPU compute infrastructure \u2014 VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualisation-v1, serverless-v1, and dns-authoritative-v1 contracts.",
   "tagline": "GPU compute infrastructure \u2014 VMs, bare metal, inference, DNS, firewall, snapshots, billing",
-  "version": "0.4.0",
+  "version": "0.5.1",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
   "tier": "certified",
   "author_type": "stallari",
-  "readiness": "beta",
+  "readiness": "production",
   "contract": [
     "virtualisation-v1",
     "serverless-v1",
@@ -185,7 +185,7 @@
     {
       "name": "vultr_vm_delete",
       "description": "Delete a VM instance. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -306,7 +306,7 @@
     {
       "name": "vultr_bm_delete",
       "description": "Delete a bare metal instance. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -394,7 +394,7 @@
     {
       "name": "vultr_dns_delete_record",
       "description": "Delete a DNS record. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -438,7 +438,7 @@
     {
       "name": "vultr_fw_delete_group",
       "description": "Delete a firewall group. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -504,7 +504,7 @@
     {
       "name": "vultr_script_delete",
       "description": "Delete a startup script. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -548,7 +548,7 @@
     {
       "name": "vultr_snap_delete",
       "description": "Delete a snapshot. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
@@ -592,7 +592,7 @@
     {
       "name": "vultr_inference_delete",
       "description": "Delete an inference subscription. Destructive \u2014 gated by confirm.",
-      "risk_class": "external_side_effect",
+      "risk_class": "high_risk",
       "granularity": {
         "scope_filtering": "server-side",
         "field_projection": "none",
