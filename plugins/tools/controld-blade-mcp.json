@@ -1,9 +1,9 @@
 {
   "name": "controld-blade-mcp",
-  "title": "Control-D — DNS Filtering & Privacy",
-  "description": "Control-D DNS management — profiles, content filters, service routing, custom rules, device endpoints, and analytics. 22 tools with write gating and credential scrubbing.",
+  "title": "Control-D \u2014 DNS Filtering & Privacy",
+  "description": "Control-D DNS management \u2014 profiles, content filters, service routing, custom rules, device endpoints, and analytics. 22 tools with write gating and credential scrubbing.",
   "tagline": "DNS filtering and privacy from the conversation",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/controld-blade-mcp.svg",
@@ -15,28 +15,28 @@
   "repository": "https://github.com/Groupthink-dev/controld-blade-mcp",
   "highlights": [
     {
-      "icon": "🛡️",
-      "text": "Profiles — create, configure, and clone DNS filtering profiles"
+      "icon": "\ud83d\udee1\ufe0f",
+      "text": "Profiles \u2014 create, configure, and clone DNS filtering profiles"
     },
     {
-      "icon": "🚫",
-      "text": "Filtering — native and external blocklists, per-profile toggle"
+      "icon": "\ud83d\udeab",
+      "text": "Filtering \u2014 native and external blocklists, per-profile toggle"
     },
     {
-      "icon": "🌐",
-      "text": "Services — block, bypass, spoof, or redirect 300+ named services"
+      "icon": "\ud83c\udf10",
+      "text": "Services \u2014 block, bypass, spoof, or redirect 300+ named services"
     },
     {
-      "icon": "📝",
-      "text": "Custom rules — hostname-level DNS rules with folder organisation"
+      "icon": "\ud83d\udcdd",
+      "text": "Custom rules \u2014 hostname-level DNS rules with folder organisation"
     },
     {
-      "icon": "💻",
-      "text": "Devices — endpoint management with per-device profile assignment"
+      "icon": "\ud83d\udcbb",
+      "text": "Devices \u2014 endpoint management with per-device profile assignment"
     },
     {
-      "icon": "🔒",
-      "text": "Write-gated — reads always work, writes require explicit opt-in"
+      "icon": "\ud83d\udd12",
+      "text": "Write-gated \u2014 reads always work, writes require explicit opt-in"
     }
   ],
   "links": [
@@ -53,7 +53,7 @@
       "url": "https://controld.com/dashboard"
     }
   ],
-  "readme": "### What it does\n\nControl-D Blade gives your AI agent full operational control over a Control-D DNS filtering account — the privacy-first DNS service that blocks ads, trackers, malware, and lets you route traffic through global proxies on a per-service basis.\n\n22 tools across 8 categories cover the operational surface: account info, DNS profiles, content filters (native and third-party blocklists), service-level rules (block/bypass/spoof/redirect for 300+ named services), custom hostname rules, device endpoint management, IP access control, and analytics configuration.\n\n### Token efficiency\n\nDNS APIs return deeply nested JSON with metadata fields irrelevant to agent workflows. Each tool includes a concise formatter that extracts only actionable fields — pipe-delimited output at ~20–30 tokens per entity vs 80–120 for raw JSON. The service catalog is cached in-memory (1hr TTL) to avoid redundant API calls.\n\n### Safety model\n\nAll 22 tools follow a read-free, write-gated pattern:\n\n- **Reads** (12 tools) work immediately — list profiles, inspect filters, search rules\n- **Writes** (10 tools) require `CONTROLD_WRITE_ENABLED=true`\n- **Destructive operations** (rule delete, IP deauthorize) require an additional `confirm=true` parameter\n\nCredentials are scrubbed from all error messages before they reach the LLM context.\n\n### Tool inventory\n\n| Category | Read | Write | What you can do |\n|----------|------|-------|-----------------|\n| Info | 3 | — | Account status, caller IP, network PoPs |\n| Profiles | 2 | 2 | List, inspect, create, update DNS profiles |\n| Filters | 1 | 1 | Native + external blocklists, batch toggle |\n| Services | 2 | 1 | Service catalog, active rules, set actions |\n| Rules | 2 | 3 | Custom hostname rules with folders |\n| Devices | 1 | 2 | Endpoints with profile assignment |\n| Access | 1 | 1 | IP authorisation on device endpoints |\n| Analytics | 1 | — | Log levels and storage regions |",
+  "readme": "### What it does\n\nControl-D Blade gives your AI agent full operational control over a Control-D DNS filtering account \u2014 the privacy-first DNS service that blocks ads, trackers, malware, and lets you route traffic through global proxies on a per-service basis.\n\n22 tools across 8 categories cover the operational surface: account info, DNS profiles, content filters (native and third-party blocklists), service-level rules (block/bypass/spoof/redirect for 300+ named services), custom hostname rules, device endpoint management, IP access control, and analytics configuration.\n\n### Token efficiency\n\nDNS APIs return deeply nested JSON with metadata fields irrelevant to agent workflows. Each tool includes a concise formatter that extracts only actionable fields \u2014 pipe-delimited output at ~20\u201330 tokens per entity vs 80\u2013120 for raw JSON. The service catalog is cached in-memory (1hr TTL) to avoid redundant API calls.\n\n### Safety model\n\nAll 22 tools follow a read-free, write-gated pattern:\n\n- **Reads** (12 tools) work immediately \u2014 list profiles, inspect filters, search rules\n- **Writes** (10 tools) require `CONTROLD_WRITE_ENABLED=true`\n- **Destructive operations** (rule delete, IP deauthorize) require an additional `confirm=true` parameter\n\nCredentials are scrubbed from all error messages before they reach the LLM context.\n\n### Tool inventory\n\n| Category | Read | Write | What you can do |\n|----------|------|-------|-----------------|\n| Info | 3 | \u2014 | Account status, caller IP, network PoPs |\n| Profiles | 2 | 2 | List, inspect, create, update DNS profiles |\n| Filters | 1 | 1 | Native + external blocklists, batch toggle |\n| Services | 2 | 1 | Service catalog, active rules, set actions |\n| Rules | 2 | 3 | Custom hostname rules with folders |\n| Devices | 1 | 2 | Endpoints with profile assignment |\n| Access | 1 | 1 | IP authorisation on device endpoints |\n| Analytics | 1 | \u2014 | Log levels and storage regions |",
   "install": {
     "runtime": "uv",
     "package": "controld-blade-mcp",
@@ -77,7 +77,7 @@
     "complexity": "trivial",
     "icon": "shield",
     "product": "Control-D",
-    "blurb": "DNS filtering and privacy — block ads, trackers, and malware with per-device policies and global service routing.",
+    "blurb": "DNS filtering and privacy \u2014 block ads, trackers, and malware with per-device policies and global service routing.",
     "help_text": "Provide your Control-D API key. Get it from the Control-D dashboard under API settings. Enable write operations only if you want the agent to modify profiles, rules, and devices.",
     "fields": [
       {
@@ -112,6 +112,261 @@
       }
     ]
   },
+  "tools": [
+    {
+      "name": "cd_info",
+      "description": "Account info and caller IP \u2014 connectivity health check",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_network",
+      "description": "Service availability across Control-D points of presence",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_profiles",
+      "description": "List all DNS profiles with rule/device counts",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_profile",
+      "description": "Full detail for a single profile including active options",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_filters",
+      "description": "List native and external filters for a profile",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_services",
+      "description": "List active service rules (block/bypass/spoof/redirect) for a profile",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_service_catalog",
+      "description": "Full Control-D service catalog \u2014 categories and proxy locations",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_rules",
+      "description": "List custom DNS rules in a folder",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_default_rule",
+      "description": "Get the default (catch-all) rule for a profile",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_devices",
+      "description": "List all DNS endpoints (devices) with profiles and resolvers",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_access",
+      "description": "List last 50 IPs that queried a device",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_analytics_config",
+      "description": "Analytics configuration \u2014 log levels and storage regions",
+      "risk_class": "read_only",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_profile_create",
+      "description": "Create a new DNS profile (blank or cloned)",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_profile_update",
+      "description": "Update a profile's name, TTL, or lock status",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_filters_update",
+      "description": "Enable/disable filters (single or batch)",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_service_update",
+      "description": "Set a service rule \u2014 block, bypass, spoof, or redirect",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_rule_create",
+      "description": "Create custom DNS rule(s) for one or more hostnames",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_rule_update",
+      "description": "Update existing custom DNS rule(s)",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_default_rule_set",
+      "description": "Set the default (catch-all) rule for a profile",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_device_create",
+      "description": "Create a new DNS endpoint (device)",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_device_update",
+      "description": "Update a device's profile assignment, name, or status",
+      "risk_class": "external_side_effect",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_rule_delete",
+      "description": "Delete a custom DNS rule (requires confirm=true)",
+      "risk_class": "high_risk",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    },
+    {
+      "name": "cd_access_update",
+      "description": "Authorize or deauthorize IPs on a device (requires confirm=true)",
+      "risk_class": "high_risk",
+      "granularity": {
+        "scope_filtering": "none",
+        "field_projection": "none",
+        "deterministic_ordering": "stable",
+        "audit_surface": "structured"
+      }
+    }
+  ],
   "scenarios": [
     {
       "type": "workflow",
