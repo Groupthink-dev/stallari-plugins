@@ -13,3 +13,8 @@ seal-key.hex
 
 # Generated build-time files
 scripts/generated/
+
+# Nix-managed local agent shims (canonical sources live in ~/.dotfiles + vault)
+CLAUDE.md
+AGENTS.md
+.agents/skills/
