@@ -3,7 +3,7 @@
   "title": "Cloudflare Edge Platform",
   "description": "Manage your Cloudflare stack \u2014 DNS, Workers, Pages, R2, KV, D1, Tunnels, Vectorize, AI Search, AI Gateway, Workers AI, and cache purge. 78 tools with token-efficient output and safety gates on all writes.",
   "tagline": "Full-stack Cloudflare management from DNS to deploy",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "author": "groupthink-dev",
   "license": "MIT",
   "icon": "/icons/cloudflare-blade-mcp.svg",
