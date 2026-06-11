@@ -154,6 +154,14 @@ export async function loadCanonicalPacks(pluginsRoot) {
   try {
     slugs = await readdir(packsContainer);
   } catch {
+    // AUD-03-01: on the deploy path (STRICT_PACKS_PIN=1) a missing canonical
+    // checkout must fail the build — a soft [] here ships a packs:0 catalog
+    // that 404s every install while looking healthy at every later gate.
+    if (process.env.STRICT_PACKS_PIN === "1") {
+      throw new Error(
+        `Canonical stallari-packs not found at ${packsContainer} — refusing to build a packs-empty catalog under STRICT_PACKS_PIN. Set STALLARI_PACKS_DIR to a checkout at the PACKS_SHA pin.`,
+      );
+    }
     console.warn(
       `  ⚠ Canonical stallari-packs not found at ${packsContainer} — building catalog with plugins only. Set STALLARI_PACKS_DIR or clone the sibling.`,
     );
