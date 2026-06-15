@@ -8,6 +8,8 @@ import {
   computeCanonicalDigest,
   pluginToCatalogEntry,
   packToCatalogEntry,
+  addOnToCatalogEntry,
+  bundleToCatalogEntry,
   buildServices,
   validatePluginUX,
 } from "./build-catalog.js";
@@ -590,5 +592,96 @@ describe("validatePluginUX", () => {
       },
     };
     assert.deepEqual(validatePluginUX(raw), []);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// DD-404 — addOnToCatalogEntry / bundleToCatalogEntry
+// ---------------------------------------------------------------------------
+
+describe("addOnToCatalogEntry", () => {
+  it("produces correct shape with type=add_on and external_system surface", () => {
+    const raw = {
+      name: "elgato-stream-deck",
+      type: "add_on",
+      version: "0.1.0",
+      description: "Reveal Stream Deck console binding + provision a scoped bearer",
+      author: "groupthink-dev",
+      license: "MIT",
+      tier: "certified",
+      external_system: { kind: "attached-hardware", ships_software_to_external: false },
+      provisions_auth: [{ id: "stream-deck-bearer", kind: "bearer", revocable: true }],
+      reveals_ui: [{ surface: "settings/integrations/stream-deck" }],
+    };
+
+    const entry = addOnToCatalogEntry(raw);
+
+    assert.equal(entry.type, "add_on");
+    assert.equal(entry.name, "elgato-stream-deck");
+    assert.equal(entry.version, "0.1.0");
+    assert.equal(entry.author, "groupthink-dev");
+    assert.equal(entry.license, "MIT");
+    assert.equal(entry.tier, "certified");
+    assert.equal(entry.external_system.kind, "attached-hardware");
+    assert.equal(entry.external_system.ships_software_to_external, false);
+    assert.equal(entry.provisions_auth.length, 1);
+    assert.equal(entry.reveals_ui.length, 1);
+    assert.equal(entry.visibility, "open");
+    // add-ons ship no tool surface
+    assert.deepEqual(entry.services, []);
+  });
+
+  it("nulls empty optional arrays", () => {
+    const raw = {
+      name: "sovereign-compute",
+      type: "add_on",
+      version: "1.0.0",
+      description: "BYO-key sovereign compute provisioning",
+      author: "groupthink-dev",
+      license: "Apache-2.0",
+      external_system: { kind: "cloud-endpoint", ships_software_to_external: false },
+    };
+
+    const entry = addOnToCatalogEntry(raw);
+
+    assert.equal(entry.type, "add_on");
+    assert.equal(entry.provisions_auth, null);
+    assert.equal(entry.reveals_ui, null);
+  });
+});
+
+describe("bundleToCatalogEntry", () => {
+  it("produces correct shape with type=bundle and members list", () => {
+    const raw = {
+      name: "stream-deck-integration",
+      type: "bundle",
+      version: "0.1.0",
+      description: "Stream Deck pack + add-on, installed as one unit",
+      author: "groupthink-dev",
+      members: [
+        { kind: "pack", name: "elgato-stream-deck", version: "0.1.0" },
+        { kind: "add-on", name: "elgato-stream-deck", version: "0.1.0" },
+      ],
+    };
+
+    const entry = bundleToCatalogEntry(raw);
+
+    assert.equal(entry.type, "bundle");
+    assert.equal(entry.name, "stream-deck-integration");
+    assert.equal(entry.version, "0.1.0");
+    assert.equal(entry.members.length, 2);
+    assert.equal(entry.members[0].kind, "pack");
+    assert.equal(entry.members[1].kind, "add-on");
+    assert.equal(entry.visibility, "open");
+  });
+
+  it("defaults members to empty array when absent", () => {
+    const entry = bundleToCatalogEntry({
+      name: "x",
+      type: "bundle",
+      version: "1.0.0",
+      description: "d",
+    });
+    assert.deepEqual(entry.members, []);
   });
 });

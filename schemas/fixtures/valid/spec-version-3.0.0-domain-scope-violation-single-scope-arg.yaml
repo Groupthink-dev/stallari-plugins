@@ -1,0 +1,85 @@
+# DD-333 F.4: governance example for the S-DOM-002 lint violation pattern.
+#
+# This fixture documents the cross-field violation S-DOM-002 catches in
+# stallari-secops-scanner: a tool declaring granularity.domain_scope: "single"
+# while also exposing a user-domain-shaped scope= / domain= argument. The
+# combination is suspicious — single-domain tools usually do not need a
+# user-facing scope selector at the wire.
+#
+# The lint is advisory (.warning at F.4 ship); authors can suppress via
+# a "// scope-arg-disclaimer: <reason>" annotation in the tool's description
+# field when the scope= argument names a service-level filter rather than a
+# user-domain selector. See docs/domain-scope.md § "CLI tooling".
+#
+# Catalog-entry shape this fixture documents (lives in stallari-plugins, not pack.yaml):
+#
+#   tools:
+#     - name: list_records
+#       description: List records matching the scope argument.
+#       arguments:
+#         - name: scope                # ← S-DOM-002 trigger (user-domain heuristic)
+#           type: string
+#       granularity:
+#         scope_filtering: server-side
+#         field_projection: none
+#         deterministic_ordering: stable
+#         audit_surface: minimal
+#         domain_scope: single         # ← violation: single + scope= arg
+#
+# The lint emits:
+#   S-DOM-002 [warning] Tool 'list_records' declares domain_scope: single
+#   but exposes a 'scope' argument. Consider declaring 'multi' or adding
+#   a // scope-arg-disclaimer: annotation if 'scope' names a non-domain
+#   filter.
+#
+# Pack manifest below is schema-valid; the violation belongs to the
+# stallari-plugins catalog entry, not this pack file. AJV here passes
+# because pack.schema.json does not validate granularity contents
+# (catalog-entry.schema.json is the authoritative gate).
+spec_version: "3.0.0"
+pack: "1.13"
+slug: domain-scope-violation-example
+name: domain-scope-violation-example
+title: "Domain Scope — Violation Governance Example"
+version: "1.0.0"
+description: Governance fixture illustrating the S-DOM-002 single-plus-scope-arg violation pattern.
+
+trust_tier: community-signed
+
+source:
+  type: vault
+  vault_path: packs/domain-scope-violation-example/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: Stallari Test Fixtures
+
+data:
+  reads:
+    - vault
+  writes: []
+  stores: nothing
+  phones_home: false
+
+domain_access:
+  description: >
+    Demonstrates the S-DOM-002 lint pattern. A real submission with this
+    catalog-entry shape would land in stallari-plugins and trip the
+    warning at build time.
+  needs_sensitive: false
+  examples_in_other_vaults:
+    - work
+
+skills:
+  - name: list-by-scope
+    description: List records for a configured scope.
+    required_tools:
+      - mcp__example-vault__list_records
+    prompt: |
+      List records matching the configured scope. The catalog entry
+      for this tool would trip S-DOM-002 because it pairs
+      domain_scope: single with a user-domain-shaped scope= argument
+      without a disclaimer annotation.

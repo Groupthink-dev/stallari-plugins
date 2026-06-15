@@ -34,6 +34,15 @@
       ]
     },
     {
+      "contract": "harness-state-v1",
+      "description": "Harness substrate read access — agent state registers + decision ledgers + section reads. First-party only (no third-party providers at v1); skills declaring this also require `harnessStateRead` permission. (DD-344 Phase A.5).",
+      "service": "harness-state",
+      "tags": [
+        "productivity",
+        "infrastructure"
+      ]
+    },
+    {
       "contract": "messages-v1",
       "description": "Short-form messaging (iMessage, Messages).",
       "service": "messages",

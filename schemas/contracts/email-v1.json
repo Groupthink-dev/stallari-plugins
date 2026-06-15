@@ -1,7 +1,7 @@
 {
   "$id": "https://stallari.app/schemas/contracts/email-v1.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Email service contract v1 — 13 operations across search, read, manage, and write.",
+  "description": "Email service contract v1 — 15 operations across search, read, manage, and write. v4.5 +2 ops (flag_bitmask_get/set) for JMAP keyword-bitmask portability (DD-344 Phase A.4).",
   "operations": [
     {
       "classification": "required",
@@ -55,8 +55,18 @@
     },
     {
       "classification": "gated",
-      "description": "Set/clear flags on messages",
+      "description": "Set/clear simple flags on messages (read/unread, flagged/unflagged)",
       "name": "flag"
+    },
+    {
+      "classification": "recommended",
+      "description": "Read JMAP keyword bitmask for a message (e.g. Apple Mail $MailFlagBit0..$MailFlagBit6 colour-coded flags)",
+      "name": "flag_bitmask_get"
+    },
+    {
+      "classification": "gated",
+      "description": "Set JMAP keyword bitmask on a message; atomic add/remove via decimal bitmask or keyword arrays",
+      "name": "flag_bitmask_set"
     },
     {
       "classification": "gated",

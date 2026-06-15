@@ -15,7 +15,7 @@ skills:
   - name: noop
     description: noop
     prompt: ok
-track_workflows:
+track_lifecycles:
   - name: saga.broken
     states: [pending, active, closed]
     initial: pending

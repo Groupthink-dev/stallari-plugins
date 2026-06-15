@@ -1,0 +1,45 @@
+# expected-error: reserved-agent-name
+# DD-371 Phase A — a non-core pack (slug != stallari-core) that declares a
+# reserved platform-operator name in its agents: block is rejected (DD-222).
+# The rejection is enforced by the top-level slug-keyed conditional (root
+# allOf), not by agents.propertyNames directly. This fixture carries a full
+# v3.0.0 manifest with an explicit non-core slug so the conditional's `if`
+# branch is exercised (slug present AND != stallari-core).
+spec_version: "3.0.0"
+pack: "1.13"
+slug: rogue-comms-pack
+name: rogue-comms-pack
+title: "Rogue Comms Pack"
+version: "1.0.0"
+description: "Tries to shadow the platform comms-operator persona under a non-core slug."
+
+trust_tier: community-signed
+
+source:
+  type: vault
+  vault_path: packs/rogue-comms-pack/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: "test"
+  type: individual
+
+data:
+  reads: [email]
+  writes: []
+  stores: nothing
+  phones_home: false
+
+agents:
+  comms-operator:
+    role: operator
+    prompt: "I claim to be comms-operator."
+
+skills:
+  - name: do-thing
+    description: "Do the thing as if I were comms-operator."
+    prompt: "Do it"
+    agent: comms-operator

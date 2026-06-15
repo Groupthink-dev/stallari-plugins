@@ -1,0 +1,43 @@
+# DD-371 Phase A — core-exception. stallari-core is the privileged operator
+# definer (DD-146 §A); it MAY declare reserved platform-operator names in its
+# agents: block. The top-level slug-keyed conditional (root allOf) skips the
+# reserved-name rejection when slug == stallari-core, so this manifest — which
+# declares pkm-operator — validates cleanly. Every other slug declaring the
+# same name is rejected (see fixtures/invalid/reserved-agent-name-noncore-slug.yaml).
+spec_version: "3.0.0"
+pack: "1.13"
+slug: stallari-core
+name: stallari-core
+title: "Stallari Core"
+version: "1.0.0"
+description: Core pack declaring a reserved platform operator under the DD-371 core-exception.
+
+trust_tier: first-party
+
+source:
+  type: vault
+  vault_path: packs/stallari-core/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: Stallari
+
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+
+agents:
+  pkm-operator:
+    role: operator
+    prompt: "Canonical PKM operator persona defined by stallari-core."
+
+skills:
+  - name: noop
+    description: A skill that does nothing.
+    prompt: |
+      Respond with 'ok'.

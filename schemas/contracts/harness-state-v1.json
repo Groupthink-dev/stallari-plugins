@@ -1,0 +1,53 @@
+{
+  "$id": "https://stallari.app/schemas/contracts/harness-state-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Harness substrate read contract v1 — 6 operations for reading agent state registers and decision ledgers. First-party only (no third-party providers at v1). Skills declaring this MUST also declare `required_permissions: [harnessStateRead]`.",
+  "operations": [
+    {
+      "classification": "required",
+      "description": "Read full body + frontmatter of a named state register",
+      "name": "read_register"
+    },
+    {
+      "classification": "required",
+      "description": "List known register slugs",
+      "name": "list_registers"
+    },
+    {
+      "classification": "recommended",
+      "description": "Read one named section (## heading) from a register",
+      "name": "read_register_section"
+    },
+    {
+      "classification": "recommended",
+      "description": "Search across ledger files by query string with arch/ops scope filter",
+      "name": "grep_ledger"
+    },
+    {
+      "classification": "recommended",
+      "description": "Read one weekly ledger file by ISO week",
+      "name": "read_ledger_week"
+    },
+    {
+      "classification": "optional",
+      "description": "Enumerate known weekly ledger files and month indices",
+      "name": "list_ledger_weeks"
+    }
+  ],
+  "properties": {
+    "name": {
+      "const": "harness-state-v1"
+    },
+    "provider_kind": {
+      "const": "first_party_only"
+    },
+    "service": {
+      "const": "harness-state"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "title": "harness-state-v1",
+  "type": "object"
+}

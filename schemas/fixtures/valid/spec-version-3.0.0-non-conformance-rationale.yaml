@@ -1,0 +1,54 @@
+# DD-333 F.1: governance example for the non_conformance_rationale block.
+#
+# NOTE: This fixture exercises pack.schema.json (top-level
+# additionalProperties: true accepts the new block). The authoritative
+# AJV gate for non_conformance_rationale lives in
+# stallari-plugins/schemas/catalog-entry.schema.json (plugin catalog
+# entry JSON shape), not the pack manifest schema here. See
+# docs/non-conformance-rationale.md § "Where this block lives".
+spec_version: "3.0.0"
+pack: "1.13"
+slug: nrr-example
+name: nrr-example
+title: "Non-Conformance Rationale Example"
+version: "1.0.0"
+description: Valid pack exercising the DD-333 F.1 non-conformance rationale top-level block (governance example).
+
+trust_tier: community-signed
+
+source:
+  type: vault
+  vault_path: packs/nrr-example/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: Stallari
+
+data:
+  reads: []
+  writes: []
+  stores: nothing
+  phones_home: false
+
+skills:
+  - name: example-skill
+    description: A skill that legitimately binds to a non-conforming tool.
+    required_tools:
+      - mcp__legacy-email__list_unfiltered
+    prompt: |
+      Respond with 'ok'.
+
+# DD-333 F.1: pack-level governance example. In the actual stallari-plugins
+# catalog entry shape (plugin .json files), this block lives top-level
+# alongside tools[].
+non_conformance_rationale:
+  reason: "Upstream IMAP backend lacks per-folder scope; client-side filter post-fetch would over-fetch bytes."
+  scope_filtering_off: true
+  contamination_risks:
+    - "cross-scope-packet-bleed"
+    - "audit-context-leak"
+  affected_tools:
+    - "mcp__legacy-email__list_unfiltered"

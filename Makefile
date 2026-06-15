@@ -25,6 +25,8 @@ sync-pack-spec:
 	@mkdir -p schemas/contracts schemas/fixtures/valid schemas/fixtures/invalid
 	@cp $(PACK_SPEC_DIR)/dist/json/pack.schema.json schemas/stallari-pack.schema.json
 	@cp $(PACK_SPEC_DIR)/dist/json/plugin.schema.json schemas/stallari-plugin.schema.json
+	@cp $(PACK_SPEC_DIR)/dist/json/add-on.schema.json schemas/stallari-add-on.schema.json
+	@cp $(PACK_SPEC_DIR)/dist/json/bundle.schema.json schemas/stallari-bundle.schema.json
 	@cp $(PACK_SPEC_DIR)/dist/json/schema-enums.json schemas/schema-enums.json
 	@cp $(PACK_SPEC_DIR)/dist/json/skill-categories.json schemas/skill-categories.json
 	@cp $(PACK_SPEC_DIR)/dist/json/services.json schemas/services.json

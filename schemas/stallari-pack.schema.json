@@ -108,9 +108,58 @@
       },
       "type": "object"
     },
+    "sealedCredential": {
+      "additionalProperties": false,
+      "description": "DD-344 Phase A.1 (v4.5) — sealed-credential entry. See docs/sealed-credentials.md.",
+      "properties": {
+        "name": {
+          "description": "Logical credential name (snake_case). Injected as env var STALLARI_CRED_<UPPERCASE_NAME> to scoped blade subprocesses. Per-skill scope (no cross-skill name collision).",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "type": "string"
+        },
+        "optional": {
+          "default": false,
+          "description": "When false (default), dispatch refuses with `service_credential_unbound` if the op:// reference doesn't resolve. When true, dispatch proceeds and the consuming op surfaces an op-level refuse on first call.",
+          "type": "boolean"
+        },
+        "rotation_hint": {
+          "description": "Free-form documentation. Surfaced in the marketplace install screen so users know who rotates the credential (e.g. \"Rotated annually with other PA notification keys\").",
+          "maxLength": 240,
+          "type": "string"
+        },
+        "source": {
+          "description": "1Password CLI reference: op://Account/Vault/Item or op://Account/Vault/Item/FieldName. Only the 1Password URL scheme is supported at v1; per-host sops fallback is a v1.1 follow-on. The harness validates the URL at PackCompile time and resolves at dispatch via `op read` (subprocess, no logging, 5s timeout).",
+          "pattern": "^op://[A-Za-z0-9._-]+/[A-Za-z0-9._\\-/ ]+$",
+          "type": "string"
+        },
+        "used_by": {
+          "description": "Service operations (matching required_services / optional_services entries) that may consume this credential. The harness enforces the binding: the credential env var is present in the blade subprocess environment ONLY for the duration of operations in this list.",
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z][a-z0-9_]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "source",
+        "used_by"
+      ],
+      "type": "object"
+    },
     "serviceRequirement": {
       "additionalProperties": false,
       "properties": {
+        "contract": {
+          "description": "Service-contract version this requirement targets (e.g. virtualmachine-v1, overlay-network-v1) — the contract the bound provider must implement. Aligns the requirement with the pack-spec contracts model (see bundledContract / contracts). DD-371 schema-reconciliation: author-facing contract-version declaration; the harness's ServiceRequirement decoder reads service+operations today (contract-version matching is a forward harness capability).",
+          "type": "string"
+        },
+        "description": {
+          "description": "Human-readable rationale for the requirement (why the pack needs this service / what degrades without it). DD-371 schema-reconciliation.",
+          "type": "string"
+        },
         "operations": {
           "description": "Specific operations required from this service.",
           "items": {
@@ -225,6 +274,36 @@
           ],
           "type": "string"
         },
+        "context_packet": {
+          "additionalProperties": false,
+          "description": "DD-287 Phase E.2 — declarative ContextPacket consumer declaration (v4.5). The dispatcher's ContextAssembler builds the packet to spec before the skill turn; skill body reads packet evidence rather than issuing raw lens/search calls.",
+          "properties": {
+            "fallback_to_raw_services": {
+              "default": true,
+              "description": "When the dispatcher cannot assemble the requested packet (e.g. Lens unavailable), continue with raw service-surface fallback. Set false to fail closed.",
+              "type": "boolean"
+            },
+            "level": {
+              "description": "DD-287 ContextPacket assembly level. brief = minimal evidence (read-only / classification skills); operational = packet evidence + memory references (typical PKM skills); evidentiary = full packet + raw service surface (security-sensitive consumers).",
+              "enum": [
+                "brief",
+                "operational",
+                "evidentiary"
+              ],
+              "type": "string"
+            },
+            "work_object_type": {
+              "description": "DD-287 work-object-type the packet is assembled for. Pre-declared types: wiki_query, wiki_note_enrichment, classifier_input, summarisation_corpus. New types require pack-spec amendment.",
+              "pattern": "^[a-z][a-z0-9_]*$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "level",
+            "work_object_type"
+          ],
+          "type": "object"
+        },
         "default_idempotency_key": {
           "description": "DD-245 — Mustache-style template ({{ }} expressions over trigger / dispatch context) used as the fallback idempotency key for emitted tracks when a result-envelope entry omits an explicit key (v1.13). Single-skill resume relies on this — same rendered key on subsequent dispatches resolves to the same track for watermark continuation. When omitted, the engine falls back to sha256(skill_name || dispatch_id || verb || canonical(args)) per DD-245 Resolved §9.",
           "type": "string"
@@ -297,6 +376,12 @@
               "minimum": 1,
               "type": "integer"
             },
+            "max_replan_attempts": {
+              "default": 2,
+              "description": "Plan-execute (DD125) ReplanNode budget — maximum replanning attempts before the graph forces termination. Read by Pack.GraphConfig.maxReplanAttempts → GraphRegistry/DefaultGraphs ReplanNode (DD-371 schema-reconciliation; harness has consumed this field since the plan-execute graph shipped).",
+              "minimum": 1,
+              "type": "integer"
+            },
             "node_model_preferences": {
               "additionalProperties": false,
               "description": "Per-graph-node model preferences (DD-236 Phase G, v2.10.1). Keys are graph node names (`classify`, `gate`, `react`, `escalate`, `critique`, `compact`); values declare a capability hint and/or a concrete model preference for that node. Resolver consults these alongside `classify_tier`/`escalation_tier`; the per-node entry wins on collision (more specific). Engine treats each node as a separate `LocalModelManager.acquire/release` window — multiple `complete` calls inside one node share the same residency, but the model can be evicted between consecutive nodes.",
@@ -356,7 +441,7 @@
         "optional_services": {
           "description": "Service contract operations the skill MAY call depending on the conversation (v1.12, DD-244). Registered with the dispatcher's surface manager at dispatch start but NOT injected into turn 1 — saves tokens. Injected into next turn's surface on first call. Failed availability is silent (skill simply can't invoke that operation). See docs/services.md.",
           "items": {
-            "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9_]*$",
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z][a-z0-9_]*$",
             "type": "string"
           },
           "type": "array"
@@ -396,7 +481,7 @@
         "required_services": {
           "description": "Service contract operations the skill ALWAYS calls (v1.12, DD-244). Format: <service>.<operation> (e.g. email.search, vault.read). The dispatcher's ServiceResolver maps each entry to a concrete tool against the host's bound providers at dispatch time and includes it in the LLM API call's tools parameter on turn 1. Failed availability (no provider bound, authoriser denial) refuses the dispatch with a structured error. Primary author-facing axis — pack authors should declare against contracts wherever possible. See docs/services.md.",
           "items": {
-            "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9_]*$",
+            "pattern": "^[a-z][a-z0-9_-]*\\.[a-z][a-z0-9_]*$",
             "type": "string"
           },
           "type": "array"
@@ -405,6 +490,26 @@
           "description": "Concrete blade tools the skill ALWAYS calls (v1.12, DD-244). String form uses mcp__<blade>__<tool>; object form additionally permits DD-280 risk_class declared overrides. Use only when no portable service contract applies (Apple Notes, Apple Mail.app, Apple Reminders, Apple Messages, operator-internal targets). Secondary axis — prefer required_services. Certified-tier packs MUST accompany any required_tools declaration with a tools_rationale block. See docs/tools.md.",
           "items": {
             "$ref": "#/$defs/toolDeclaration"
+          },
+          "type": "array"
+        },
+        "risk_class": {
+          "additionalProperties": {
+            "enum": [
+              "read_only",
+              "reversible_write",
+              "external_side_effect",
+              "high_risk"
+            ],
+            "type": "string"
+          },
+          "description": "DD-280 — per-service-op risk-class declaration map. Keys are service.operation names (e.g. vault.create, email.flag_bitmask_set, billing.create_adjustment); values are risk classes. Sister to the per-tool risk_class field inside required_tools[] — this map covers the required_services / optional_services surface. Runtime resolution: declared risk_class wins; fallback to MCP annotation; final fallback to heuristic. The two-gate authoriser routes external_side_effect and high_risk through DD-280 ActionProposal.",
+          "type": "object"
+        },
+        "sealed_credentials": {
+          "description": "DD-344 Phase A.1 (v4.5) — skill-level sealed-credential declarations. Each entry maps a logical credential name to an op://Account/Vault/Item reference; the harness's SealedCredentialResolver resolves at dispatch and injects env vars bounded to the named ops' blade-subprocess lifetime. Skill body never sees plaintext credentials. See docs/sealed-credentials.md.",
+          "items": {
+            "$ref": "#/$defs/sealedCredential"
           },
           "type": "array"
         },
@@ -549,6 +654,74 @@
       ],
       "type": "object"
     },
+    "track_lifecycle": {
+      "additionalProperties": true,
+      "description": "DD-353 Phase A.2 — Pack-declared track-record state machine (lifecycle definition). State machine for durable Track records (orthogonal to `workflows:` which orchestrates skills). The PackCompiler namespaces each entry as `<packId>.<name>` at compile time; the runtime `TrackLifecycleRegistry` registers under that namespaced name. Phase A schema covers the canonical TrackLifecycle YAML surface (name, states, initial, terminal, verbs, watermark, permissions, saga). Additional properties are permitted at v3.1.0 (`additionalProperties: true`) to allow forward-compatible authoring; the harness Codable layer enforces the full validation invariants (`TrackLifecycle.validate(against:)`).",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "idempotency": {
+          "additionalProperties": true,
+          "description": "Optional idempotency policy. `required: true` forces every emit to carry an idempotency key; otherwise emits are duplicate-protected only when the caller supplies one.",
+          "type": "object"
+        },
+        "initial": {
+          "description": "The state a track lands in when opened via the universal `open` verb. MUST appear in `states:`.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Workflow identifier (kebab-case; dotted names allowed). Namespaced as `<pack-slug>.<name>` at PackCompiler time.",
+          "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)*$",
+          "type": "string"
+        },
+        "permissions": {
+          "additionalProperties": true,
+          "description": "Default permission lists (read / write / transition) that apply when a track doesn't override them inline. Each list is an array of principals; `self`, `fleet`, and operator slugs are accepted.",
+          "type": "object"
+        },
+        "saga": {
+          "additionalProperties": true,
+          "description": "Optional saga DAG for compensation choreography. Only relevant if the workflow's downstream emit path participates in a saga (DD-200 / DD-245 Phase F territory). Phase A leaves the validation to the runtime Codable layer. DD-371 schema-reconciliation — explicit `saga: null` is permitted (the harness's TrackLifecycle decoder uses `decodeIfPresent`, so null is the author's canonical 'no compensation' expression, runtime-equivalent to omitting the key).",
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "states": {
+          "description": "Enumeration of legal track states for this workflow. Order is significant for UI rendering only; transitions are governed by `verbs:`.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "terminal": {
+          "description": "States that complete the track lifecycle. Each MUST appear in `states:`. Tracks in a terminal state are not eligible for transition verbs.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "verbs": {
+          "additionalProperties": true,
+          "description": "Workflow-extended verb declarations. Each verb declares allowed `from:` states, the target `to:` state, required `requires:` args, and the `permissions:` list governing actor authorisation. Universal verbs (`open`, `comment`, `block`, `assign`, `reopen`) are reserved and MUST NOT be redefined here.",
+          "type": "object"
+        },
+        "watermark": {
+          "additionalProperties": true,
+          "description": "Watermark schema for monotonic progress tracking. `schema: none` for stateless workflows; `schema: offset` for batch progress (integer counter); `schema: since` for timestamp watermarks; `schema: composite` for multi-field shapes.",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "states",
+        "initial",
+        "terminal"
+      ],
+      "type": "object"
+    },
     "trigger": {
       "additionalProperties": false,
       "properties": {
@@ -559,6 +732,11 @@
         "schedule": {
           "description": "Cron expression (5-field, e.g. \"0 7 * * *\").",
           "type": "string"
+        },
+        "throttle": {
+          "description": "Debounce interval in seconds for watch/schedule re-fires (launchd ThrottleInterval analogue). The dispatcher will not re-run the skill within this window. Read by PackCompiler → SkillConfig.throttle (DD-371 schema-reconciliation; harness has read this field since the v1.x trigger shape).",
+          "minimum": 0,
+          "type": "integer"
         },
         "watch": {
           "description": "Paths to watch for changes.",
@@ -689,6 +867,14 @@
           "description": "Human-readable label.",
           "type": "string"
         },
+        "max": {
+          "description": "Upper bound for numeric inputs (type=int / type=float). DD-371 schema-reconciliation — author-facing constraint declaration mirroring the `tunable` $def's `max`. See `min`.",
+          "type": "number"
+        },
+        "min": {
+          "description": "Lower bound for numeric inputs (type=int / type=float). DD-371 schema-reconciliation — author-facing constraint declaration mirroring the `tunable` $def's `min`. The simple userInput surface does not yet enforce at decode time (the `tunable` system does); declared here to preserve author intent and feed a future form-renderer.",
+          "type": "number"
+        },
         "required": {
           "default": false,
           "description": "Whether input is mandatory.",
@@ -697,6 +883,13 @@
         "type": {
           "description": "Input type (e.g. string, number, boolean, choice, time).",
           "type": "string"
+        },
+        "values": {
+          "description": "Valid options for type=enum / type=enum_array inputs (the enum-typed analogue of `choices`, which is keyed to type=choice). DD-371 schema-reconciliation — the harness's richer `tunable` $def already models enum constraints; first-party skill inputs declare their enum surface here. Author-facing constraint declaration.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -826,13 +1019,48 @@
   "$id": "https://stallari.app/schemas/stallari-pack.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": true,
-  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v3.0.0-alpha.1 — first breaking-version cut of the spec-repo (DD-261 coordinator, DD-172 P0 namespace+signing, DD-253 P0 signature carrier, DD-260 Phase A workflow unification). v3.0.0 introduces six new required fields at the pack root: `spec_version: \"3.0.0\"` (hard fail-fast indicator), `slug` (stable kebab-case namespace identifier), `title` (display name), `trust_tier` (first-party | community-signed | user-self), `source` (provenance: vault | git | local), `runtime` (distribution: fabric | none + signing key + publish_targets). Retires `track_workflows:` field — the canonical declarative graph-composition contract is now the unified `workflows:` field with node-shaped nodes (DD-260 Phase A: sequential + fan-in only at this stage; parallel/conditional/error-handler shapes additive in 3.x minor). Removes `classify_model` and `escalation_model` (DD-261 B.1 — schema-only, zero pack consumers; DD-138/DD-236 capabilities supersede). Keeps `tier:` field (75-file usage; DD-261 audit revised B.1) and `virtualmachine-v1` contract (active sealed-pack consumer). Per DD-172 Q3 the `pack:` field does NOT bump (`pack: \"1.13\"` stays valid); `spec_version` is the new fail-fast contract. v2.x history retained at this header for migration reference: v1.0–v1.13 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146, DD152, DD163, DD184, DD-214, DD-215, DD-234, DD-244, DD-245).",
-  "not": {
-    "description": "DD-260 Phase A — `track_workflows:` retired in v3.0.0. The unified `workflows:` field is the canonical declarative graph-composition contract. Migration: rename `track_workflows:` → `workflows:`, restructure entries to node-shaped graphs (per DD-260 Phase A; see docs/migration-v2-to-v3.md).",
-    "required": [
-      "track_workflows"
-    ]
-  },
+  "allOf": [
+    {
+      "$comment": "DD-371 Phase A — reserved-operator core-exception. stallari-core (privileged definer, DD-146 §A) may declare reserved platform-operator names in its agents: block; every other pack is rejected (DD-222).",
+      "if": {
+        "not": {
+          "properties": {
+            "slug": {
+              "const": "stallari-core"
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "agents": {
+            "propertyNames": {
+              "not": {
+                "enum": [
+                  "pkm-operator",
+                  "comms-operator",
+                  "scheduling-operator",
+                  "secops-operator",
+                  "fleet-operator",
+                  "notifications-operator",
+                  "home-operator",
+                  "bizops-operator",
+                  "review-operator",
+                  "memory-operator",
+                  "digital-assistant",
+                  "system-architect"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "description": "Schema for pack manifests (stallari-plugin.yaml with pack: field). Public Pack Spec v3.0.0-alpha.1 — first breaking-version cut of the spec-repo (DD-261 coordinator, DD-172 P0 namespace+signing, DD-253 P0 signature carrier, DD-260 Phase A workflow unification). v3.0.0 introduces six new required fields at the pack root: `spec_version: \"3.0.0\"` (hard fail-fast indicator), `slug` (stable kebab-case namespace identifier), `title` (display name), `trust_tier` (first-party | community-signed | user-self), `source` (provenance: vault | git | local), `runtime` (distribution: fabric | none + signing key + publish_targets). **DD-353 Phase A un-retirement (VERSION 4.6.0) + Phase A.2 rename (VERSION 4.7.0):** the `track_lifecycles:` top-level field declares state machines for durable Track records (DD-245 substrate; states/verbs/watermark/permissions). Distinct from the unified `workflows:` field which orchestrates skills via node-shaped graphs (`triggers`/`depends_on`). The two fields coexist on the same manifest because they cover unrelated concepts; DD-260 Phase A's overlap framing was incorrect. Phase A.2 renamed the field from `track_workflows:` to `track_lifecycles:` to eliminate vocabulary collision with `workflows:` (hard cut; zero first-party pack consumers at rename time). Removes `classify_model` and `escalation_model` (DD-261 B.1 — schema-only, zero pack consumers; DD-138/DD-236 capabilities supersede). Keeps `tier:` field (75-file usage; DD-261 audit revised B.1) and `virtualmachine-v1` contract (active sealed-pack consumer). Per DD-172 Q3 the `pack:` field does NOT bump (`pack: \"1.13\"` stays valid); `spec_version` is the new fail-fast contract. v2.x history retained at this header for migration reference: v1.0–v1.13 (DD92, DD99, DD104, DD113, DD119, DD126, DD145/DD146, DD152, DD163, DD184, DD-214, DD-215, DD-234, DD-244, DD-245). DD-371 Phase A (4.8.0): agents reserved-name core-exception — stallari-core may declare reserved operators; all other packs rejected (DD-222).",
   "properties": {
     "access": {
       "default": "public",
@@ -844,29 +1072,11 @@
       "type": "string"
     },
     "agents": {
+      "$comment": "Reserved platform operator names (DD-222): pkm-operator, comms-operator, scheduling-operator, secops-operator, fleet-operator, notifications-operator, home-operator, bizops-operator, review-operator, memory-operator, digital-assistant, system-architect. Reference these via skill.agent: <name> to reuse the platform persona; redefining them is rejected for every pack EXCEPT stallari-core (the privileged operator definer, DD-146 §A). The rejection is now enforced by a top-level slug-keyed conditional (see root allOf — DD-371 Phase A) rather than here in propertyNames, because propertyNames cannot see the sibling top-level slug property.",
       "additionalProperties": {
         "$ref": "#/$defs/agent"
       },
       "description": "Named agent definitions (dict of name → agent config). Pack authors MAY reference platform operators by bare name (`skill.agent: comms-operator`) without declaring them here — bundled-fallback resolution handles the dispatch (DD-146 §A). Pack authors MUST NOT redefine reserved platform operator names (DD-222 — see docs/operators-v1.md for the canonical reusable palette and harness-only personas).",
-      "propertyNames": {
-        "description": "Reserved platform operator names (DD-222). Reference these via skill.agent: <name> to reuse the platform persona; redefining them is rejected.",
-        "not": {
-          "enum": [
-            "pkm-operator",
-            "comms-operator",
-            "scheduling-operator",
-            "secops-operator",
-            "fleet-operator",
-            "notifications-operator",
-            "home-operator",
-            "bizops-operator",
-            "review-operator",
-            "memory-operator",
-            "digital-assistant",
-            "system-architect"
-          ]
-        }
-      },
       "type": "object"
     },
     "author": {
@@ -959,6 +1169,37 @@
       "description": "One-line summary of what this pack does.",
       "maxLength": 300,
       "type": "string"
+    },
+    "domain_access": {
+      "additionalProperties": false,
+      "description": "DD-341 Phase C — Declares the kind of vault content this pack reads. User maps to actual domains at install via Stallari's consent flow. Never names a domain.",
+      "properties": {
+        "description": {
+          "description": "Plain-language explanation of what content the pack wants and why.",
+          "maxLength": 240,
+          "minLength": 10,
+          "type": "string"
+        },
+        "examples_in_other_vaults": {
+          "default": [],
+          "description": "Display hint only. Example domain names this pack typically maps to in other users' vaults. Never load-bearing.",
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]{0,30}$",
+            "type": "string"
+          },
+          "maxItems": 8,
+          "type": "array"
+        },
+        "needs_sensitive": {
+          "default": false,
+          "description": "True if the pack needs access to sensitive content (health, legal, finance, etc.). Default false.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "type": "object"
     },
     "encryption": {
       "additionalProperties": false,
@@ -1306,12 +1547,39 @@
       "type": "string"
     },
     "readme": {
-      "description": "Inline README content (v1.2). Mandatory when visibility is sealed (enforced by validator, not schema).",
-      "type": "string"
+      "description": "Inline README content (v1.2). Either a bare string, or a `{format, body}` object — DD-371 schema-reconciliation: the harness's `FlexibleReadme` decoder accepts both shapes, so the spec models both. Mandatory when visibility is sealed (enforced by validator, not schema).",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "body": {
+              "description": "README body content.",
+              "type": "string"
+            },
+            "format": {
+              "description": "Content format hint (e.g. markdown).",
+              "type": "string"
+            }
+          },
+          "required": [
+            "body"
+          ],
+          "type": "object"
+        }
+      ]
     },
     "recommends": {
       "$ref": "#/$defs/requirements",
       "description": "Soft requirements — missing services degrade gracefully."
+    },
+    "requested_domains": {
+      "description": "FORBIDDEN. Packs MUST NOT name user domains. Use domain_access.description instead.",
+      "not": {
+        "type": "array"
+      }
     },
     "requires": {
       "$ref": "#/$defs/requirements",
@@ -1447,6 +1715,13 @@
       "maxLength": 80,
       "minLength": 1,
       "type": "string"
+    },
+    "track_lifecycles": {
+      "description": "DD-353 Phase A.2 — pack-declared track-record state machines. Each entry is a TrackLifecycle YAML (states/verbs/watermark/permissions; same shape as the harness's first-party set under `Sources/StallariKit/Tracks/Lifecycles/*.yaml`). The harness namespaces each entry as `<packId>.<name>` at compile time (`PackCompiler.compileTrackWorkflows()`) and registers it into the runtime `TrackLifecycleRegistry` at daemon startup. Distinct from the `workflows:` field — `workflows:` orchestrates skills (DAG of nodes with `triggers`/`depends_on`); `track_lifecycles:` declares the durable state-machine contract that a skill writes Track records to. The two coexist on the same manifest because they cover unrelated concepts. **DD-353 Phase A.2 (VERSION 4.7.0)** — wire field renamed from `track_workflows:` to `track_lifecycles:`; hard cut, no migration shim (zero first-party pack consumers at rename time). See docs/workflow-registry.md + docs/migration-v2-to-v3.md.",
+      "items": {
+        "$ref": "#/$defs/track_lifecycle"
+      },
+      "type": "array"
     },
     "trust_tier": {
       "description": "DD-172 P0 — Trust tier driving the runtime authoriser (DD-188) capability gate. `first-party` is for in-tree Stallari packs; `community-signed` is for marketplace-signed third-party packs (DD-253 import path); `user-self` is for Forge- or Obsidian-authored packs signed with the install identity's user-self ed25519 key (DD-186 CredentialStore). The harness's PackCompiler validates the signing chain on load; a manifest declaring a tier its signature can't substantiate is rejected.",

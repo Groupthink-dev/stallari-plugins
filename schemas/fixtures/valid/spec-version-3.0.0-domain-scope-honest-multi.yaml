@@ -1,0 +1,71 @@
+# DD-333 F.4: governance example for the granularity.domain_scope: multi declaration.
+#
+# NOTE: This fixture exercises pack.schema.json. The authoritative AJV gate
+# for granularity.domain_scope lives in
+# stallari-plugins/schemas/catalog-entry.schema.json (plugin catalog entry
+# JSON shape). See docs/domain-scope.md § "Where this declaration lives".
+#
+# Shape this fixture documents (lives in the plugin catalog entry, not pack.yaml):
+#
+#   tools:
+#     - name: vault_search_global
+#       granularity:
+#         scope_filtering: client-side
+#         field_projection: per-field
+#         deterministic_ordering: stable
+#         audit_surface: structured
+#         domain_scope: multi         # NEW at pack-spec 4.4.0
+#
+# A multi-domain tool MUST ship a _meta.domain_attribution envelope per
+# returned record (DD-338 A.2.dom). The dispatcher uses the envelope to
+# filter records against the pack's granted domains before the assembler
+# sees the response.
+spec_version: "3.0.0"
+pack: "1.13"
+slug: domain-scope-honest-multi
+name: domain-scope-honest-multi
+title: "Domain Scope — Honest Multi"
+version: "1.0.0"
+description: Valid pack referencing a tool that returns records spanning multiple domains per call.
+
+trust_tier: community-signed
+
+source:
+  type: vault
+  vault_path: packs/domain-scope-honest-multi/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: Stallari Test Fixtures
+
+data:
+  reads:
+    - vault
+  writes: []
+  stores: nothing
+  phones_home: false
+
+domain_access:
+  description: >
+    Searches notes across the entire vault. The tool returns records
+    from multiple user domains in one response and surfaces a
+    _meta.domain_attribution envelope per record so the dispatcher can
+    filter against the pack's granted domains.
+  needs_sensitive: false
+  examples_in_other_vaults:
+    - work
+    - personal
+    - family
+
+skills:
+  - name: cross-domain-search
+    description: Search the vault across all granted domains.
+    required_tools:
+      - mcp__example-vault__vault_search_global
+    prompt: |
+      Search the vault for the query phrase. The result set may span
+      multiple granted domains; the dispatcher will filter records
+      whose attributed domain falls outside the pack's grant.

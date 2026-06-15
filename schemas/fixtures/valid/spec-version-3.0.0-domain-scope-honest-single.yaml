@@ -1,0 +1,66 @@
+# DD-333 F.4: governance example for the granularity.domain_scope: single declaration.
+#
+# NOTE: This fixture exercises pack.schema.json (top-level
+# additionalProperties: true accepts the new granularity dimension via the
+# embedded comment). The authoritative AJV gate for granularity.domain_scope
+# lives in stallari-plugins/schemas/catalog-entry.schema.json (plugin catalog
+# entry JSON shape), not the pack manifest schema here. See
+# docs/domain-scope.md § "Where this declaration lives".
+#
+# Shape this fixture documents (lives in the plugin catalog entry, not pack.yaml):
+#
+#   tools:
+#     - name: list_notes_in_folder
+#       granularity:
+#         scope_filtering: server-side
+#         field_projection: per-field
+#         deterministic_ordering: stable
+#         audit_surface: structured
+#         domain_scope: single        # NEW at pack-spec 4.4.0
+#
+# The pack manifest below references the tool from a skill; the catalog entry
+# carrying the granularity block lives in stallari-plugins.
+spec_version: "3.0.0"
+pack: "1.13"
+slug: domain-scope-honest-single
+name: domain-scope-honest-single
+title: "Domain Scope — Honest Single"
+version: "1.0.0"
+description: Valid pack referencing a tool that returns records from one domain per call.
+
+trust_tier: community-signed
+
+source:
+  type: vault
+  vault_path: packs/domain-scope-honest-single/
+
+runtime:
+  distribution: none
+  publish_targets: []
+
+author:
+  name: Stallari Test Fixtures
+
+data:
+  reads:
+    - vault
+  writes: []
+  stores: nothing
+  phones_home: false
+
+domain_access:
+  description: >
+    Reads notes from a single folder per call; the folder maps to one
+    user domain via the DD-341 folder-to-domain registry.
+  needs_sensitive: false
+  examples_in_other_vaults:
+    - work
+    - projects
+
+skills:
+  - name: summarise-folder
+    description: Summarise notes in one folder.
+    required_tools:
+      - mcp__example-vault__list_notes_in_folder
+    prompt: |
+      List notes in the configured folder and summarise their contents.

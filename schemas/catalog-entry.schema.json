@@ -27,6 +27,24 @@
     },
     {
       "if": {
+        "properties": { "type": { "const": "add_on" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["name", "type", "description", "version", "author", "license", "external_system"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "bundle" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["name", "type", "description", "version", "members"]
+      }
+    },
+    {
+      "if": {
         "properties": {
           "install": {
             "properties": { "runtime": { "const": "library" } },
@@ -51,8 +69,8 @@
     },
     "type": {
       "type": "string",
-      "enum": ["plugin", "pack"],
-      "description": "Entry type. Plugins provide MCP tools; packs are workflow manifests."
+      "enum": ["plugin", "pack", "add_on", "bundle"],
+      "description": "Entry type. Plugins provide MCP tools; packs are workflow manifests; add_ons (DD-404) reveal UI + provision scoped auth for an external system (no tool surface, no software shipped externally); bundles (DD-404) group >= 2 members (pack/add-on/plugin) under one install unit + version pin."
     },
     "description": {
       "type": "string"
@@ -306,6 +324,41 @@
       "type": "integer",
       "minimum": 0,
       "description": "Number of credential fields required. 0 = no setup needed."
+    },
+    "external_system": {
+      "type": "object",
+      "description": "DD-404 add_on: the external system this add-on enables. ships_software_to_external is always false — the add-on reveals UI + provisions auth Stallari-side; it ships no software to the external system.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["attached-hardware", "cloud-endpoint", "external-app"]
+        },
+        "ships_software_to_external": { "const": false }
+      }
+    },
+    "provisions_auth": {
+      "type": "array",
+      "description": "DD-404 add_on: scoped credentials this add-on mints (least-privilege bearer per DD-186). Catalog summary of the manifest provisions_auth[].",
+      "items": { "type": "object" }
+    },
+    "reveals_ui": {
+      "type": "array",
+      "description": "DD-404 add_on: UI surfaces this add-on unhides in the app/daemon.",
+      "items": { "type": "object" }
+    },
+    "members": {
+      "type": "array",
+      "description": "DD-404 bundle: the >= 2 members (pack / add-on / plugin) installed atomically as one unit and version-pinned together. Acyclic by construction — no member declares an edge to another.",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["kind", "name", "version"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["pack", "add-on", "plugin"] },
+          "name": { "type": "string" },
+          "version": { "type": "string" }
+        }
+      }
     }
   }
 }

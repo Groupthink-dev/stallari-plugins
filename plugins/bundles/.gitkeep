@@ -1,0 +1,3 @@
+# DD-404 — bundle catalog-entry sources (type: "bundle"). Parallel to plugins/tools/.
+# A bundle is a named member-list (>= 2 of pack/add-on/plugin) + shared version pin.
+# Empty until the first instance lands (Stream Deck integration bundle — Phase E).

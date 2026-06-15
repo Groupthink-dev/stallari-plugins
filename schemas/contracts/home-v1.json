@@ -1,7 +1,7 @@
 {
   "$id": "https://stallari.app/schemas/contracts/home-v1.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Home automation service contract v1 — 14 operations across state, history, control, and environmental monitoring.",
+  "description": "Home automation service contract v1 — 14 operations across state, history, control, and environmental monitoring. v4.5: sites first-class — every op accepts an optional `site:` argument; harness resolves against the user's fleet.sites registry at dispatch time (DD-344 Phase A.3). Pre-v4.5 multi-site skills using Mustache @{site} enumeration are retired.",
   "operations": [
     {
       "classification": "required",
@@ -80,6 +80,9 @@
     },
     "service": {
       "const": "home"
+    },
+    "site_scoped": {
+      "const": true
     },
     "version": {
       "const": 1

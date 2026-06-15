@@ -17,6 +17,7 @@ export const DECLARED_SERVICES: string[] = [
   "functions",
   "gaming",
   "gpu-inference",
+  "harness-state",
   "home",
   "isp",
   "kv",

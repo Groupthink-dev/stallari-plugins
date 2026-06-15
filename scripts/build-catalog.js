@@ -21,6 +21,9 @@ import addFormats from "ajv-formats";
 import { loadCanonicalPacks } from "./lib/canonical-packs.js";
 const ROOT = resolve(import.meta.dirname, "..");
 const TOOLS_DIR = join(ROOT, "plugins", "tools");
+// DD-404: add-on + bundle catalog-entry sources (parallel to plugins/tools/).
+const ADD_ONS_DIR = join(ROOT, "plugins", "add-ons");
+const BUNDLES_DIR = join(ROOT, "plugins", "bundles");
 const DATA_DIR = join(ROOT, "data");
 const DIST_DIR = join(ROOT, "dist");
 
@@ -575,6 +578,91 @@ function packToCatalogEntry(pack) {
   };
 }
 
+/**
+ * DD-404 — Convert an add-on catalog-entry source to a CatalogEntry.
+ * Add-ons reveal UI + provision scoped auth for an external system; they ship
+ * no tool surface (vs plugin) and no skills/workloads (vs pack). The defining
+ * field is `external_system`.
+ */
+function addOnToCatalogEntry(raw) {
+  const { author_type, readiness } = resolveCertification(raw);
+  return {
+    name: raw.name,
+    title: raw.title || null,
+    type: "add_on",
+    version: raw.version,
+    description: raw.description || null,
+    author: raw.author || null,
+    services: [],
+    min_stallari: raw.min_stallari || null,
+    installs: null,
+    likes: null,
+    compatibility: null,
+    repository: raw.repository || null,
+    created: null,
+    updated: null,
+    visibility: raw.visibility || "open",
+    tier: raw.tier || null,
+    author_type,
+    readiness,
+    license: raw.license || null,
+    // DD-404 add-on-specific surface
+    external_system: raw.external_system || null,
+    provisions_auth:
+      Array.isArray(raw.provisions_auth) && raw.provisions_auth.length > 0
+        ? raw.provisions_auth
+        : null,
+    reveals_ui:
+      Array.isArray(raw.reveals_ui) && raw.reveals_ui.length > 0
+        ? raw.reveals_ui
+        : null,
+    icon: raw.icon || null,
+    tagline: raw.tagline || null,
+    readme: raw.readme || null,
+    highlights:
+      Array.isArray(raw.highlights) && raw.highlights.length > 0
+        ? raw.highlights
+        : null,
+    links: Array.isArray(raw.links) && raw.links.length > 0 ? raw.links : null,
+  };
+}
+
+/**
+ * DD-404 — Convert a bundle catalog-entry source to a CatalogEntry.
+ * A bundle is a minimal named-member-list + shared version pin: the install
+ * unit that couples a pack + add-on (or other members) without a dependency
+ * cycle. It is not a fourth artifact with its own lifecycle.
+ */
+function bundleToCatalogEntry(raw) {
+  const { author_type, readiness } = resolveCertification(raw);
+  return {
+    name: raw.name,
+    title: raw.title || null,
+    type: "bundle",
+    version: raw.version,
+    description: raw.description || null,
+    author: raw.author || null,
+    services: [],
+    min_stallari: raw.min_stallari || null,
+    installs: null,
+    likes: null,
+    compatibility: null,
+    repository: raw.repository || null,
+    created: null,
+    updated: null,
+    visibility: raw.visibility || "open",
+    tier: raw.tier || null,
+    author_type,
+    readiness,
+    license: raw.license || null,
+    // DD-404 bundle-specific surface
+    members: Array.isArray(raw.members) ? raw.members : [],
+    icon: raw.icon || null,
+    tagline: raw.tagline || null,
+    readme: raw.readme || null,
+  };
+}
+
 /** Generate static scenario cards for each catalog entry by cross-referencing services */
 function buildScenarios(entries) {
   // Index: service → entries that provide/use it
@@ -754,15 +842,51 @@ async function main() {
     entries.push(packToCatalogEntry(manifest));
   }
 
+  // Add-ons + bundles (DD-404) — catalog-entry sources parallel to plugins/tools/.
+  // Dirs may be empty/absent (no authored instances yet — DD-404 Phase E);
+  // tolerate ENOENT so the path is wired before the first instance lands.
+  for (const { dir, label, convert, type } of [
+    { dir: ADD_ONS_DIR, label: "add-on", convert: addOnToCatalogEntry, type: "add_on" },
+    { dir: BUNDLES_DIR, label: "bundle", convert: bundleToCatalogEntry, type: "bundle" },
+  ]) {
+    let files = [];
+    try {
+      files = (await readdir(dir)).filter((f) => f.endsWith(".json"));
+    } catch (err) {
+      if (err.code !== "ENOENT") throw err;
+    }
+    files.sort();
+    for (const file of files) {
+      const raw = JSON.parse(await readFile(join(dir, file), "utf-8"));
+      if (raw.hidden) continue;
+      // DD-404 sources declare `type` explicitly (unlike plugins/tools/, which
+      // derive it) so the discriminated catalog-entry validation actually fires.
+      if (raw.type !== type) {
+        throw new Error(
+          `${label} source ${file} must declare "type": "${type}" (found ${JSON.stringify(raw.type)})`,
+        );
+      }
+      const verdict = await validateCatalogEntry(raw);
+      if (!verdict.valid) {
+        throw new Error(
+          `Catalog entry ${raw.name || file} fails schema validation:\n${verdict.errorsText}`,
+        );
+      }
+      entries.push(convert(raw));
+    }
+  }
+
   const now = new Date().toISOString().split("T")[0];
 
   const catalog = {
     meta: {
-      version: "1.1.0",
+      version: "1.2.0",
       generated: now,
       total: entries.length,
       plugins: entries.filter((e) => e.type === "plugin").length,
       packs: entries.filter((e) => e.type === "pack").length,
+      add_ons: entries.filter((e) => e.type === "add_on").length,
+      bundles: entries.filter((e) => e.type === "bundle").length,
     },
     data: entries,
   };
@@ -939,6 +1063,8 @@ export {
   computeCanonicalDigest,
   pluginToCatalogEntry,
   packToCatalogEntry,
+  addOnToCatalogEntry,
+  bundleToCatalogEntry,
   buildServices,
   buildScenarios,
   validatePluginUX,

@@ -1,0 +1,81 @@
+{
+  "$id": "https://stallari.app/schemas/stallari-bundle.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Schema for stallari-bundle.yaml — a minimal bundle artifact that names a set of co-installed members and a shared version pin (DD-404). A bundle is the install unit for artifacts that must travel together — e.g. a pack that requires its add-on and vice-versa. The bundle keeps the dependency graph ACYCLIC: members do not declare edges to one another; the bundle is the single install/remove/version unit. A bundle is NOT a fourth lifecycle — it carries no behaviour of its own beyond membership.",
+  "properties": {
+    "author": {
+      "description": "Bundle author identifier.",
+      "type": "string"
+    },
+    "bundle": {
+      "description": "Bundle manifest spec version (e.g. '1.0'). Discriminates this artifact as a bundle.",
+      "pattern": "^\\d+\\.\\d+$",
+      "type": "string"
+    },
+    "description": {
+      "description": "Human-readable summary of what the bundle installs as one unit.",
+      "maxLength": 200,
+      "type": "string"
+    },
+    "license": {
+      "description": "SPDX license identifier.",
+      "type": "string"
+    },
+    "members": {
+      "description": "The artifacts installed together as one unit. A bundle of fewer than two members is pointless — install the single artifact directly. Members span artifact classes (e.g. a pack + an add-on). No member declares a dependency on another member; the bundle is the coupling.",
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "description": "Artifact class of this member (DD-404 taxonomy: pack, plugin/MCP, or add-on).",
+            "enum": [
+              "pack",
+              "add-on",
+              "plugin"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "description": "Member artifact identifier.",
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "type": "string"
+          },
+          "version": {
+            "description": "Member semantic version pinned by this bundle.",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "name",
+          "version"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "name": {
+      "description": "Bundle identifier (e.g. 'stream-deck-integration').",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "type": "string"
+    },
+    "version": {
+      "description": "Bundle semantic version. Installing the bundle installs its members atomically; the bundle version pins the member set.",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "bundle",
+    "name",
+    "version",
+    "description",
+    "members"
+  ],
+  "title": "Stallari Bundle Manifest",
+  "type": "object"
+}
