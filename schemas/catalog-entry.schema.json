@@ -336,6 +336,11 @@
         "ships_software_to_external": { "const": false }
       }
     },
+    "provisions_scopes": {
+      "type": "array",
+      "description": "DD-404 add_on: the reviewed envelope of auth scopes this add-on may mint across all its credentials — the surface reviewed at the gated first-party admission lane. Every provisions_auth scope is a subset of this set.",
+      "items": { "type": "string" }
+    },
     "provisions_auth": {
       "type": "array",
       "description": "DD-404 add_on: scoped credentials this add-on mints (least-privilege bearer per DD-186). Catalog summary of the manifest provisions_auth[].",
