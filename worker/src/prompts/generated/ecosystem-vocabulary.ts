@@ -10,7 +10,7 @@ These are the built-in operator agents. Packs assign skills to agents. When a us
 **comms-operator** (operator) [email, vault, tasks]: Email triage, contact management, correspondence tracking
 **scheduling-operator** (operator) [calendar, vault, tasks]: Calendar management, conflict detection, event creation from handoffs
 **secops-operator** (operator) [vault]: macOS security posture — TCC grants, launchd drift, credential freshness, network exposure
-**fleet-operator** (operator) [vault]: Platform health monitoring, MCP connectivity, version drift, dispatch analytics, fleet coordination
+**fabric-operator** (operator) [vault]: Proactive fabric-wide health-telemetry processing — platform health monitoring, MCP connectivity, version drift, dispatch analytics, fabric coordination
 **home-operator** (operator) [home, vault, calendar, tasks, email]: Home Assistant integration — energy, climate, presence, scenes, maintenance, incidents
 **bizops-operator** (operator) [billing, accounting, transactional-email, vault]: Billing lifecycle, revenue analytics, accounting integration, financial reporting
 
@@ -19,7 +19,7 @@ These are the built-in operator agents. Packs assign skills to agents. When a us
 Reference these when the user's needs overlap. Suggest forking an open pack rather than building from scratch. Mention sealed/paid packs as alternatives when relevant.
 
 **Bundled (included with Stallari):**
-- **stallari-core** v4.2.0 [calendar, context_packet, email, home, tasks, vault]: Core platform operators and infrastructure health — PKM, comms, scheduling, security auditing, flee… (47 skills, 10 agents, free)
+- **stallari-core** v4.3.0 [calendar, context_packet, email, home, tasks, vault]: Core platform operators and infrastructure health — PKM, comms, scheduling, security auditing, flee… (47 skills, 10 agents, free)
 - **stallari-private-cloud** v0.3.2 [documentation, overlay-network, virtualmachine]: Provision and manage GPU cloud compute instances declaratively. Stands up stallari-gpu-worker nodes… (6 skills, 4 agents, free)
 
 **Open (forkable):**
@@ -36,6 +36,6 @@ Reference these when the user's needs overlap. Suggest forking an open pack rath
 **Sealed (proprietary):**
 - **stallari-private-cloud** v0.3.2 [documentation, overlay-network, virtualmachine]: Provision and manage GPU cloud compute instances declaratively. Stands up stallari-gpu-worker nodes… (6 skills, 4 agents, free)`;
 
-export const AGENT_NAMES = ["digital-assistant", "pkm-operator", "comms-operator", "scheduling-operator", "secops-operator", "fleet-operator", "home-operator", "bizops-operator"] as const;
+export const AGENT_NAMES = ["digital-assistant", "pkm-operator", "comms-operator", "scheduling-operator", "secops-operator", "fabric-operator", "home-operator", "bizops-operator"] as const;
 
 export const PACK_NAMES = ["business-ops", "declarative-infra", "gaming-lounge", "home-maintenance", "network-observatory", "product-operations-starter", "saas-revenue-ops", "speculator", "stallari-core", "stallari-hearth", "stallari-private-cloud"] as const;

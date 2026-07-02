@@ -1,7 +1,7 @@
 # expected-error: reserved-agent-name
 # DD-222 — pack-spec 2.7.0. A non-platform pack cannot redefine
 # stallari-core's bundled operator slugs (pkm-operator, comms-operator,
-# scheduling-operator, secops-operator, fleet-operator,
+# scheduling-operator, secops-operator, fabric-operator,
 # notifications-operator) or harness-only personas (digital-assistant,
 # system-architect). Authors should reference these by bare name in
 # `skill.agent:` to reuse the platform persona instead.

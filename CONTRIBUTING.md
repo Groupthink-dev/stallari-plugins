@@ -23,7 +23,7 @@ All external submissions enter at `tier: "community"`. See the README for the pr
 
 Stallari ships a fixed palette of ten platform operator personas
 (`pkm-operator`, `comms-operator`, `scheduling-operator`, `secops-operator`,
-`fleet-operator`, `notifications-operator`, `home-operator`,
+`fabric-operator`, `notifications-operator`, `home-operator`,
 `bizops-operator`, `review-operator`, `memory-operator`) plus two
 harness-only personas (`digital-assistant`, `system-architect`).
 

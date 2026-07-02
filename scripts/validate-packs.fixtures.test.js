@@ -56,7 +56,7 @@ const SKIPPED_CODES = new Set([
   // lives in the harness PackCompiler and the pack-spec AJV schema, not in
   // this marketplace validator — non-platform packs cannot redefine
   // pkm-operator / comms-operator / scheduling-operator / secops-operator /
-  // fleet-operator / notifications-operator / digital-assistant /
+  // fabric-operator / notifications-operator / digital-assistant /
   // system-architect.
   "reserved-agent-name",
   // DD-261 Phase D — v3.0.0 cut error codes. The strict v3 submission gate

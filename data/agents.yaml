@@ -37,9 +37,9 @@ agents:
     services: [vault]
     core_skills: [darwin-state-audit, launchd-audit, credential-expiry-watch, tcc-drift-monitor, network-exposure-scan, fleet-trust-audit]
 
-  fleet-operator:
+  fabric-operator:
     role: operator
-    domain: Platform health monitoring, MCP connectivity, version drift, dispatch analytics, fleet coordination
+    domain: Proactive fabric-wide health-telemetry processing — platform health monitoring, MCP connectivity, version drift, dispatch analytics, fabric coordination
     services: [vault]
     core_skills: [platform-health, version-drift-check, dispatch-analytics, upgrade-coordinator, capacity-forecast, mcp-lifecycle, backup-verification]
 

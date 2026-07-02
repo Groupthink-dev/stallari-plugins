@@ -1044,7 +1044,7 @@
                   "comms-operator",
                   "scheduling-operator",
                   "secops-operator",
-                  "fleet-operator",
+                  "fabric-operator",
                   "notifications-operator",
                   "home-operator",
                   "bizops-operator",
@@ -1072,7 +1072,7 @@
       "type": "string"
     },
     "agents": {
-      "$comment": "Reserved platform operator names (DD-222): pkm-operator, comms-operator, scheduling-operator, secops-operator, fleet-operator, notifications-operator, home-operator, bizops-operator, review-operator, memory-operator, digital-assistant, system-architect. Reference these via skill.agent: <name> to reuse the platform persona; redefining them is rejected for every pack EXCEPT stallari-core (the privileged operator definer, DD-146 §A). The rejection is now enforced by a top-level slug-keyed conditional (see root allOf — DD-371 Phase A) rather than here in propertyNames, because propertyNames cannot see the sibling top-level slug property.",
+      "$comment": "Reserved platform operator names (DD-222): pkm-operator, comms-operator, scheduling-operator, secops-operator, fabric-operator, notifications-operator, home-operator, bizops-operator, review-operator, memory-operator, digital-assistant, system-architect. Reference these via skill.agent: <name> to reuse the platform persona; redefining them is rejected for every pack EXCEPT stallari-core (the privileged operator definer, DD-146 §A). The rejection is now enforced by a top-level slug-keyed conditional (see root allOf — DD-371 Phase A) rather than here in propertyNames, because propertyNames cannot see the sibling top-level slug property.",
       "additionalProperties": {
         "$ref": "#/$defs/agent"
       },
