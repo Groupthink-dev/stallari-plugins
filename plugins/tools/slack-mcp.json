@@ -1,5 +1,6 @@
 {
   "name": "slack-mcp",
+  "type": "plugin",
   "title": "Slack",
   "description": "Slack team messaging — channels, threads, search, users, reactions. Official vendor-hosted remote MCP.",
   "tagline": "Slack channels, threads, and search via official MCP",
@@ -12,6 +13,7 @@
   "readiness": "beta",
   "contract": "messages-v1",
   "risk_class": "external_side_effect",
+  "repository": null,
   "homepage": "https://api.slack.com/docs/mcp",
   "install": {
     "runtime": "remote",
@@ -53,25 +55,6 @@
     "test": {
       "skip": true,
       "skip_reason": "OAuth device-code flow — no credentials present until flow completes."
-    }
-  },
-  "services": {
-    "messages": {
-      "chats": "slack_list_channels",
-      "messages": "slack_get_channel_history",
-      "search": "slack_search_messages",
-      "chat": "slack_get_channel_info",
-      "contacts": "slack_list_users",
-      "unread": "slack_unread_counts",
-      "threads": "slack_get_thread",
-      "reactions": "slack_get_reactions",
-      "members": "slack_channel_members",
-      "pins": "slack_list_pins",
-      "channels": "slack_list_all_channels",
-      "presence": "slack_user_presence",
-      "send": "slack_post_message",
-      "reply_thread": "slack_reply_to_thread",
-      "react": "slack_add_reaction"
     }
   },
   "highlights": [

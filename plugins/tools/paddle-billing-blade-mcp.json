@@ -1,5 +1,6 @@
 {
   "name": "paddle-billing-blade-mcp",
+  "type": "plugin",
   "title": "Paddle Billing",
   "description": "Paddle Billing API operations — billing-v1 (subscription billing, products, prices) + payments-v1 (transactions as one-time payments, adjustments as refunds). Token-efficient with pipe-delimited output, field selection, and human-readable money formatting.",
   "tagline": "Subscriptions, products, and revenue through Paddle",

@@ -1,5 +1,6 @@
 {
   "name": "google-workspace-mcp",
+  "type": "plugin",
   "title": "Google Workspace",
   "description": "Google Workspace email via Gmail API — search, read, send, labels, threads",
   "tagline": "Gmail and Workspace email via the official Google API",

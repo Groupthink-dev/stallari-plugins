@@ -1,5 +1,6 @@
 {
   "name": "todoist-blade-mcp",
+  "type": "plugin",
   "title": "Todoist",
   "description": "Todoist task management — projects, sections, tasks, labels, comments, incremental sync, batch commands, filter queries",
   "tagline": "Todoist tasks with dual API and incremental sync",

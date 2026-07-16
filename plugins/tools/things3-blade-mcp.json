@@ -1,5 +1,6 @@
 {
   "name": "things3-blade-mcp",
+  "type": "plugin",
   "title": "Things 3",
   "description": "Things 3 task management via AppleScript and URL scheme — macOS only",
   "tagline": "GTD task management through Things 3 on macOS",

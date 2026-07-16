@@ -1,5 +1,6 @@
 {
   "name": "apple-mail-blade-mcp",
+  "type": "plugin",
   "aliases": [
     "mail-app-blade-mcp"
   ],

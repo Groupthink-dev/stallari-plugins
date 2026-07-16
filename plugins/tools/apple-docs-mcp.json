@@ -1,5 +1,6 @@
 {
   "name": "apple-docs-mcp",
+  "type": "plugin",
   "title": "Apple Developer Docs",
   "description": "Search Apple Developer Documentation — iOS, macOS, SwiftUI, UIKit APIs, WWDC videos, sample code, and platform compatibility",
   "tagline": "Apple Developer Documentation, WWDC sessions, and API reference",
@@ -7,6 +8,7 @@
   "author": "kimsungwhee",
   "license": "MIT",
   "icon": "/icons/apple-docs-mcp.svg",
+  "tier": "community",
   "author_type": "community",
   "readiness": "beta",
   "contract": "documentation-v1",
@@ -284,18 +286,6 @@
     "test": {
       "skip": true,
       "skip_reason": "Read-only public docs API; no credentials to verify."
-    }
-  },
-  "services": {
-    "documentation": {
-      "search": "search_apple_docs",
-      "info": "get_apple_doc_content",
-      "browse": "list_technologies",
-      "versions": "get_documentation_updates",
-      "references": "resolve_references_batch",
-      "samples": "get_sample_code",
-      "compatibility": "get_platform_compatibility",
-      "related": "get_related_apis"
     }
   },
   "scenarios": [

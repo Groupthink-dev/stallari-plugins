@@ -1,5 +1,6 @@
 {
   "name": "youtube-mcp-server",
+  "type": "plugin",
   "title": "YouTube",
   "description": "YouTube video search, channel discovery, playlist browsing, and transcript extraction via Data API v3",
   "version": "1.0.0",

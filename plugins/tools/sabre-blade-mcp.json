@@ -1,5 +1,6 @@
 {
   "name": "sabre-blade-mcp",
+  "type": "plugin",
   "title": "Sabre Travel Platform",
   "description": "Search flights, hotels, and rental cars on the Sabre GDS. Book and manage trips with 15 tools, token-efficient output, and dual write-gates on all booking operations.",
   "tagline": "Flights, hotels, cars, and trip management via the Sabre GDS",

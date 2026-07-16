@@ -1,5 +1,6 @@
 {
   "name": "hass-mcp",
+  "type": "plugin",
   "title": "Home Assistant (community)",
   "description": "Home Assistant operations via REST API — entity state, history, areas, services, automations, camera snapshots, energy monitoring",
   "tagline": "Community Home Assistant with camera snapshots",

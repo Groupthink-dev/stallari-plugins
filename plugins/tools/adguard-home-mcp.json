@@ -1,5 +1,6 @@
 {
   "name": "adguard-home-mcp",
+  "type": "plugin",
   "title": "AdGuard Home — Network-Wide DNS Shield",
   "description": "Full-coverage AdGuard Home management — DNS config, filtering rules, blocklists, query log, clients, DHCP, rewrites, safe browsing, parental controls, TLS, and blocked services. 65 tools with read-only mode and credential sanitisation.",
   "tagline": "Your entire AdGuard Home from the conversation",

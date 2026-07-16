@@ -1,5 +1,6 @@
 {
   "name": "resend-blade-mcp",
+  "type": "plugin",
   "title": "Resend",
   "description": "Resend transactional email — send, contacts, broadcasts, templates, domains, webhooks. Security-first with no filesystem access.",
   "tagline": "Transactional email with zero filesystem exposure",

@@ -1,5 +1,6 @@
 {
   "name": "office365-blade-mcp",
+  "type": "plugin",
   "title": "Microsoft Office 365",
   "description": "Microsoft 365 operations via Graph API — email, calendar, tasks (To Do + Planner). Token-efficient, write-gated, dual auth.",
   "tagline": "Email, calendar, and tasks through Microsoft Graph",
@@ -111,40 +112,6 @@
       "expected_status": [
         200
       ]
-    }
-  },
-  "services": {
-    "email": {
-      "inbox": "o365_inbox",
-      "message": "o365_message",
-      "search": "o365_search",
-      "send": "o365_send",
-      "reply": "o365_reply",
-      "labels": "o365_folders",
-      "threads": "o365_threads",
-      "move": "o365_move",
-      "delete": "o365_delete"
-    },
-    "calendar": {
-      "events": "o365_events",
-      "event": "o365_event",
-      "search": "o365_search_events",
-      "calendars": "o365_calendars",
-      "freebusy": "o365_freebusy",
-      "today": "o365_today",
-      "week": "o365_week",
-      "create": "o365_create_event",
-      "update": "o365_update_event",
-      "delete": "o365_delete_event"
-    },
-    "tasks": {
-      "list": "o365_tasks",
-      "search": "o365_search_tasks",
-      "projects": "o365_task_lists",
-      "today": "o365_tasks_today",
-      "create": "o365_create_task",
-      "update": "o365_update_task",
-      "complete": "o365_complete_task"
     }
   },
   "highlights": [

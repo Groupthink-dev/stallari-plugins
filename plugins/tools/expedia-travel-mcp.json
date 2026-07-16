@@ -1,5 +1,6 @@
 {
   "name": "expedia-travel-mcp",
+  "type": "plugin",
   "title": "Expedia Travel Recommendations",
   "description": "Official Expedia MCP server for travel recommendations — search hotels, flights, activities, and car rentals via Expedia's platform.",
   "tagline": "Expedia-powered travel search for hotels, flights, activities, and cars",

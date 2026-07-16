@@ -1,5 +1,6 @@
 {
   "name": "tessie-mcp",
+  "type": "plugin",
   "title": "Tesla (Tessie)",
   "description": "Tesla vehicle monitoring and control via the Tessie API — state, battery, charging, climate, drives, and 26 vehicle commands with confirmation-gated safety.",
   "tagline": "Tesla vehicle control with summary-first responses and built-in safety gates",

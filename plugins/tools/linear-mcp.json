@@ -1,5 +1,6 @@
 {
   "name": "linear-mcp",
+  "type": "plugin",
   "title": "Linear",
   "description": "Linear project management — issues, projects, cycles, labels, teams. Official vendor-hosted remote MCP.",
   "tagline": "Issue tracking and sprint management via Linear",
@@ -11,6 +12,7 @@
   "author_type": "community",
   "readiness": "beta",
   "contract": "tasks-v1",
+  "repository": null,
   "homepage": "https://linear.app/docs/mcp",
   "install": {
     "runtime": "remote",
@@ -50,20 +52,6 @@
     "test": {
       "skip": true,
       "skip_reason": "OAuth device-code flow — no credentials present until flow completes."
-    }
-  },
-  "services": {
-    "tasks": {
-      "list": "linear_list_issues",
-      "search": "linear_search_issues",
-      "projects": "linear_list_projects",
-      "today": "linear_my_issues",
-      "inbox": "linear_inbox",
-      "tags": "linear_list_labels",
-      "summary": "linear_team_overview",
-      "create": "linear_create_issue",
-      "update": "linear_update_issue",
-      "complete": "linear_complete_issue"
     }
   },
   "highlights": [

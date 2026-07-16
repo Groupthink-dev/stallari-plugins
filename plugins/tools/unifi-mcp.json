@@ -1,5 +1,6 @@
 {
   "name": "unifi-mcp",
+  "type": "plugin",
   "title": "UniFi (Full Management)",
   "description": "Comprehensive UniFi network management — 161 tools covering devices, clients, networks, firewall, VPN, and system configuration",
   "tagline": "Full UniFi management with 161 tools across every domain",

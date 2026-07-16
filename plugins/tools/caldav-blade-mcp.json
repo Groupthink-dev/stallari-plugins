@@ -1,5 +1,6 @@
 {
   "name": "caldav-blade-mcp",
+  "type": "plugin",
   "title": "Calendar (CalDAV)",
   "description": "CalDAV calendar operations \u2014 protocol-level access to any CalDAV server",
   "tagline": "Universal calendar access over the CalDAV protocol",

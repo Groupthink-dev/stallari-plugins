@@ -1,5 +1,6 @@
 {
   "name": "vultr-blade-mcp",
+  "type": "plugin",
   "title": "Vultr GPU Cloud",
   "description": "Manage Vultr GPU compute infrastructure \u2014 VMs, bare metal, serverless inference, DNS, firewall, snapshots, and billing. 50 tools implementing virtualisation-v1, serverless-v1, and dns-authoritative-v1 contracts.",
   "tagline": "GPU compute infrastructure \u2014 VMs, bare metal, inference, DNS, firewall, snapshots, billing",
@@ -8,7 +9,7 @@
   "license": "MIT",
   "icon": "/icons/vultr-blade-mcp.svg",
   "tier": "certified",
-  "author_type": "stallari",
+  "author_type": "first-party",
   "readiness": "production",
   "contract": [
     "virtualisation-v1",

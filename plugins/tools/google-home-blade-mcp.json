@@ -1,5 +1,6 @@
 {
   "name": "google-home-blade-mcp",
+  "type": "plugin",
   "title": "Google Home",
   "description": "Google Home / Nest device control via SDM API \u2014 thermostats, cameras, doorbells, event streams",
   "tagline": "Nest thermostat, camera, and doorbell control via SDM",

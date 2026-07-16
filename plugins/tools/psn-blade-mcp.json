@@ -1,5 +1,6 @@
 {
   "name": "psn-blade-mcp",
+  "type": "plugin",
   "title": "PlayStation Network",
   "description": "PlayStation Network operations — trophies, game library, friends, presence, and messaging via unofficial PSN API",
   "tagline": "Trophy tracking, game library, and friends on PSN",
@@ -124,27 +125,6 @@
     }
   ],
   "readme": "### What it does\n\nPlayStation Network gives your AI agent access to PSN player data — trophies, game library, friends list, online presence, and messaging. Built on the unofficial PSNAWP library, it covers the same data the PlayStation app shows you, minus the UI.\n\nYour agent can check trophy progress, compare achievements with friends, browse your game library, see who’s online, and search for players or games across PSN.\n\n### Authentication\n\nPSN uses an NPSSO session token rather than a standard API key. You extract it from your browser after logging into your Sony account. The token is short-lived — the library handles refresh automatically, but you may need to re-extract after extended inactivity.\n\nA dedicated PSN account is recommended. Excessive API use on your primary account may trigger Sony’s rate limiting or account restrictions.\n\n### Safety model\n\nRead operations work immediately — trophies, games, friends, presence, search.\n\nWrite operations (messaging, friend accept/remove) require `PSN_WRITE_ENABLED=true`. This is disabled by default, so your agent can explore freely without accidentally sending messages or modifying your friends list.\n\n### Tool coverage\n\n| Category | Tools | What you can do |\n|----------|-------|-----------------|\n| Profile | 1 | View player profile and avatar |\n| Trophies | 4 | Earned trophies, summaries, groups, compare |\n| Games | 5 | Library, recent play, details, search, entitlements |\n| Social | 5 | Friends, presence, search, messaging, friend management |\n| Devices | 1 | Registered console information |",
-  "services": {
-    "gaming": {
-      "profile": "psn_profile",
-      "achievements": "psn_trophies",
-      "achievement_summary": "psn_trophy_summary",
-      "games_played": "psn_games",
-      "games_recent": "psn_games_recent",
-      "friends": "psn_friends",
-      "presence": "psn_presence",
-      "search_users": "psn_search_users",
-      "achievement_compare": "psn_trophy_compare",
-      "achievement_groups": "psn_trophy_groups",
-      "games_purchased": "psn_entitlements",
-      "devices": "psn_devices",
-      "game_details": "psn_game_details",
-      "search_games": "psn_search_games",
-      "send_message": "psn_send_message",
-      "friend_add": "psn_friend_accept",
-      "friend_remove": "psn_friend_remove"
-    }
-  },
   "certification": {
     "status": "certified",
     "validated_version": "0.1.0",

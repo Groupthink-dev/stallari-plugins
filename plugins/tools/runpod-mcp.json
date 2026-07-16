@@ -1,5 +1,6 @@
 {
   "name": "runpod-mcp",
+  "type": "plugin",
   "title": "RunPod GPU Cloud",
   "description": "Manage RunPod GPU infrastructure — pods, serverless endpoints, templates, network volumes, and container registries. 43 tools covering the full RunPod API surface.",
   "tagline": "GPU cloud management — pods, endpoints, and serverless inference",

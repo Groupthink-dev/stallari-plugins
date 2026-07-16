@@ -1,5 +1,6 @@
 {
   "name": "apple-reminders-blade-mcp",
+  "type": "plugin",
   "title": "Apple Reminders",
   "description": "Apple Reminders operations — lists, reminders, search, due dates, create, complete, update, delete",
   "tagline": "Native Apple Reminders access on macOS",
