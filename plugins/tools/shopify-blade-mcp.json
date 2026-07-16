@@ -1,5 +1,6 @@
 {
   "name": "shopify-blade-mcp",
+  "type": "plugin",
   "title": "Shopify",
   "description": "Shopify Admin API operations via GraphQL — products, orders, customers, inventory, collections, fulfillment, discounts, metafields, webhooks, analytics",
   "tagline": "Full Shopify store management via GraphQL Admin API",

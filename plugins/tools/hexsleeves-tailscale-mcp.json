@@ -1,5 +1,6 @@
 {
   "name": "hexsleeves-tailscale-mcp",
+  "type": "plugin",
   "title": "Tailscale (Full Management)",
   "description": "Comprehensive Tailscale management — ~15 tools covering devices, ACLs, DNS, keys, and network configuration",
   "tagline": "Full Tailscale management with device, ACL, and DNS controls",

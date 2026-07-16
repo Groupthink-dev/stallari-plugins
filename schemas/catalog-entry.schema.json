@@ -4,7 +4,7 @@
   "title": "Stallari Catalog Entry",
   "description": "Schema for entries in the registry catalog (plugins/*.json). Supports both plugin and pack types via discriminated union on the 'type' field.",
   "type": "object",
-  "required": ["name", "description", "version", "author"],
+  "required": ["name", "type", "description", "version", "author"],
   "additionalProperties": true,
   "allOf": [
     {
@@ -87,11 +87,12 @@
       "description": "SPDX license identifier. Required for plugins."
     },
     "tier": {
-      "type": ["string", "null"],
-      "enum": ["certified", "verified", "community", null]
+      "type": "string",
+      "enum": ["certified", "verified", "community"]
     },
     "contract": {
       "type": ["string", "array", "null"],
+      "$comment": "null means a community tool has no canonical contract mapping (residual divergent entry).",
       "description": "Domain contract identifier(s). String for single contract; array for multi-contract plugins (e.g. cloudflare-blade declares four). Required for plugins.",
       "items": { "type": "string" }
     },
@@ -197,7 +198,8 @@
       }
     },
     "repository": {
-      "type": ["string", "null"]
+      "type": ["string", "null"],
+      "$comment": "null means no verified source repository (residual divergent entry)."
     },
     "install": {
       "type": "object",
@@ -248,8 +250,8 @@
     },
     "author_type": {
       "type": "string",
-      "enum": ["first-party", "verified", "community", "unverified", "stallari", "third-party"],
-      "description": "Authorship class. DD-265: required for runtime == 'library' (must be 'first-party' — only first-party builds can edit Package.swift). Legacy values 'stallari' (≡ first-party) and 'third-party' (≡ community) remain accepted."
+      "enum": ["first-party", "community"],
+      "description": "Authorship class. DD-265: required for runtime == 'library' (must be 'first-party' — only first-party builds can edit Package.swift)."
     },
     "hidden": {
       "type": "boolean",
@@ -270,8 +272,12 @@
     "multi_instance": { "type": "boolean" },
     "env": { "type": "array" },
     "services": {
-      "type": ["array", "object"],
-      "description": "Abstract service names this entry provides or uses. Array of strings is the canonical shape; object form is legacy (apple-docs-mcp et al.)."
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_-]*$"
+      },
+      "description": "Abstract service names this entry provides or uses. Service identifiers may contain hyphens and underscores."
     },
     "min_stallari": {
       "type": "string",

@@ -1,5 +1,6 @@
 {
   "name": "mcp-nixos",
+  "type": "plugin",
   "title": "NixOS",
   "description": "Search NixOS packages, options, Home Manager, nix-darwin, flakes, FlakeHub, NixVim, wiki, Noogle, and NixHub version history",
   "tagline": "NixOS ecosystem reference — packages, options, flakes, and docs",
@@ -7,6 +8,7 @@
   "author": "utensils",
   "license": "MIT",
   "icon": "/icons/mcp-nixos.svg",
+  "tier": "community",
   "author_type": "community",
   "readiness": "beta",
   "contract": "documentation-v1",
@@ -87,14 +89,6 @@
     "test": {
       "skip": true,
       "skip_reason": "Read-only public NixOS APIs; no credentials to verify."
-    }
-  },
-  "services": {
-    "documentation": {
-      "search": "nix",
-      "info": "nix",
-      "browse": "nix",
-      "versions": "nix_versions"
     }
   },
   "scenarios": [

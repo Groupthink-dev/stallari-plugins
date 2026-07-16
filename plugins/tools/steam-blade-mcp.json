@@ -1,5 +1,6 @@
 {
   "name": "steam-blade-mcp",
+  "type": "plugin",
   "title": "Steam Games",
   "description": "Steam gaming platform — library, achievements, friends, store data, market prices",
   "tagline": "Steam library, achievements, friends, and market data",
@@ -75,23 +76,6 @@
         "url": "https://steamid.io"
       }
     ]
-  },
-  "services": {
-    "gaming": {
-      "profile": "steam_profile",
-      "achievements": "steam_achievements",
-      "achievement_summary": "steam_achievements",
-      "games_played": "steam_library",
-      "games_recent": "steam_recent",
-      "friends": "steam_friends",
-      "game_details": "steam_game",
-      "search_games": "steam_search",
-      "game_news": "steam_news",
-      "global_stats": "steam_stats",
-      "inventory": "steam_inventory",
-      "market_price": "steam_price",
-      "player_count": "steam_players"
-    }
   },
   "highlights": [
     {

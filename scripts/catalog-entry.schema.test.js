@@ -30,6 +30,23 @@ function loadFixture(name) {
   return JSON.parse(readFileSync(join(FIXTURE_DIR, name), "utf-8"));
 }
 
+function validPluginEntry(overrides = {}) {
+  return {
+    name: "schema-tightening-test-mcp",
+    type: "plugin",
+    description: "Inline fixture for catalog-entry schema tightening.",
+    version: "1.0.0",
+    author: "stallari",
+    license: "MIT",
+    tier: "community",
+    author_type: "community",
+    contract: "example-v1",
+    repository: "https://github.com/Groupthink-dev/schema-tightening-test-mcp",
+    install: { runtime: "npm", package: "schema-tightening-test-mcp" },
+    ...overrides,
+  };
+}
+
 describe("DD-333 catalog-entry schema — granularity fixtures", () => {
   it("accepts entry with fully-declared per-tool granularity", async () => {
     const entry = loadFixture("tool-with-granularity.json");
@@ -167,6 +184,85 @@ describe("DD-333 F.1 catalog-entry schema — non_conformance_rationale fixtures
       "tool-non-conformance-rationale-affected-tools-mismatch.json",
     );
     const verdict = await validateCatalogEntry(entry);
+    assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+});
+
+describe("catalog-entry schema — divergent plugin shapes", () => {
+  it("rejects a plugin entry missing type", async () => {
+    const entry = validPluginEntry();
+    delete entry.type;
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, false);
+  });
+
+  it("rejects object-form services", async () => {
+    const entry = validPluginEntry({ services: { example: { list: "list_examples" } } });
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, false);
+  });
+
+  it("accepts array-form services with underscore and hyphen identifiers", async () => {
+    const entry = validPluginEntry({ services: ["file_storage", "prediction-market"] });
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+
+  it("rejects invalid service identifiers", async () => {
+    const entry = validPluginEntry({ services: ["prediction market"] });
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, false);
+  });
+
+  it("rejects tier: null", async () => {
+    const entry = validPluginEntry({ tier: null });
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, false);
+  });
+
+  for (const authorType of ["stallari", "third-party"]) {
+    it(`rejects legacy author_type: ${authorType}`, async () => {
+      const entry = validPluginEntry({ author_type: authorType });
+
+      const verdict = await validateCatalogEntry(entry);
+
+      assert.equal(verdict.valid, false);
+    });
+  }
+
+  it("accepts contract: null for a community tool with no canonical mapping", async () => {
+    const entry = validPluginEntry({ contract: null });
+
+    const verdict = await validateCatalogEntry(entry);
+
+    assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+
+  for (const contract of [false, 42]) {
+    it(`rejects invalid contract shape: ${JSON.stringify(contract)}`, async () => {
+      const entry = validPluginEntry({ contract });
+
+      const verdict = await validateCatalogEntry(entry);
+
+      assert.equal(verdict.valid, false);
+    });
+  }
+
+  it("accepts repository: null when no source repository is verified", async () => {
+    const entry = validPluginEntry({ repository: null });
+
+    const verdict = await validateCatalogEntry(entry);
+
     assert.equal(verdict.valid, true, verdict.errorsText);
   });
 });

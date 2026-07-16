@@ -1,5 +1,6 @@
 {
   "name": "starlink-enterprise-mcp",
+  "type": "plugin",
   "title": "Starlink Enterprise",
   "description": "Starlink Enterprise cloud API — fleet management, telemetry, service lines, data usage, and availability for enterprise accounts with OAuth2 credentials.",
   "tagline": "Cloud fleet management for enterprise Starlink accounts",

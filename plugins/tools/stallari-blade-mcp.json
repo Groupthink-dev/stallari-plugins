@@ -1,5 +1,6 @@
 {
   "name": "stallari-blade-mcp",
+  "type": "plugin",
   "aliases": [
     "stallari-blade-mcp"
   ],

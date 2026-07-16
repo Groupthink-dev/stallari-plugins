@@ -1,5 +1,6 @@
 {
   "name": "home-assistant-blade-mcp",
+  "type": "plugin",
   "title": "Home Assistant",
   "description": "Home Assistant operations \u2014 entities, state, history, device control, automations, energy, multi-site management",
   "tagline": "Multi-site Home Assistant control with write gating",

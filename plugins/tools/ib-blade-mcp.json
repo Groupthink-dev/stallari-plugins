@@ -1,5 +1,6 @@
 {
   "name": "ib-blade-mcp",
+  "type": "plugin",
   "title": "Interactive Brokers",
   "version": "0.1.1",
   "description": "Interactive Brokers MCP Server — portfolio, market data, orders, scanners via Client Portal Gateway",
@@ -112,31 +113,6 @@
         "url": "https://github.com/Groupthink-dev/ib-blade-mcp"
       }
     ]
-  },
-  "services": {
-    "brokerage": {
-      "status": "ib_status",
-      "tickle": "ib_tickle",
-      "accounts": "ib_accounts",
-      "positions": "ib_positions",
-      "portfolio_summary": "ib_portfolio_summary",
-      "cash_balances": "ib_cash_balances",
-      "pnl": "ib_pnl",
-      "contract_search": "ib_contract_search",
-      "contract_detail": "ib_contract_detail",
-      "quote": "ib_quote",
-      "historical": "ib_historical",
-      "scanner_params": "ib_scanner_params",
-      "scanner_run": "ib_scanner_run",
-      "orders": "ib_orders",
-      "order_status": "ib_order_status",
-      "trades": "ib_trades",
-      "order_preview": "ib_order_preview",
-      "place_order": "ib_place_order",
-      "confirm_order": "ib_confirm_order",
-      "modify_order": "ib_modify_order",
-      "cancel_order": "ib_cancel_order"
-    }
   },
   "highlights": [
     {

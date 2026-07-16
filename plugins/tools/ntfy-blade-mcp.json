@@ -1,5 +1,6 @@
 {
   "name": "ntfy-blade-mcp",
+  "type": "plugin",
   "title": "ntfy Notifications",
   "description": "ntfy push notification MCP — publish, poll, topic reservation, and token management. Double-gate security with PII scrubbing.",
   "tagline": "Push notifications with priority, scheduling, and PII scrubbing",

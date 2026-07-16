@@ -1,5 +1,6 @@
 {
   "name": "prediction-mcp",
+  "type": "plugin",
   "title": "Prediction Markets",
   "version": "0.1.16",
   "description": "Unified prediction market data from Polymarket and Kalshi — search, prices, orderbooks, relevance-scored results",
@@ -8,7 +9,7 @@
   "tier": "community",
   "author_type": "community",
   "readiness": "beta",
-  "contract": null,
+  "contract": "prediction-market-v1",
   "risk_class": "high_risk",
   "tagline": "Polymarket and Kalshi prediction data in one place",
   "repository": "https://github.com/shaanmajid/prediction-mcp",

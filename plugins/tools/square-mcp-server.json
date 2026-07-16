@@ -1,5 +1,6 @@
 {
   "name": "square-mcp-server",
+  "type": "plugin",
   "title": "Square (Official Meta-Tool)",
   "description": "Square's official MCP server. Single meta-tool (`make_request`) covering the full Square REST surface — Payments, Customers, Orders, Catalog, Inventory, Disputes, Bookings, Loyalty, Gift Cards, Team. Breadth at the cost of token efficiency.",
   "tagline": "Full Square REST surface via a single meta-tool",
@@ -8,7 +9,7 @@
   "license": "Apache-2.0",
   "icon": "/icons/square-mcp-server.svg",
   "tier": "community",
-  "author_type": "third-party",
+  "author_type": "community",
   "readiness": "beta",
   "contract": "payments-v1",
   "risk_class": "high_risk",

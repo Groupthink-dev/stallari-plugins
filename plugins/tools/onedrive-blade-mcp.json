@@ -1,5 +1,6 @@
 {
   "name": "onedrive-blade-mcp",
+  "type": "plugin",
   "title": "Microsoft OneDrive",
   "description": "OneDrive and SharePoint file operations via Microsoft Graph API — browse, read, search, upload, share, delta sync",
   "tagline": "Browse, search, and sync files across OneDrive and SharePoint",

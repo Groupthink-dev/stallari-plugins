@@ -1,5 +1,6 @@
 {
   "name": "polymarket-blade-mcp",
+  "type": "plugin",
   "title": "Polymarket",
   "version": "0.1.1",
   "description": "Polymarket prediction market data — events, markets, orderbooks, prices, analytics. 22 tools across 3 APIs. No credentials required.",

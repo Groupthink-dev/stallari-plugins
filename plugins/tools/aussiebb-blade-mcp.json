@@ -1,5 +1,6 @@
 {
   "name": "aussiebb-blade-mcp",
+  "type": "plugin",
   "title": "Aussie Broadband",
   "description": "Aussie Broadband ISP operations \u2014 usage monitoring, outage tracking, billing, and line diagnostics via the MyAussie API",
   "tagline": "Monitor your NBN \u2014 usage, outages, billing, and diagnostics",

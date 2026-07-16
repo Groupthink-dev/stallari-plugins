@@ -1,5 +1,6 @@
 {
   "name": "apple-messages-blade-mcp",
+  "type": "plugin",
   "title": "Apple Messages",
   "description": "Apple Messages (iMessage) operations — conversations, search, contacts, attachments, send",
   "tagline": "Read, search, and send via iMessage on macOS",

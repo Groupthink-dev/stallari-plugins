@@ -1,5 +1,6 @@
 {
   "name": "xboxlive-blade-mcp",
+  "type": "plugin",
   "title": "Xbox Live (Blade)",
   "description": "Xbox Live operations — profiles, achievements, friends, presence, game library, SmartGlass console control, Store catalog, messaging",
   "version": "0.1.1",
@@ -179,27 +180,6 @@
         "url": "https://github.com/Groupthink-dev/xboxlive-blade-mcp#quick-start"
       }
     ]
-  },
-  "services": {
-    "gaming": {
-      "profile": "xbox_profile",
-      "achievements": "xbox_achievements",
-      "achievement_summary": "xbox_achievement_summary",
-      "games_played": "xbox_games",
-      "games_recent": "xbox_games_recent",
-      "friends": "xbox_friends",
-      "presence": "xbox_presence",
-      "search_users": "xbox_search_users",
-      "achievement_compare": "xbox_achievement_compare",
-      "achievement_groups": "xbox_achievement_groups",
-      "games_purchased": "xbox_games_purchased",
-      "devices": "xbox_consoles",
-      "game_details": "xbox_game_details",
-      "search_games": "xbox_search_games",
-      "send_message": "xbox_send_message",
-      "friend_add": "xbox_friend_add",
-      "friend_remove": "xbox_friend_remove"
-    }
   },
   "certification": {
     "status": "certified",

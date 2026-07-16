@@ -44,9 +44,9 @@ sync-pack-spec:
 # Requires: pip install check-jsonschema
 validate:
 	@echo "Validating tool entries..."
-	@for f in plugins/tools/*.json; do \
+	@set -e; for f in plugins/tools/*.json; do \
 		echo "  $$f"; \
-		check-jsonschema --schemafile schemas/stallari-plugin.schema.json "$$f" 2>/dev/null || true; \
+		check-jsonschema --schemafile schemas/catalog-entry.schema.json "$$f"; \
 	done
 	@echo "Done."
 

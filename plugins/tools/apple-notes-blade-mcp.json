@@ -1,5 +1,6 @@
 {
   "name": "apple-notes-blade-mcp",
+  "type": "plugin",
   "title": "Apple Notes",
   "description": "On-disk Apple Notes reader — NoteStore.sqlite + protobuf body decode + folder hierarchy. Read-only; never opens the network. Library form factor (DD-240 Phase A) — compiled into Stallari.",
   "tagline": "Years of notes, on-device, no iCloud round-trip",

@@ -1,5 +1,6 @@
 {
   "name": "ubiquiti-unifi-blade-mcp",
+  "type": "plugin",
   "title": "Ubiquiti UniFi",
   "description": "Ubiquiti UniFi network monitoring and security — device health, client visibility, firewall policies, traffic routes, DPI restrictions, and port forwards",
   "tagline": "Monitor and secure your UniFi network — devices, clients, firewalls, and traffic",

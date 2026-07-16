@@ -1,5 +1,6 @@
 {
   "name": "square-blade-mcp",
+  "type": "plugin",
   "title": "Square Payments + Billing",
   "description": "Square Payments + Billing API operations — payments, refunds, customers, cards, locations, orders, catalog, inventory, disputes, webhooks (payments-v1) and subscriptions, plans, invoices (billing-v1). PCI-safe card output, write-gated, confirm-gated for destructive ops.",
   "tagline": "POS, e-commerce, recurring billing, and invoicing through Square",

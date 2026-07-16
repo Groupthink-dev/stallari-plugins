@@ -1,5 +1,6 @@
 {
   "name": "vastai-blade-mcp",
+  "type": "plugin",
   "title": "Vast.ai GPU Marketplace",
   "description": "Search and provision GPU instances on the Vast.ai P2P marketplace — search offers, accept bids, manage instances, and track billing. 16 tools implementing virtualisation-v1 contract.",
   "tagline": "GPU marketplace — search offers, provision instances, manage bids and billing",
@@ -8,7 +9,7 @@
   "license": "MIT",
   "icon": "/icons/vastai-blade-mcp.svg",
   "tier": "certified",
-  "author_type": "stallari",
+  "author_type": "first-party",
   "readiness": "beta",
   "contract": [
     "virtualisation-v1"

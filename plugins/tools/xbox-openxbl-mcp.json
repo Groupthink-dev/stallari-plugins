@@ -1,5 +1,6 @@
 {
   "name": "xbox-openxbl-mcp",
+  "type": "plugin",
   "title": "Xbox Live (Community)",
   "description": "Xbox Live profiles, achievements, and presence via OpenXBL (xbl.io) API proxy — simple API key auth, no OAuth",
   "version": "0.1.0",
@@ -114,16 +115,6 @@
         "url": "https://xbl.io/api"
       }
     ]
-  },
-  "services": {
-    "gaming": {
-      "profile": "oxbl_profile",
-      "achievements": "oxbl_achievements",
-      "achievement_summary": "oxbl_achievement_summary",
-      "presence": "oxbl_presence",
-      "friends": "oxbl_friends",
-      "search_users": "oxbl_search_users"
-    }
   },
   "conformance": {
     "required": "3/4",
