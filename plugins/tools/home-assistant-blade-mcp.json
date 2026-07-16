@@ -63,6 +63,10 @@
     "runtime": "uv",
     "package": "home-assistant-blade-mcp"
   },
+  "non_conformance_rationale": {
+    "reason": "Optional instance selection can fan reads into multiple configured sites or choose a first provider, and responses do not provide canonical _meta.domain_attribution.",
+    "domain_scope_unspecified": ["ha_info", "ha_config", "ha_error_log", "ha_areas", "ha_devices", "ha_entities", "ha_floors", "ha_labels", "ha_search", "ha_services_list", "ha_state", "ha_states", "ha_states_by_domain", "ha_history", "ha_logbook", "ha_statistics", "ha_statistics_list", "ha_calendar_events", "ha_automations", "ha_automation_get", "ha_template", "ha_camera_snapshot", "ha_events"]
+  },
   "tools": [
     {
       "name": "ha_info",
@@ -270,7 +274,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -281,7 +286,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -292,7 +298,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -303,7 +310,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -314,7 +322,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -325,7 +334,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -358,7 +368,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -369,7 +380,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -380,7 +392,8 @@
         "scope_filtering": "none",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -391,7 +404,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -402,7 +416,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -435,7 +450,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     },
     {
@@ -457,7 +473,8 @@
         "scope_filtering": "server-side",
         "field_projection": "none",
         "deterministic_ordering": "stable",
-        "audit_surface": "minimal"
+        "audit_surface": "minimal",
+        "domain_scope": "single"
       }
     }
   ],

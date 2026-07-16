@@ -63,6 +63,10 @@
     "runtime": "uv",
     "package": "tailscale-blade-mcp"
   },
+  "non_conformance_rationale": {
+    "reason": "There is no authoritative service binding/domain contract for overlay-network-v1, and responses do not provide canonical _meta.domain_attribution.",
+    "domain_scope_unspecified": ["ts_info", "ts_devices", "ts_device", "ts_device_routes", "ts_dns", "ts_acl", "ts_acl_validate", "ts_keys", "ts_users", "ts_webhooks", "ts_audit_log", "ts_authorize_device", "ts_set_tags", "ts_expire_device", "ts_approve_routes", "ts_create_key", "ts_delete_key", "ts_delete_device"]
+  },
   "tools": [
     {
       "name": "ts_info",

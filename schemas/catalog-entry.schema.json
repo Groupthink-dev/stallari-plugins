@@ -156,7 +156,21 @@
       "type": "object",
       "description": "DD-333 F.1 (pack-spec 4.2.0) — explicit non-conformance declaration. When a plugin's tools[] entry lacks a `granularity:` block AND the tool name appears in `affected_tools` here, the plugin is accepted-with-rationale rather than rejected. build-catalog.js derives `granularity.scope_filtering: \"non-conforming-explicit\"` (plus worst-case row on the other three dimensions) for each listed tool. Downstream UI ([[DD-189]] amendment), memory ([[DD-301]] amendment), and assembler verdict ([[DD-333]] F.2) consume the per-tool non-conformance flag. See stallari-pack-spec/docs/non-conformance-rationale.md.",
       "additionalProperties": false,
-      "required": ["reason", "scope_filtering_off", "contamination_risks", "affected_tools"],
+      "required": ["reason"],
+      "allOf": [
+        {
+          "anyOf": [
+            { "required": ["scope_filtering_off", "contamination_risks", "affected_tools"] },
+            { "required": ["domain_scope_unspecified"] }
+          ]
+        },
+        {
+          "if": { "required": ["affected_tools"] },
+          "then": {
+            "required": ["scope_filtering_off", "contamination_risks", "affected_tools"]
+          }
+        }
+      ],
       "properties": {
         "reason": {
           "type": "string",
@@ -191,6 +205,7 @@
         },
         "domain_scope_unspecified": {
           "type": "array",
+          "minItems": 1,
           "uniqueItems": true,
           "items": { "type": "string" },
           "description": "DD-333 F.4 — additive non-conformance escape hatch for the 5th granularity dimension (domain_scope). Optional list of tool names from this entry's tools[].name that legitimately cannot yet declare domain_scope (upstream provider doesn't expose per-domain partitioning, blade pre-dates DD-341 substrate, etc.). build-catalog.js derives `granularity.domain_scope: \"non-conforming-explicit\"` for each listed tool (sister to existing scope_filtering derivation). Cross-field invariant (every entry must cross-reference an actual tools[].name) is enforced procedurally in build-catalog.js. Promoted to mandatory backfill at F.4.b after A.2.dom blade declarations land."

@@ -445,6 +445,9 @@ function pluginToCatalogEntry(raw) {
     // in enforceNonConformanceRationale(); consumers reading the per-tool
     // shape see the derived row.
     non_conformance_rationale: raw.non_conformance_rationale || null,
+    // Preserve post-derivation tool rows so catalog consumers receive every
+    // granularity axis, including domain_scope.
+    tools: Array.isArray(raw.tools) ? raw.tools : null,
     not_supported: Array.isArray(raw.not_supported) && raw.not_supported.length > 0 ? raw.not_supported : null,
     runtime: raw.install?.runtime || raw.runtime || null,
     // DD-265: surface library-form-factor metadata so the harness marketplace

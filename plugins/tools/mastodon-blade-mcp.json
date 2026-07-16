@@ -18,6 +18,10 @@
     "runtime": "uv",
     "package": "mastodon-blade-mcp"
   },
+  "non_conformance_rationale": {
+    "reason": "There is no authoritative service binding/domain contract for social-v1, and responses do not provide canonical _meta.domain_attribution.",
+    "domain_scope_unspecified": ["mastodon_info", "mastodon_verify", "mastodon_timeline_home", "mastodon_timeline_public", "mastodon_timeline_local", "mastodon_timeline_hashtag", "mastodon_timeline_list", "mastodon_status", "mastodon_context", "mastodon_search", "mastodon_account", "mastodon_account_statuses", "mastodon_relationships", "mastodon_followers", "mastodon_following", "mastodon_notifications", "mastodon_trending_tags", "mastodon_trending_statuses", "mastodon_trending_links", "mastodon_bookmarks", "mastodon_favourites", "mastodon_lists", "mastodon_list_accounts", "mastodon_conversations", "mastodon_filters", "mastodon_post", "mastodon_reply", "mastodon_edit", "mastodon_delete", "mastodon_favourite", "mastodon_unfavourite", "mastodon_boost", "mastodon_unboost", "mastodon_bookmark", "mastodon_unbookmark", "mastodon_pin", "mastodon_unpin", "mastodon_follow", "mastodon_unfollow", "mastodon_block", "mastodon_unblock", "mastodon_mute", "mastodon_unmute", "mastodon_dismiss_notification", "mastodon_media_upload"]
+  },
   "tools": [
     {
       "name": "mastodon_info",

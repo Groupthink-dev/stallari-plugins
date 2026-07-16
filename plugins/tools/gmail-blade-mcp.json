@@ -62,6 +62,10 @@
     "runtime": "uv",
     "package": "gmail-blade-mcp"
   },
+  "non_conformance_rationale": {
+    "reason": "A mailbox binding does not resolve the user-defined domains selected by Gmail's per-record pattern mapper, and responses do not provide canonical _meta.domain_attribution.",
+    "domain_scope_unspecified": ["gmail_search", "gmail_read", "gmail_snippets", "gmail_thread", "gmail_mailboxes", "gmail_info", "gmail_state", "gmail_changes", "gmail_identities", "gmail_filters", "gmail_send", "gmail_reply", "gmail_draft", "gmail_flag", "gmail_move", "gmail_bulk", "gmail_delete", "gmail_filter_create", "gmail_filter_delete", "gmail_classify", "gmail_summarise"]
+  },
   "tools": [
     {
       "name": "gmail_search",
