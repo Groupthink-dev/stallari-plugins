@@ -104,6 +104,56 @@ describe("DD-333 catalog-entry schema — granularity fixtures", () => {
 });
 
 describe("DD-333 F.1 catalog-entry schema — non_conformance_rationale fixtures", () => {
+  it("accepts a domain-only non_conformance_rationale block", async () => {
+    const entry = validPluginEntry({
+      tools: [{ name: "legacy_domain_tool" }],
+      non_conformance_rationale: {
+        reason: "The upstream service has no authoritative domain contract or canonical attribution.",
+        domain_scope_unspecified: ["legacy_domain_tool"],
+      },
+    });
+    const verdict = await validateCatalogEntry(entry);
+    assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+
+  it("rejects an empty domain-only unspecified list", async () => {
+    const entry = validPluginEntry({
+      tools: [{ name: "legacy_domain_tool" }],
+      non_conformance_rationale: {
+        reason: "The upstream service has no authoritative domain contract or canonical attribution.",
+        domain_scope_unspecified: [],
+      },
+    });
+    const verdict = await validateCatalogEntry(entry);
+    assert.equal(verdict.valid, false);
+    assert.ok(verdict.errors.some(
+      (e) => e.instancePath === "/non_conformance_rationale/domain_scope_unspecified" && e.keyword === "minItems",
+    ), verdict.errorsText);
+  });
+
+  it("rejects a rationale with only reason", async () => {
+    const verdict = await validateCatalogEntry(validPluginEntry({
+      non_conformance_rationale: { reason: "Incomplete rationale." },
+    }));
+    assert.equal(verdict.valid, false);
+  });
+
+  it("requires the complete scope-filtering quartet when affected_tools is present", async () => {
+    const entry = validPluginEntry({
+      tools: [{ name: "legacy_scope_tool" }, { name: "legacy_domain_tool" }],
+      non_conformance_rationale: {
+        reason: "Both contracts are incomplete.",
+        affected_tools: ["legacy_scope_tool"],
+        domain_scope_unspecified: ["legacy_domain_tool"],
+      },
+    });
+    const verdict = await validateCatalogEntry(entry);
+    assert.equal(verdict.valid, false);
+    assert.ok(verdict.errors.some(
+      (e) => e.params && e.params.missingProperty === "scope_filtering_off",
+    ), verdict.errorsText);
+  });
+
   it("accepts entry with valid non_conformance_rationale block", async () => {
     const entry = loadFixture("tool-non-conformance-rationale-valid.json");
     const verdict = await validateCatalogEntry(entry);

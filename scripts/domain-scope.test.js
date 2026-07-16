@@ -17,13 +17,14 @@
 
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 import {
   validateCatalogEntry,
   enforceDomainScope,
+  pluginToCatalogEntry,
   findDomainScopeArg,
   DOMAIN_SCOPE_ARG_PATTERN,
 } from "./build-catalog.js";
@@ -31,6 +32,31 @@ import {
 const ROOT = resolve(import.meta.dirname, "..");
 const FIXTURE_DIR = join(ROOT, "schemas", "fixtures", "catalog-entries");
 const BUILD_SCRIPT = join(ROOT, "scripts", "build-catalog.js");
+const TARGET_FILES = [
+  "gmail-blade-mcp.json",
+  "home-assistant-blade-mcp.json",
+  "mastodon-blade-mcp.json",
+  "tailscale-blade-mcp.json",
+  "syncthing-blade-mcp.json",
+];
+const HOME_SINGLE = new Set([
+  "ha_call_service", "ha_light", "ha_climate", "ha_scene", "ha_lock", "ha_alarm",
+  "ha_automation_trigger", "ha_automation_toggle", "ha_automation_create",
+  "ha_automation_delete", "ha_script_run", "ha_webhook", "ha_notify",
+]);
+
+function loadToolEntry(file) {
+  return JSON.parse(readFileSync(join(ROOT, "plugins", "tools", file), "utf-8"));
+}
+
+function effectiveTools(entry) {
+  const verdict = validateCatalogEntry(entry);
+  return Promise.resolve(verdict).then((result) => {
+    assert.equal(result.valid, true, result.errorsText);
+    enforceDomainScope(entry, entry.name);
+    return entry.tools;
+  });
+}
 
 function loadFixture(name) {
   return JSON.parse(readFileSync(join(FIXTURE_DIR, name), "utf-8"));
@@ -161,11 +187,91 @@ describe("DD-333 F.4 — procedural cross-field gate (enforceDomainScope)", () =
   });
 });
 
-describe("DD-333 F.4 — real plugins/tools/ corpus remains clean", () => {
-  // Smoke: invoking the real build script over the real plugins/tools/
-  // directory MUST emit zero S-DOM-002 warnings (no plugin entry today
-  // declares domain_scope). Any drift surfaces here.
-  it("zero S-DOM-002 warnings on real corpus", () => {
+describe("DD-333 F.4 — exact domain-scope corpus and generated projection", () => {
+  it("derives the exact 13 single / 145 non-conforming distribution across the five source entries", async () => {
+    const entries = TARGET_FILES.map(loadToolEntry);
+    const protectedFields = new Map(entries.flatMap((entry) => entry.tools.map((tool) => [
+      `${entry.name}/${tool.name}`,
+      {
+        risk_class: tool.risk_class,
+        scope_filtering: tool.granularity.scope_filtering,
+        field_projection: tool.granularity.field_projection,
+        deterministic_ordering: tool.granularity.deterministic_ordering,
+        audit_surface: tool.granularity.audit_surface,
+      },
+    ])));
+    assert.equal(
+      entries.flatMap((entry) => entry.tools)
+        .filter((tool) => tool.granularity.domain_scope === "non-conforming-explicit").length,
+      0,
+      "domain-only rationale, not authors, must derive non-conforming-explicit",
+    );
+    const tools = (await Promise.all(entries.map(effectiveTools))).flat();
+    assert.equal(tools.length, 158);
+
+    const counts = tools.reduce((result, tool) => {
+      result[tool.granularity.domain_scope] = (result[tool.granularity.domain_scope] || 0) + 1;
+      return result;
+    }, {});
+    assert.deepEqual(counts, { single: 13, "non-conforming-explicit": 145 });
+
+    const gmail = entries[0];
+    assert.deepEqual(
+      new Set(gmail.tools.map((tool) => tool.name)),
+      new Set(gmail.non_conformance_rationale.domain_scope_unspecified),
+    );
+    assert.ok(gmail.tools.every((tool) => tool.granularity.domain_scope === "non-conforming-explicit"));
+
+    const home = entries[1];
+    const homeSingles = new Set(home.tools
+      .filter((tool) => tool.granularity.domain_scope === "single")
+      .map((tool) => tool.name));
+    assert.deepEqual(homeSingles, HOME_SINGLE);
+    const homeUnspecified = new Set(home.non_conformance_rationale.domain_scope_unspecified);
+    assert.deepEqual(
+      homeUnspecified,
+      new Set(home.tools.map((tool) => tool.name).filter((name) => !HOME_SINGLE.has(name))),
+    );
+
+    for (const entry of entries) {
+      const rationale = entry.non_conformance_rationale;
+      assert.equal(rationale.scope_filtering_off, undefined);
+      assert.equal(rationale.contamination_risks, undefined);
+      assert.equal(rationale.affected_tools, undefined);
+      const unspecified = rationale.domain_scope_unspecified;
+      assert.equal(new Set(unspecified).size, unspecified.length);
+      const named = new Set(entry.tools.map((tool) => tool.name));
+      assert.ok(unspecified.every((name) => named.has(name)));
+      assert.ok(entry.tools.every((tool) =>
+        tool.granularity.domain_scope === "single" ||
+        tool.granularity.domain_scope === "non-conforming-explicit"));
+      for (const tool of entry.tools) {
+        assert.deepEqual(
+          {
+            risk_class: tool.risk_class,
+            scope_filtering: tool.granularity.scope_filtering,
+            field_projection: tool.granularity.field_projection,
+            deterministic_ordering: tool.granularity.deterministic_ordering,
+            audit_surface: tool.granularity.audit_surface,
+          },
+          protectedFields.get(`${entry.name}/${tool.name}`),
+        );
+      }
+    }
+    for (const entry of entries.slice(2)) {
+      assert.ok(entry.tools.every((tool) => tool.granularity.domain_scope === "non-conforming-explicit"));
+    }
+  });
+
+  it("projects post-derivation tools into a catalog entry", async () => {
+    const entry = loadToolEntry("gmail-blade-mcp.json");
+    await effectiveTools(entry);
+    const projected = pluginToCatalogEntry(entry);
+    assert.equal(projected.tools, entry.tools);
+    assert.ok(projected.tools.every((tool) => tool.granularity.domain_scope === "non-conforming-explicit"));
+  });
+
+  it("builds effective tools without S-DOM-002 warnings and preserves source tool counts", () => {
     const result = spawnSync(process.execPath, [BUILD_SCRIPT], {
       cwd: ROOT,
       encoding: "utf-8",
@@ -183,5 +289,25 @@ describe("DD-333 F.4 — real plugins/tools/ corpus remains clean", () => {
       /S-DOM-002 — \d+ warning/,
       `Expected zero S-DOM-002 warnings; got stdout:\n${result.stdout}`,
     );
+    const generated = JSON.parse(readFileSync(join(ROOT, "dist", "catalog.json"), "utf-8")).data;
+    const sourceEntries = readdirSync(join(ROOT, "plugins", "tools"))
+      .filter((file) => file.endsWith(".json"))
+      .map(loadToolEntry);
+    for (const source of sourceEntries) {
+      if (!Array.isArray(source.tools)) continue;
+      const generatedEntry = generated.find((entry) => entry.name === source.name);
+      assert.ok(generatedEntry, `missing generated entry for ${source.name}`);
+      assert.equal(generatedEntry.tools.length, source.tools.length, source.name);
+    }
+    const selected = generated.filter((entry) => TARGET_FILES
+      .map((file) => file.replace(/\.json$/, ""))
+      .includes(entry.name));
+    const generatedTools = selected.flatMap((entry) => entry.tools);
+    assert.equal(generatedTools.length, 158);
+    const generatedCounts = generatedTools.reduce((result, tool) => {
+      result[tool.granularity.domain_scope] = (result[tool.granularity.domain_scope] || 0) + 1;
+      return result;
+    }, {});
+    assert.deepEqual(generatedCounts, { single: 13, "non-conforming-explicit": 145 });
   });
 });

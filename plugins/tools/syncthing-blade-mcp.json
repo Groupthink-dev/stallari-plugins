@@ -25,6 +25,10 @@
     "runtime": "uv",
     "package": "syncthing-blade-mcp"
   },
+  "non_conformance_rationale": {
+    "reason": "There is no authoritative service binding/domain contract for sync-v1, and multi-instance and pattern-based responses do not provide canonical _meta.domain_attribution.",
+    "domain_scope_unspecified": ["syncthing_list_devices", "syncthing_device_completion", "syncthing_connections", "syncthing_device_stats", "syncthing_pending_devices", "syncthing_pending_folders", "syncthing_accept_device", "syncthing_reject_device", "syncthing_accept_folder", "syncthing_reject_folder", "syncthing_get_ignores", "syncthing_set_ignores", "syncthing_get_default_ignores", "syncthing_set_default_ignores", "syncthing_folder_status", "syncthing_folder_completion", "syncthing_replication_report", "syncthing_pause_folder", "syncthing_resume_folder", "syncthing_scan_folder", "syncthing_folder_errors", "syncthing_browse_folder", "syncthing_file_info", "syncthing_folder_need", "syncthing_remote_need", "syncthing_override_folder", "syncthing_revert_folder", "syncthing_list_instances", "syncthing_list_folders", "syncthing_system_status", "syncthing_system_errors", "syncthing_clear_errors", "syncthing_system_log", "syncthing_recent_changes", "syncthing_restart_required", "syncthing_restart", "syncthing_check_upgrade", "syncthing_health_summary"]
+  },
   "tools": [
     {
       "name": "syncthing_list_devices",
