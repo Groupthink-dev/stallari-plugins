@@ -581,6 +581,61 @@ function packToCatalogEntry(pack) {
   };
 }
 
+// Reviewed scope allowlist for the gated first-party add-on admission lane.
+// The allowlist IS the review artifact: adding a scope is a reviewed change.
+// Mirrors the canonical gate in the registry worker (validate.ts).
+const REVIEWED_ADDON_SCOPES = new Set([
+  "workload.trigger",
+  "hitl.approve",
+  "status.read",
+  "inference.invoke",
+]);
+const ADDON_SCOPE_PATTERN = /^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)+$/;
+
+/**
+ * Build-time admission gate for add-ons (CI fail-fast mirror of the registry
+ * worker). Add-ons provision scoped auth, so they go through a first-party
+ * gated lane: first-party only, scopes within the reviewed allowlist, and every
+ * credential scope a subset of the declared provisions_scopes envelope.
+ * Throws on violation so the catalog build fails before R2 upload.
+ */
+function assertAddOnAdmission(raw) {
+  const errors = [];
+  if (raw.author_type !== "first-party") {
+    errors.push(
+      'add-ons are admitted only through the first-party gated lane (author_type: "first-party"); third-party add-ons are not yet accepted',
+    );
+  }
+  const envelope = new Set(
+    Array.isArray(raw.provisions_scopes) ? raw.provisions_scopes : [],
+  );
+  if (!Array.isArray(raw.provisions_scopes)) {
+    errors.push("provisions_scopes (reviewed scope envelope) is required");
+  } else {
+    for (const scope of raw.provisions_scopes) {
+      if (!ADDON_SCOPE_PATTERN.test(String(scope))) {
+        errors.push(`invalid scope format: "${scope}"`);
+      } else if (!REVIEWED_ADDON_SCOPES.has(String(scope))) {
+        errors.push(`scope "${scope}" is outside the reviewed allowlist`);
+      }
+    }
+  }
+  for (const cred of Array.isArray(raw.provisions_auth) ? raw.provisions_auth : []) {
+    for (const scope of Array.isArray(cred.scopes) ? cred.scopes : []) {
+      if (!envelope.has(String(scope))) {
+        errors.push(
+          `credential "${cred.id}" mints scope "${scope}" not declared in provisions_scopes`,
+        );
+      }
+    }
+  }
+  if (errors.length) {
+    throw new Error(
+      `Add-on "${raw.name}" fails admission:\n  - ${errors.join("\n  - ")}`,
+    );
+  }
+}
+
 /**
  * DD-404 — Convert an add-on catalog-entry source to a CatalogEntry.
  * Add-ons reveal UI + provision scoped auth for an external system; they ship
@@ -611,6 +666,10 @@ function addOnToCatalogEntry(raw) {
     license: raw.license || null,
     // DD-404 add-on-specific surface
     external_system: raw.external_system || null,
+    provisions_scopes:
+      Array.isArray(raw.provisions_scopes) && raw.provisions_scopes.length > 0
+        ? raw.provisions_scopes
+        : null,
     provisions_auth:
       Array.isArray(raw.provisions_auth) && raw.provisions_auth.length > 0
         ? raw.provisions_auth
@@ -874,6 +933,11 @@ async function main() {
         throw new Error(
           `Catalog entry ${raw.name || file} fails schema validation:\n${verdict.errorsText}`,
         );
+      }
+      // Add-ons provision scoped auth — enforce the gated first-party
+      // admission lane (CI fail-fast mirror of the registry worker).
+      if (type === "add_on") {
+        assertAddOnAdmission(raw);
       }
       entries.push(convert(raw));
     }

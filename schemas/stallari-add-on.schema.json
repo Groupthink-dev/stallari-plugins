@@ -1,212 +1,178 @@
 {
-  "$id": "https://stallari.app/schemas/stallari-add-on.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "additionalProperties": false,
+  "$id": "https://stallari.app/schemas/stallari-add-on.schema.json",
+  "title": "Stallari Add-on Manifest",
   "description": "Schema for stallari-add-on.yaml — the manifest format for Stallari add-ons. An add-on is the TERTIARY Marketplace artifact class (after packs and plugins/MCPs, DD-404): a Stallari-side module that unhides otherwise-hidden integration UI and provisions scoped auth for an external system or directly-attached hardware. An add-on ships NO software to the external system (enforced: external_system.ships_software_to_external is const false). It is distinct from a pack (ships no skills/workloads) and a plugin/MCP (exposes no LLM tool surface). Instances: Sovereign Compute, Elgato Stream Deck.",
+  "type": "object",
+  "required": ["add_on", "name", "version", "description", "author", "license", "external_system", "provisions_scopes"],
+  "additionalProperties": false,
   "properties": {
     "add_on": {
-      "description": "Add-on manifest spec version (e.g. '1.0'). Discriminates this artifact as an add-on, mirroring the pack manifest's `pack:` field.",
+      "type": "string",
       "pattern": "^\\d+\\.\\d+$",
-      "type": "string"
-    },
-    "author": {
-      "description": "Add-on author identifier.",
-      "type": "string"
-    },
-    "author_type": {
-      "description": "Author provenance. first-party = published and maintained by Stallari (the common case for add-ons, which provision auth).",
-      "enum": [
-        "first-party",
-        "community"
-      ],
-      "type": "string"
-    },
-    "description": {
-      "description": "Human-readable summary of what the add-on reveals and provisions.",
-      "maxLength": 200,
-      "type": "string"
-    },
-    "external_system": {
-      "additionalProperties": false,
-      "description": "The external system or directly-attached hardware this add-on bridges. The add-on provisions auth and reveals UI for it but never installs software onto it.",
-      "properties": {
-        "consumer_ref": {
-          "description": "Human-readable reference (and ideally a link) to the external consumer that receives the provisioned auth — e.g. 'Elgato Stream Deck plugin (Elgato Marketplace)'. The add-on links to it; it never bundles or installs it.",
-          "type": "string"
-        },
-        "kind": {
-          "description": "Nature of the external system. attached-hardware = a USB/peripheral device (e.g. Elgato Stream Deck). cloud-endpoint = a remote compute/service endpoint (e.g. Sovereign Compute BYO box). external-app = a third-party application.",
-          "enum": [
-            "attached-hardware",
-            "cloud-endpoint",
-            "external-app"
-          ],
-          "type": "string"
-        },
-        "product": {
-          "description": "External system product (e.g. 'stream-deck').",
-          "type": "string"
-        },
-        "ships_software_to_external": {
-          "const": false,
-          "description": "Class invariant (DD-404): an add-on MUST NOT ship software to the external system — it only reveals Stallari-side UI and provisions auth. Schema-enforced to false."
-        },
-        "vendor": {
-          "description": "External system vendor (e.g. 'elgato').",
-          "type": "string"
-        }
-      },
-      "required": [
-        "kind",
-        "ships_software_to_external"
-      ],
-      "type": "object"
-    },
-    "homepage": {
-      "description": "Add-on homepage or repository URL.",
-      "format": "uri",
-      "type": "string"
-    },
-    "icon": {
-      "description": "Relative URL path to icon asset for marketplace display.",
-      "type": "string"
-    },
-    "license": {
-      "description": "SPDX license identifier (e.g. MIT, Apache-2.0).",
-      "type": "string"
-    },
-    "lifecycle": {
-      "additionalProperties": false,
-      "description": "Optional lifecycle hook descriptors. Enabling reveals UI + readies provisioning; disabling/removing must revoke provisioned credentials.",
-      "properties": {
-        "on_disable": {
-          "description": "What happens on disable.",
-          "type": "string"
-        },
-        "on_enable": {
-          "description": "What happens on enable (reveal UI, ready provisioning).",
-          "type": "string"
-        },
-        "on_revoke": {
-          "description": "What happens on revoke — MUST kill credentials provisioned via provisions_auth.",
-          "type": "string"
-        }
-      },
-      "type": "object"
+      "description": "Add-on manifest spec version (e.g. '1.0'). Discriminates this artifact as an add-on, mirroring the pack manifest's `pack:` field."
     },
     "name": {
-      "description": "Add-on identifier. Lowercase alphanumeric with hyphens (e.g. 'elgato-streamdeck', 'sovereign-compute').",
+      "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*$",
-      "type": "string"
+      "description": "Add-on identifier. Lowercase alphanumeric with hyphens (e.g. 'elgato-streamdeck', 'sovereign-compute')."
     },
-    "notes": {
-      "description": "Free-form notes (curation status, caveats, context).",
-      "type": "string"
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (major.minor.patch)."
     },
-    "provisions_auth": {
-      "description": "Scoped credentials this add-on is permitted to mint (Stallari-side, via the DD-186 CredentialStore) and emit as a connection bundle for the external consumer. Least-privilege; revocable add-on-side.",
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "description": "Credential identifier (e.g. 'console-bearer').",
-            "pattern": "^[a-z0-9][a-z0-9-]*$",
-            "type": "string"
-          },
-          "kind": {
-            "description": "Credential type provisioned for the external consumer.",
-            "enum": [
-              "bearer",
-              "token",
-              "none"
-            ],
-            "type": "string"
-          },
-          "revocable": {
-            "default": true,
-            "description": "Whether the add-on can revoke this credential (killing the external consumer's access) independent of the consumer's state. Should be true.",
-            "type": "boolean"
-          },
-          "scopes": {
-            "description": "Least-privilege scopes granted to the provisioned credential (e.g. ['workload.trigger', 'hitl.approve', 'status.read']).",
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "id",
-          "kind"
-        ],
-        "type": "object"
-      },
-      "type": "array"
+    "description": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Human-readable summary of what the add-on reveals and provisions."
+    },
+    "author": {
+      "type": "string",
+      "description": "Add-on author identifier."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier (e.g. MIT, Apache-2.0)."
+    },
+    "author_type": {
+      "type": "string",
+      "enum": ["first-party", "community"],
+      "description": "Author provenance. first-party = published and maintained by Stallari (the common case for add-ons, which provision auth)."
     },
     "readiness": {
-      "description": "Testing completeness. production = fully tested. beta = partially tested. experimental = untested. stub = scaffolded but not functional.",
-      "enum": [
-        "production",
-        "beta",
-        "experimental",
-        "stub"
-      ],
-      "type": "string"
+      "type": "string",
+      "enum": ["production", "beta", "experimental", "stub"],
+      "description": "Testing completeness. production = fully tested. beta = partially tested. experimental = untested. stub = scaffolded but not functional."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Relative URL path to icon asset for marketplace display."
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Add-on homepage or repository URL."
     },
     "repository": {
-      "description": "Source repository URL.",
+      "type": "string",
       "format": "uri",
-      "type": "string"
+      "description": "Source repository URL."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes (curation status, caveats, context)."
     },
     "requires": {
+      "type": "object",
       "additionalProperties": false,
       "description": "Dependency requirements.",
       "properties": {
         "stallari": {
-          "description": "Minimum Stallari version (e.g. >=0.99.0).",
+          "type": "string",
           "pattern": "^[><=!~^]+\\d+\\.\\d+\\.\\d+",
-          "type": "string"
+          "description": "Minimum Stallari version (e.g. >=0.99.0)."
         }
-      },
-      "type": "object"
+      }
+    },
+    "external_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ships_software_to_external"],
+      "description": "The external system or directly-attached hardware this add-on bridges. The add-on provisions auth and reveals UI for it but never installs software onto it.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["attached-hardware", "cloud-endpoint", "external-app"],
+          "description": "Nature of the external system. attached-hardware = a USB/peripheral device (e.g. Elgato Stream Deck). cloud-endpoint = a remote compute/service endpoint (e.g. Sovereign Compute BYO box). external-app = a third-party application."
+        },
+        "vendor": {
+          "type": "string",
+          "description": "External system vendor (e.g. 'elgato')."
+        },
+        "product": {
+          "type": "string",
+          "description": "External system product (e.g. 'stream-deck')."
+        },
+        "consumer_ref": {
+          "type": "string",
+          "description": "Human-readable reference (and ideally a link) to the external consumer that receives the provisioned auth — e.g. 'Elgato Stream Deck plugin (Elgato Marketplace)'. The add-on links to it; it never bundles or installs it."
+        },
+        "ships_software_to_external": {
+          "const": false,
+          "description": "Class invariant (DD-404): an add-on MUST NOT ship software to the external system — it only reveals Stallari-side UI and provisions auth. Schema-enforced to false."
+        }
+      }
+    },
+    "provisions_scopes": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "The complete, reviewed envelope of auth scopes this add-on is permitted to mint across ALL of its provisioned credentials. This is the single surface groupthink reviews at catalog admission: the gated first-party lane rejects any add-on whose declared scopes fall outside the reviewed allowlist, and rejects any credential in provisions_auth whose scopes are not a subset of this envelope. An add-on that mints nothing declares an empty array. Each scope is a dotted, lowercase capability string (e.g. 'workload.trigger', 'inference.invoke').",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]*(\\.[a-z][a-z0-9-]*)+$"
+      }
+    },
+    "provisions_auth": {
+      "type": "array",
+      "description": "Scoped credentials this add-on is permitted to mint (Stallari-side, via the DD-186 CredentialStore) and emit as a connection bundle for the external consumer. Least-privilege; revocable add-on-side. Every scope listed here MUST also appear in provisions_scopes — the reviewed envelope is the superset; admission enforces the subset relation.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "description": "Credential identifier (e.g. 'console-bearer')."
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["bearer", "token", "none"],
+            "description": "Credential type provisioned for the external consumer."
+          },
+          "scopes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Least-privilege scopes granted to the provisioned credential (e.g. ['workload.trigger', 'hitl.approve', 'status.read'])."
+          },
+          "revocable": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether the add-on can revoke this credential (killing the external consumer's access) independent of the consumer's state. Should be true."
+          }
+        }
+      }
     },
     "reveals_ui": {
+      "type": "array",
       "description": "Otherwise-hidden Stallari UI surfaces this add-on unhides when enabled (so users without the add-on see no clutter).",
       "items": {
+        "type": "object",
         "additionalProperties": false,
+        "required": ["surface"],
         "properties": {
-          "description": {
-            "description": "What the revealed surface lets the user do.",
-            "type": "string"
-          },
           "surface": {
-            "description": "Named UI surface identifier the app reveals (e.g. 'stream-deck-console', 'sovereign-compute').",
+            "type": "string",
             "pattern": "^[a-z0-9][a-z0-9-]*$",
-            "type": "string"
+            "description": "Named UI surface identifier the app reveals (e.g. 'stream-deck-console', 'sovereign-compute')."
+          },
+          "description": {
+            "type": "string",
+            "description": "What the revealed surface lets the user do."
           }
-        },
-        "required": [
-          "surface"
-        ],
-        "type": "object"
-      },
-      "type": "array"
+        }
+      }
     },
-    "version": {
-      "description": "Semantic version (major.minor.patch).",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "type": "string"
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional lifecycle hook descriptors. Enabling reveals UI + readies provisioning; disabling/removing must revoke provisioned credentials.",
+      "properties": {
+        "on_enable": { "type": "string", "description": "What happens on enable (reveal UI, ready provisioning)." },
+        "on_disable": { "type": "string", "description": "What happens on disable." },
+        "on_revoke": { "type": "string", "description": "What happens on revoke — MUST kill credentials provisioned via provisions_auth." }
+      }
     }
-  },
-  "required": [
-    "add_on",
-    "name",
-    "version",
-    "description",
-    "author",
-    "license",
-    "external_system"
-  ],
-  "title": "Stallari Add-on Manifest",
-  "type": "object"
+  }
 }
