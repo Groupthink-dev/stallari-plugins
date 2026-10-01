@@ -1,0 +1,59 @@
+# Linux validation lane on the Woodpecker site runners (Track B Tier 2 batch 4,
+# infra/iac ADR-0047 § Decision 6; standard shape in the Tier 2 scoping note).
+#
+# The Woodpecker port of `.github/workflows/validate.yml`, which stopped running
+# for pull requests when this repository moved to git.groupthink.asia on
+# 2026-10-02. The GitHub workflow's final step, a `catalog-updated` repository
+# dispatch to stallari-registry-infra, had no consumer and retires with it.
+# Pull-request pack validation and the security comment come from the registry
+# worker's Forgejo webhook (registry-infra #52), not from this lane.
+#
+# Node image: the estate pin set by Stallari/mcp-helpers-ts (Tier 2 decision 9),
+# `docker.io/library/node:22-bookworm` by digest.
+#
+# Gate: three green push runs and three green pull-request runs, then Forgejo
+# branch protection on `main` requires `ci/woodpecker/pr/validation`. Until
+# then `main` is protected with no status check and merges are operator acts.
+#
+# Secret-free by construction (CONV-36): no `from_secret`, no `op://`. The one
+# git dependency (`stallari-secops-scanner`, a public repository) resolves over
+# anonymous HTTPS from its Forgejo home through a git URL rewrite; the lockfile
+# keeps its pinned commit. `.woodpecker/*` is a may-not-mutate CI surface
+# (ADR-0021): edits here are architect-rider work, never dispatched agent work.
+# Every image names its registry and a digest: FCOS Podman refuses short names
+# without a TTY.
+when:
+  - event: push
+    branch: main
+  - event: pull_request
+
+labels:
+  platform: linux/amd64
+  backend: docker
+  estate: meridian
+  lane: linux
+
+clone:
+  - name: clone
+    image: docker.io/woodpeckerci/plugin-git:2.10.1@sha256:550075c844fcec0af41d9d28f9860aa5d8c43e1e9419be4b9266dc02c2f29804
+    settings:
+      partial: false
+
+steps:
+  - name: validate
+    image: docker.io/library/node:22-bookworm@sha256:363e1587494626837fa7f9a23bdb453d13b0ff3c67c705c2805cfc69c2d2fad7
+    environment:
+      npm_config_cache: /woodpecker/.npm-cache
+      CI: "true"
+      STRICT_UX: "1"
+    commands:
+      - node --version
+      - npm --version
+      - git config --global url."https://git.groupthink.asia/Stallari/secops-scanner.git".insteadOf "git+ssh://git@github.com/Groupthink-dev/stallari-secops-scanner.git"
+      - git config --global url."https://git.groupthink.asia/Stallari/secops-scanner.git".insteadOf "ssh://git@github.com/Groupthink-dev/stallari-secops-scanner.git"
+      - npm ci
+      - node scripts/build-forge-context.js
+      - node scripts/validate-packs.js
+      - node scripts/security-scan.js
+      - node --test scripts/*.test.js
+      - node scripts/build-catalog.js
