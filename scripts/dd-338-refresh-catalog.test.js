@@ -276,3 +276,72 @@ describe("formatSummary", () => {
     assert.match(text, /~ alpha:/);
   });
 });
+
+// ---------------------------------------------------------------------------
+// diffCatalogs — returns_result_set (pack-spec 4.20.0, #45)
+// ---------------------------------------------------------------------------
+
+describe("diffCatalogs — returns_result_set", () => {
+  const catalogWith = (extra) => ({
+    data: [
+      {
+        name: "alpha",
+        type: "plugin",
+        tier: "certified",
+        tools: [
+          {
+            name: "alpha_ping",
+            granularity: {
+              scope_filtering: "none",
+              field_projection: "minimal",
+              deterministic_ordering: "stable",
+              audit_surface: "complete",
+              ...extra,
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  it("reports a flip from absent to false with before: true", () => {
+    const diff = diffCatalogs(
+      catalogWith({}),
+      catalogWith({ returns_result_set: false }),
+    );
+    assert.equal(diff.changed.length, 1);
+    assert.deepEqual(diff.changed[0].tool_changes, [
+      {
+        tool: "alpha_ping",
+        field: "returns_result_set",
+        before: true,
+        after: false,
+      },
+    ]);
+    assert.equal(diff.summary.tool_flips_total, 1);
+  });
+
+  it("reports a flip from false back to true", () => {
+    const diff = diffCatalogs(
+      catalogWith({ returns_result_set: false }),
+      catalogWith({ returns_result_set: true }),
+    );
+    assert.deepEqual(diff.changed[0].tool_changes, [
+      {
+        tool: "alpha_ping",
+        field: "returns_result_set",
+        before: false,
+        after: true,
+      },
+    ]);
+  });
+
+  it("treats absent and true as equal", () => {
+    const diff = diffCatalogs(
+      catalogWith({}),
+      catalogWith({ returns_result_set: true }),
+    );
+    assert.deepEqual(diff.changed, []);
+    assert.equal(diff.summary.tool_flips_total, 0);
+  });
+});

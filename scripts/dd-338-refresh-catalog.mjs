@@ -56,9 +56,12 @@ async function pathExists(p) {
  *
  * `tool_changes` is a list of `{ tool, field, before, after }` rows for any
  * tools[].granularity declaration flip OR tools[] add/remove inside an entry
- * present in both catalogs. The four fields tracked are the granularity axes:
+ * present in both catalogs. The fields tracked are the four granularity axes,
  * scope_filtering, field_projection, deterministic_ordering, audit_surface,
- * plus domain_scope when present (DD-333 F.4).
+ * plus domain_scope when present (DD-333 F.4), plus the returns_result_set
+ * precondition key (pack-spec 4.20.0). An absent returns_result_set means
+ * true, so absent and true compare equal and a flip to false is reported
+ * with before: true.
  *
  * Exported for testing.
  */
@@ -69,7 +72,11 @@ export function diffCatalogs(prevCatalog, newCatalog) {
     "deterministic_ordering",
     "audit_surface",
     "domain_scope",
+    "returns_result_set",
   ];
+  // Value an axis takes when the block omits it. Axes not listed here
+  // compare an omitted key as null.
+  const axisDefaults = { returns_result_set: true };
 
   // First-run baseline: no prior catalog. Every entry is a fresh add.
   if (prevCatalog === null) {
@@ -152,8 +159,8 @@ export function diffCatalogs(prevCatalog, newCatalog) {
       const prevGran = prevTool.granularity || {};
       const newGran = newTool.granularity || {};
       for (const axis of granularityAxes) {
-        const before = prevGran[axis] ?? null;
-        const after = newGran[axis] ?? null;
+        const before = prevGran[axis] ?? axisDefaults[axis] ?? null;
+        const after = newGran[axis] ?? axisDefaults[axis] ?? null;
         if (before !== after) {
           toolChanges.push({ tool: toolName, field: axis, before, after });
           toolFlipsTotal += 1;
