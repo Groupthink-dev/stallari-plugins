@@ -9,6 +9,7 @@
  *   - tool-non-conformance-rationale-scope-off-false.json     — invalid; AJV const:true rejects
  *   - tool-non-conformance-rationale-empty-contamination.json — invalid; AJV minItems:1 rejects
  *   - tool-non-conformance-rationale-affected-tools-mismatch.json — AJV accepts (cross-field invariant lives procedurally in build-catalog.js).
+ *   - inline granularity.returns_result_set cases (pack-spec 4.20.0) — true/false/absent accepted; non-boolean rejected; not required
  *
  * As an additional smoke gate, every real plugin entry under plugins/tools/
  * must validate against the schema — this catches regressions and confirms
@@ -314,6 +315,56 @@ describe("catalog-entry schema — divergent plugin shapes", () => {
     const verdict = await validateCatalogEntry(entry);
 
     assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+});
+
+describe("pack-spec 4.20.0 catalog-entry schema — granularity.returns_result_set", () => {
+  const FOUR_DIMS = { scope_filtering: "none", field_projection: "none", deterministic_ordering: "unstable", audit_surface: "minimal" };
+  function rrsEntry(granularity) {
+    return validPluginEntry({ tools: [{ name: "confirm_with_user", granularity }] });
+  }
+
+  it("declares an optional boolean with default true and keeps the four dimensions required", () => {
+    const schema = JSON.parse(readFileSync(join(ROOT, "schemas", "catalog-entry.schema.json"), "utf-8"));
+    const g = schema.properties.tools.items.properties.granularity;
+    assert.equal(g.properties.returns_result_set.type, "boolean");
+    assert.equal(g.properties.returns_result_set.default, true);
+    assert.equal(g.required.includes("returns_result_set"), false);
+    assert.equal(g.additionalProperties, false);
+    assert.deepEqual(g.required, ["scope_filtering", "field_projection", "deterministic_ordering", "audit_surface"]);
+  });
+
+  for (const value of [true, false]) {
+    it(`accepts returns_result_set: ${value}`, async () => {
+      const verdict = await validateCatalogEntry(rrsEntry({ returns_result_set: value, ...FOUR_DIMS }));
+      assert.equal(verdict.valid, true, verdict.errorsText);
+    });
+  }
+
+  it("accepts an absent returns_result_set", async () => {
+    const verdict = await validateCatalogEntry(rrsEntry({ ...FOUR_DIMS }));
+    assert.equal(verdict.valid, true, verdict.errorsText);
+  });
+
+  for (const value of ["false", 0, 1, null, "true"]) {
+    it(`rejects non-boolean returns_result_set: ${JSON.stringify(value)}`, async () => {
+      const verdict = await validateCatalogEntry(rrsEntry({ returns_result_set: value, ...FOUR_DIMS }));
+      assert.equal(verdict.valid, false);
+      assert.ok(verdict.errors.some(
+        (e) => e.instancePath === "/tools/0/granularity/returns_result_set" && e.keyword === "type",
+      ), verdict.errorsText);
+    });
+  }
+
+  it("requires the dimensions when returns_result_set is false", async () => {
+    const verdict = await validateCatalogEntry(rrsEntry({
+      returns_result_set: false,
+      field_projection: "none",
+      deterministic_ordering: "unstable",
+      audit_surface: "minimal",
+    }));
+    assert.equal(verdict.valid, false);
+    assert.ok(verdict.errors.some((e) => e.params.missingProperty === "scope_filtering"), verdict.errorsText);
   });
 });
 

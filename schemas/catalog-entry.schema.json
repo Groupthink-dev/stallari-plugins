@@ -127,6 +127,11 @@
             "additionalProperties": false,
             "required": ["scope_filtering", "field_projection", "deterministic_ordering", "audit_surface"],
             "properties": {
+              "returns_result_set": {
+                "type": "boolean",
+                "default": true,
+                "description": "pack-spec 4.20.0 precondition key (harness ADR-0042 § Amendment 2026-08-21). Declares whether the tool returns a result set at all. Optional; absent means true, and the verdict is computed exactly as before 4.20.0. false: the assembler's granularity verdict short-circuits to proceed before scope_filtering is evaluated, at every context level. A shape fact, not a diligence claim: declaring false on a tool that returns a result set is an S-MCP-001-class conformance breach (stallari-pack-spec/docs/granularity-conformance.md#declaring-returns_result_set-false). Not a non_conformance_rationale signal; never list a tool under affected_tools to express it. The four dimension keys remain required alongside it. See stallari-pack-spec/docs/granularity.md#before-the-dimensions-returns_result_set."
+              },
               "scope_filtering": {
                 "enum": ["server-side", "client-side", "none", "non-conforming-explicit"],
                 "description": "server-side: tool accepts a scope argument and the plugin honours it before bytes leave the plugin's address space (safe for over-fetch threat model). client-side: tool returns unfiltered results and the assembler filters post-hoc (carries over-fetch leak). none: tool has no concept of scope (data is naturally unscoped, or the plugin punts entirely). non-conforming-explicit (DD-333 F.1): computed at build time in build-catalog.js for tools listed in non_conformance_rationale.affected_tools whose own granularity block is omitted. MUST NOT be hand-written by authors — authors declare non_conformance_rationale at top level and leave granularity off on listed tools."
